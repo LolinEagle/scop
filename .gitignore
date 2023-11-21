@@ -30,3 +30,9 @@
 *.exe
 *.out
 *.app
+
+# Code
+.vscode
+
+# My executables
+scop
