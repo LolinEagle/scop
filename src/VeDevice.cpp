@@ -6,9 +6,6 @@
 #include <set>
 #include <unordered_set>
 
-namespace lve
-{
-
 	// local callback functions
 	static VKAPI_ATTR VkBool32 VKAPI_CALL debugCallback(
 		VkDebugUtilsMessageSeverityFlagBitsEXT messageSeverity,
@@ -110,19 +107,15 @@ namespace lve
 
 			populateDebugMessengerCreateInfo(debugCreateInfo);
 			createInfo.pNext = (VkDebugUtilsMessengerCreateInfoEXT *)&debugCreateInfo;
-		}
-		else
-		{
+		} else {
 			createInfo.enabledLayerCount = 0;
 			createInfo.pNext = nullptr;
 		}
 
 		if (vkCreateInstance(&createInfo, nullptr, &instance) != VK_SUCCESS)
-		{
 			throw std::runtime_error("failed to create instance!");
-		}
 
-		hasGflwRequiredInstanceExtensions();
+		// hasGflwRequiredInstanceExtensions();
 	}
 
 	void VeDevice::pickPhysicalDevice()
@@ -130,10 +123,7 @@ namespace lve
 		uint32_t deviceCount = 0;
 		vkEnumeratePhysicalDevices(instance, &deviceCount, nullptr);
 		if (deviceCount == 0)
-		{
 			throw std::runtime_error("failed to find GPUs with Vulkan support!");
-		}
-		std::cout << "Device count: " << deviceCount << std::endl;
 		std::vector<VkPhysicalDevice> devices(deviceCount);
 		vkEnumeratePhysicalDevices(instance, &deviceCount, devices.data());
 
@@ -152,7 +142,6 @@ namespace lve
 		}
 
 		vkGetPhysicalDeviceProperties(physicalDevice, &properties);
-		std::cout << "physical device: " << properties.deviceName << std::endl;
 	}
 
 	void VeDevice::createLogicalDevice()
@@ -606,5 +595,3 @@ namespace lve
 			throw std::runtime_error("failed to bind image memory!");
 		}
 	}
-
-} // namespace lve
