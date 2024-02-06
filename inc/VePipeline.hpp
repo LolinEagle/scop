@@ -8,7 +8,6 @@ using namespace std;
 struct PipelineConfigInfo {
 	VkViewport								viewport;
 	VkRect2D								scissor;
-	VkPipelineViewportStateCreateInfo		viewportInfo;
 	VkPipelineInputAssemblyStateCreateInfo	inputAssemblyInfo;
 	VkPipelineRasterizationStateCreateInfo	rasterizationInfo;
 	VkPipelineMultisampleStateCreateInfo	multisampleInfo;
@@ -27,7 +26,7 @@ class VePipeline{
 		VkShaderModule	_vertShaderModule;
 		VkShaderModule	_fragShaderModule;
 
-		static vector<char> readFile(const string &filepath);
+		static vector<char>	readFile(const string &filepath);
 		void	createGraphicsPipeline(
 			const string &vertFilepath,
 			const string &fragFilepath,
@@ -43,5 +42,6 @@ class VePipeline{
 		);
 		~VePipeline();
 
+		void						bind(VkCommandBuffer commandBuffer);
 		static PipelineConfigInfo	defaultPipelineConfigInfo(uint32_t width, uint32_t height);
 };

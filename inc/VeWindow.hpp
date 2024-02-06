@@ -13,6 +13,7 @@ class VeWindow{
 		VeWindow(int width, int height);
 		~VeWindow();
 
-		void	createWindowSurface(VkInstance instance, VkSurfaceKHR *surface);
-		void	run(void);
+		VkExtent2D	getExtent(void);
+		bool		shouldClose(void);
+		void		createWindowSurface(VkInstance instance, VkSurfaceKHR *surface);
 };

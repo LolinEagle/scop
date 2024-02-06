@@ -1,5 +1,5 @@
 NAME		=	scop
-SRC			=	VeDevice.cpp VePipeline.cpp VeWindow.cpp main.cpp
+SRC			=	main.cpp MainClass.cpp VeDevice.cpp VePipeline.cpp VeSwapChain.cpp VeWindow.cpp
 
 # Commands
 CPP			=	c++
@@ -23,10 +23,13 @@ DEP			=	${addprefix ${OBJ_PATH},${SRC:.cpp=.d}}
 all:${NAME}
 
 clean:
-	${RM} ${OBJ_PATH}
+	${RM} ${OBJ_PATH} .vscode
 
-fclean:clean
-	${RM} ${NAME} ./shader/*.spv
+shaderclean:
+	${RM} ./shader/*.spv
+
+fclean:clean shaderclean
+	${RM} ${NAME} 
 
 re:fclean
 	make all
@@ -41,7 +44,7 @@ ${OBJ_PATH}%.o:${SRC_PATH}%.cpp
 ${OBJ_DIRS}:
 	mkdir ${OBJ_DIRS}
 
-${NAME}:${OBJ_DIRS} ${OBJ}
+${NAME}:${OBJ_DIRS} ${OBJ} shaderclean
 	${CPP} ${OBJ} ${LDFLAGS} -o $@
 	${GLSLC} ./shader/simpleShader.vert -o ./shader/simpleShader.vert.spv
 	${GLSLC} ./shader/simpleShader.frag -o ./shader/simpleShader.frag.spv

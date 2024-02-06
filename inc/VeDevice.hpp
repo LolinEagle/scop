@@ -2,24 +2,23 @@
 
 #include <VeWindow.hpp>
 
-	struct SwapChainSupportDetails
-	{
-		VkSurfaceCapabilitiesKHR capabilities;
-		std::vector<VkSurfaceFormatKHR> formats;
-		std::vector<VkPresentModeKHR> presentModes;
-	};
+using namespace std;
 
-	struct QueueFamilyIndices
-	{
-		uint32_t graphicsFamily;
-		uint32_t presentFamily;
-		bool graphicsFamilyHasValue = false;
-		bool presentFamilyHasValue = false;
-		bool isComplete() { return graphicsFamilyHasValue && presentFamilyHasValue; }
-	};
+struct SwapChainSupportDetails{
+	VkSurfaceCapabilitiesKHR capabilities;
+	vector<VkSurfaceFormatKHR> formats;
+	vector<VkPresentModeKHR> presentModes;
+};
 
-	class VeDevice
-	{
+struct QueueFamilyIndices{
+	uint32_t graphicsFamily;
+	uint32_t presentFamily;
+	bool graphicsFamilyHasValue = false;
+	bool presentFamilyHasValue = false;
+	bool isComplete() { return graphicsFamilyHasValue && presentFamilyHasValue; }
+};
+
+class VeDevice{
 	public:
 #ifdef NDEBUG
 		const bool enableValidationLayers = false;
@@ -46,7 +45,7 @@
 		uint32_t findMemoryType(uint32_t typeFilter, VkMemoryPropertyFlags properties);
 		QueueFamilyIndices findPhysicalQueueFamilies() { return findQueueFamilies(physicalDevice); }
 		VkFormat findSupportedFormat(
-			const std::vector<VkFormat> &candidates, VkImageTiling tiling, VkFormatFeatureFlags features);
+			const vector<VkFormat> &candidates, VkImageTiling tiling, VkFormatFeatureFlags features);
 
 		// Buffer Helper Functions
 		void createBuffer(
@@ -77,9 +76,9 @@
 		void createLogicalDevice();
 		void createCommandPool();
 
-		// helper functions
+		// Helper functions
 		bool isDeviceSuitable(VkPhysicalDevice device);
-		std::vector<const char *> getRequiredExtensions();
+		vector<const char *> getRequiredExtensions();
 		bool checkValidationLayerSupport();
 		QueueFamilyIndices findQueueFamilies(VkPhysicalDevice device);
 		void populateDebugMessengerCreateInfo(VkDebugUtilsMessengerCreateInfoEXT &createInfo);
@@ -98,6 +97,6 @@
 		VkQueue graphicsQueue_;
 		VkQueue presentQueue_;
 
-		const std::vector<const char *> validationLayers = {"VK_LAYER_KHRONOS_validation"};
-		const std::vector<const char *> deviceExtensions = {VK_KHR_SWAPCHAIN_EXTENSION_NAME};
-	};
+		const vector<const char*>	validationLayers = {"VK_LAYER_KHRONOS_validation"};
+		const vector<const char*>	deviceExtensions = {VK_KHR_SWAPCHAIN_EXTENSION_NAME};
+};
