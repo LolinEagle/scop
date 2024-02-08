@@ -4,14 +4,14 @@ using namespace std;
 
 void	VeWindow::initWindow(void){
 	if (!glfwInit())
-		throw (string("Failed to initialize GLFW"));
+		throw (runtime_error("Failed to initialize GLFW"));
 	if (!glfwVulkanSupported())
-		throw (string("Vulkan not supported"));
+		throw (runtime_error("Vulkan not supported"));
 	glfwWindowHint(GLFW_CLIENT_API, GLFW_NO_API);
 	glfwWindowHint(GLFW_RESIZABLE, GLFW_FALSE);
 	_window = glfwCreateWindow(_width, _height, TITLE, nullptr, nullptr);
 	if (!_window)
-		throw (string("Failed to create GLFW window"));
+		throw (runtime_error("Failed to create GLFW window"));
 }
 
 VeWindow::VeWindow(int width, int height) : _width(width), _height(height){

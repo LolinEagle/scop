@@ -60,7 +60,8 @@ void	MainClass::createCommandBuffers(void){
 		vkCmdBeginRenderPass(commandBuffers[i], &renderPassInfo, VK_SUBPASS_CONTENTS_INLINE);
 
 		vePipeline->bind(commandBuffers[i]);
-		vkCmdDraw(commandBuffers[i], 3, 1, 0, 0);
+		veModel->bind(commandBuffers[i]);
+		veModel->draw(commandBuffers[i]);
 
 		vkCmdEndRenderPass(commandBuffers[i]);
 		if (vkEndCommandBuffer(commandBuffers[i]) != VK_SUCCESS)
@@ -79,7 +80,37 @@ void	MainClass::drawFrame(void){
 		throw (runtime_error("failed to present swap chain image"));
 }
 
+void 	sierpinski(
+	vector<VeModel::Vertex> &vertices,
+	int						depth,
+	glm::vec2				top,
+	glm::vec2				left,
+	glm::vec2				right
+){
+	if (depth > 16)
+		throw (runtime_error("Too many depth"));
+	if (depth <= 0){
+		vertices.push_back({top});
+		vertices.push_back({right});
+		vertices.push_back({left});
+	} else {
+		auto	topLeft = (top + left) * 0.5f;
+		auto	leftRight = (left + right) * 0.5f;
+		auto	rightTop = (right + top) * 0.5f;
+		sierpinski(vertices, depth - 1, top, topLeft, rightTop);
+		sierpinski(vertices, depth - 1, topLeft, left, leftRight);
+		sierpinski(vertices, depth - 1, rightTop, leftRight, right);
+	}
+}
+
+void	MainClass::loadModels(void){
+	vector<VeModel::Vertex>	vertices{};
+	sierpinski(vertices, 8, {-1, 1}, {1, 1}, {0, -1});
+	veModel = make_unique<VeModel>(veDevice, vertices);
+}
+
 MainClass::MainClass(void){
+	loadModels();
 	createPipelineLayout();
 	createPipeline();
 	createCommandBuffers();

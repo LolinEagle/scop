@@ -1,6 +1,7 @@
 #pragma once
 
 #include <VeDevice.hpp>
+#include <VeModel.hpp>
 #include <VePipeline.hpp>
 #include <VeSwapChain.hpp>
 #include <VeWindow.hpp>
@@ -16,11 +17,13 @@ class MainClass{
 
 		VkPipelineLayout		pipelineLayout;
 		vector<VkCommandBuffer>	commandBuffers;
+		unique_ptr<VeModel>		veModel;
 
 		void	createPipelineLayout(void);
 		void	createPipeline(void);
 		void	createCommandBuffers(void);
 		void	drawFrame(void);
+		void	loadModels(void);
 	public:
 		MainClass(void);
 		~MainClass();

@@ -1,5 +1,5 @@
 NAME		=	scop
-SRC			=	main.cpp MainClass.cpp VeDevice.cpp VePipeline.cpp VeSwapChain.cpp VeWindow.cpp
+SRC			=	main.cpp MainClass.cpp VeDevice.cpp VeModel.cpp VePipeline.cpp VeSwapChain.cpp VeWindow.cpp
 
 # Commands
 CPP			=	c++
@@ -11,7 +11,7 @@ CPPFLAGS	=	-std=c++17 -O2 -MMD
 LDFLAGS		=	-lglfw -lvulkan -ldl -lpthread -lX11 -lXxf86vm -lXrandr -lXi
 
 # Path
-INC			=	-I ./inc/
+INC			=	-Iglm -Iinc
 SRC_PATH	=	./src/
 OBJ_PATH	=	./obj/
 

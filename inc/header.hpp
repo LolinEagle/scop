@@ -1,10 +1,15 @@
 #pragma once
 
-/* GLFW */
+// glfw3
 #define GLFW_INCLUDE_VULKAN
 #include <GLFW/glfw3.h>
 
-/* Include */
+// glm
+#define GLM_FORCE_RADIANS
+#define GLM_FORCE_DEPTH_ZERO_TO_ONE
+#include <glm.hpp>
+
+// Include
 #include <cstring>
 #include <fstream>
 #include <iostream>
@@ -12,13 +17,13 @@
 #include <memory>
 #include <stdexcept>
 
-/* Containers */
+// Containers
 #include <array>
 #include <set>
 #include <unordered_set>
 #include <vector>
 
-/* Define */
+// Define
 #define TITLE "scop"
 #define WIDTH 1600
 #define HEIGHT 900
