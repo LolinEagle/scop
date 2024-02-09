@@ -5,15 +5,16 @@
 
 using namespace std;
 
-struct PipelineConfigInfo {
-	VkViewport								viewport;
-	VkRect2D								scissor;
+struct PipelineConfigInfo{
+	VkPipelineViewportStateCreateInfo		viewportInfo;
 	VkPipelineInputAssemblyStateCreateInfo	inputAssemblyInfo;
 	VkPipelineRasterizationStateCreateInfo	rasterizationInfo;
 	VkPipelineMultisampleStateCreateInfo	multisampleInfo;
 	VkPipelineColorBlendAttachmentState		colorBlendAttachment;
 	VkPipelineColorBlendStateCreateInfo		colorBlendInfo;
 	VkPipelineDepthStencilStateCreateInfo	depthStencilInfo;
+	vector<VkDynamicState>					dynamicStateEnables;
+	VkPipelineDynamicStateCreateInfo		dynamicStateInfo;
 	VkPipelineLayout						pipelineLayout = nullptr;
 	VkRenderPass							renderPass = nullptr;
 	uint32_t								subpass = 0;
@@ -42,6 +43,6 @@ class VePipeline{
 		);
 		~VePipeline();
 
-		void						bind(VkCommandBuffer commandBuffer);
-		static PipelineConfigInfo	defaultPipelineConfigInfo(uint32_t width, uint32_t height);
+		void		bind(VkCommandBuffer commandBuffer);
+		static void	defaultPipelineConfigInfo(PipelineConfigInfo &configInfo);
 };
