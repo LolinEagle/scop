@@ -104,8 +104,12 @@ void 	sierpinski(
 }
 
 void	MainClass::loadModels(void){
-	vector<VeModel::Vertex>	vertices{};
-	sierpinski(vertices, 8, {-1, 1}, {1, 1}, {0, -1});
+	vector<VeModel::Vertex>	vertices{
+		{{-1,  1}, {1, 0, 0}},	// Left
+		{{ 1,  1}, {0, 1, 0}},	// Right
+		{{ 0, -1}, {0, 0, 1}}	// Top
+	};
+
 	veModel = make_unique<VeModel>(veDevice, vertices);
 }
 

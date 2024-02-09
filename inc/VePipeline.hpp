@@ -1,6 +1,5 @@
 #pragma once
 
-#include <header.hpp>
 #include <VeDevice.hpp>
 #include <VeModel.hpp>
 

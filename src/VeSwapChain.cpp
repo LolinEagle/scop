@@ -350,13 +350,10 @@ void	VeSwapChain::createSyncObjects(){
 
 VkSurfaceFormatKHR VeSwapChain::chooseSwapSurfaceFormat(const vector<VkSurfaceFormatKHR> &availableFormats){
 	for (const auto &availableFormat : availableFormats){
-		if (availableFormat.format == VK_FORMAT_B8G8R8A8_UNORM &&
-				availableFormat.colorSpace == VK_COLOR_SPACE_SRGB_NONLINEAR_KHR){
-			return availableFormat;
-		}
+		if (availableFormat.format == VK_FORMAT_B8G8R8A8_SRGB && availableFormat.colorSpace == VK_COLOR_SPACE_SRGB_NONLINEAR_KHR)
+			return (availableFormat);
 	}
-
-	return availableFormats[0];
+	return (availableFormats[0]);
 }
 
 VkPresentModeKHR VeSwapChain::chooseSwapPresentMode(const vector<VkPresentModeKHR> &availablePresentModes){
@@ -366,14 +363,12 @@ VkPresentModeKHR VeSwapChain::chooseSwapPresentMode(const vector<VkPresentModeKH
 			return (availablePresentMode);
 		}
 	}
-
-	// for (const auto &availablePresentMode : availablePresentModes){
-	// 	if (availablePresentMode == VK_PRESENT_MODE_IMMEDIATE_KHR){
-	// 		cout << "Present mode: Immediate" << endl;
-	// 		return (availablePresentMode);
-	// 	}
-	// }
-
+	/* for (const auto &availablePresentMode : availablePresentModes){
+		if (availablePresentMode == VK_PRESENT_MODE_IMMEDIATE_KHR){
+			cout << "Present mode: Immediate" << endl;
+			return (availablePresentMode);
+		}
+	}*/
 	cout << "Present mode: V-Sync" << endl;
 	return (VK_PRESENT_MODE_FIFO_KHR);
 }
