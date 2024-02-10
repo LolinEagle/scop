@@ -28,6 +28,8 @@ class VePipeline{
 		VkShaderModule	_fragShaderModule;
 
 		static vector<char>	readFile(const string &filepath);
+
+		// Create function
 		void	createGraphicsPipeline(
 			const string &vertFilepath,
 			const string &fragFilepath,

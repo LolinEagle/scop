@@ -1,5 +1,11 @@
 NAME		=	scop
-SRC			=	main.cpp MainClass.cpp VeDevice.cpp VeModel.cpp VePipeline.cpp VeSwapChain.cpp VeWindow.cpp
+SRC			=	main.cpp\
+				MainClass.cpp\
+				VeDevice.cpp\
+				VeModel.cpp\
+				VePipeline.cpp\
+				VeSwapChain.cpp\
+				VeWindow.cpp
 
 # Commands
 CPP			=	c++
@@ -49,6 +55,6 @@ ${NAME}:${OBJ_DIRS} ${OBJ} shaderclean
 	${GLSLC} ./shader/simpleShader.vert -o ./shader/simpleShader.vert.spv
 	${GLSLC} ./shader/simpleShader.frag -o ./shader/simpleShader.frag.spv
 
-.PHONY:all clean fclean re run
+.PHONY:all clean shaderclean fclean re run
 
 -include ${DEP}

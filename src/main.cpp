@@ -7,7 +7,7 @@ int	main(void){
 
 	try {
 		mainClass.run();
-	} catch(const exception& e) {
+	} catch(const exception& e){
 		cerr << e.what() << '\n';
 		return (1);
 	}

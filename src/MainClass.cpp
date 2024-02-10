@@ -9,7 +9,8 @@ void	MainClass::createPipelineLayout(void){
 	pipelineLayoutInfo.pSetLayouts = nullptr;
 	pipelineLayoutInfo.pushConstantRangeCount = 0;
 	pipelineLayoutInfo.pPushConstantRanges = nullptr;
-	if (vkCreatePipelineLayout(veDevice.device(), &pipelineLayoutInfo, nullptr, &pipelineLayout) != VK_SUCCESS)
+	if (vkCreatePipelineLayout(veDevice.device(), &pipelineLayoutInfo, nullptr, &pipelineLayout) !=
+	VK_SUCCESS)
 		throw (runtime_error("failed to create pipeline layout"));
 }
 
@@ -36,7 +37,8 @@ void	MainClass::createCommandBuffers(void){
 	allocInfo.commandPool = veDevice.getCommandPool();
 	allocInfo.commandBufferCount = static_cast<uint32_t>(commandBuffers.size());
 
-	if (vkAllocateCommandBuffers(veDevice.device(), &allocInfo, commandBuffers.data()) != VK_SUCCESS)
+	if (vkAllocateCommandBuffers(veDevice.device(), &allocInfo, commandBuffers.data()) !=
+	VK_SUCCESS)
 		throw (runtime_error("failed to allocate command buffers"));
 }
 
@@ -125,7 +127,10 @@ void	MainClass::drawFrame(void){
 		throw (runtime_error("failed to acquire swap chain image"));
 	recordCommandBuffers(imageIndex);
 	result = veSwapChain->submitCommandBuffers(&commandBuffers[imageIndex], &imageIndex);
-	if (result == VK_ERROR_OUT_OF_DATE_KHR || result == VK_SUBOPTIMAL_KHR || veWindow.wasWindowResized()){
+	if (result == VK_ERROR_OUT_OF_DATE_KHR ||
+		result == VK_SUBOPTIMAL_KHR ||
+		veWindow.wasWindowResized()
+	){
 		veWindow.resetWindowResizedFlag();
 		recreateSwapChain();
 		return ;

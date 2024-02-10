@@ -3,7 +3,7 @@
 using namespace std;
 
 vector<VkVertexInputBindingDescription>		VeModel::Vertex::getBindingDescriptions(void){
-	vector<VkVertexInputBindingDescription> 	bindingDescription(1);
+	vector<VkVertexInputBindingDescription>		bindingDescription(1);
 
 	bindingDescription[0].binding = 0;
 	bindingDescription[0].stride = sizeof(Vertex);
@@ -12,18 +12,16 @@ vector<VkVertexInputBindingDescription>		VeModel::Vertex::getBindingDescriptions
 }
 
 vector<VkVertexInputAttributeDescription>	VeModel::Vertex::getAttributeDescriptions(void){
-	vector<VkVertexInputAttributeDescription>   attributeDescription(2);
+	vector<VkVertexInputAttributeDescription>	attributeDescription(2);
 
 	attributeDescription[0].binding = 0;
 	attributeDescription[0].location = 0;
 	attributeDescription[0].format = VK_FORMAT_R32G32_SFLOAT;
 	attributeDescription[0].offset = offsetof(Vertex, position);
-
 	attributeDescription[1].binding = 0;
 	attributeDescription[1].location = 1;
 	attributeDescription[1].format = VK_FORMAT_R32G32B32_SFLOAT;
 	attributeDescription[1].offset = offsetof(Vertex, color);
-
 	return (attributeDescription);
 }
 
@@ -32,8 +30,8 @@ void	VeModel::createVertexBuffers(const vector<Vertex> &vertices){
 	if (_vertexCount < 3)
 		throw (runtime_error("Vertex count must be at least 3"));
 	
-	VkDeviceSize    bufferSize = sizeof(vertices[0]) * _vertexCount;
-	void            *data;
+	VkDeviceSize	bufferSize = sizeof(vertices[0]) * _vertexCount;
+	void			*data;
 
 	_veDevice.createBuffer(
 		bufferSize,
@@ -57,8 +55,8 @@ VeModel::~VeModel(){
 }
 
 void	VeModel::bind(VkCommandBuffer commandBuffer){
-	VkBuffer        buffers[] = {_vertexBuffer};
-	VkDeviceSize    offsets[] = {0};
+	VkBuffer		buffers[] = {_vertexBuffer};
+	VkDeviceSize	offsets[] = {0};
 
 	vkCmdBindVertexBuffers(commandBuffer, 0, 1, buffers, offsets);
 }

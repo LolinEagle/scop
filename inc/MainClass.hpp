@@ -14,7 +14,6 @@ class MainClass{
 		VeDevice				veDevice{veWindow};
 		unique_ptr<VeSwapChain>	veSwapChain;
 		unique_ptr<VePipeline>	vePipeline;
-
 		VkPipelineLayout		pipelineLayout;
 		vector<VkCommandBuffer>	commandBuffers;
 		unique_ptr<VeModel>		veModel;
