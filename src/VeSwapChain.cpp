@@ -245,17 +245,17 @@ void	VeSwapChain::createSyncObjects(void){
 	}
 }
 
-VkSurfaceFormatKHR	VeSwapChain::chooseSwapSurfaceFormat(const vector<VkSurfaceFormatKHR> &availableFormats){
-	for (const auto &availableFormat : availableFormats) {
+VkSurfaceFormatKHR	VeSwapChain::chooseSwapSurfaceFormat(const vector<VkSurfaceFormatKHR> &format){
+	for (const auto &availableFormat : format) {
 		if (availableFormat.format == VK_FORMAT_B8G8R8A8_SRGB &&
 				availableFormat.colorSpace == VK_COLOR_SPACE_SRGB_NONLINEAR_KHR) {
 			return availableFormat;
 		}
 	}
-	return (availableFormats[0]);
+	return (format[0]);
 }
 
-VkPresentModeKHR	VeSwapChain::chooseSwapPresentMode(const vector<VkPresentModeKHR> &availablePresentModes){
+VkPresentModeKHR	VeSwapChain::chooseSwapPresentMode(const vector<VkPresentModeKHR> &present){
 	// Present mode: Mailbox
 	const auto	&presentMode = VK_PRESENT_MODE_MAILBOX_KHR;
 
@@ -263,7 +263,7 @@ VkPresentModeKHR	VeSwapChain::chooseSwapPresentMode(const vector<VkPresentModeKH
 	// const auto	&presentMode = VK_PRESENT_MODE_IMMEDIATE_KHR;
 
 	// Find if present mode is available
-	for (const auto	&availablePresentMode : availablePresentModes){
+	for (const auto	&availablePresentMode : present){
 		if (availablePresentMode == presentMode)
 			return (availablePresentMode);
 	}
@@ -287,11 +287,13 @@ VkExtent2D			VeSwapChain::chooseSwapExtent(const VkSurfaceCapabilitiesKHR &capab
 	}
 }
 
-VeSwapChain::VeSwapChain(VeDevice &deviceRef, VkExtent2D extent) : device(deviceRef), windowExtent(extent){
+VeSwapChain::VeSwapChain(VeDevice &deviceRef, VkExtent2D extent)
+: device(deviceRef), windowExtent(extent){
 	init();
 }
 
-VeSwapChain::VeSwapChain(VeDevice &deviceRef, VkExtent2D extent, shared_ptr<VeSwapChain> previous) : device(deviceRef), windowExtent(extent), oldSwapChain(previous){
+VeSwapChain::VeSwapChain(VeDevice &deviceRef, VkExtent2D extent, shared_ptr<VeSwapChain> previous)
+: device(deviceRef), windowExtent(extent), oldSwapChain(previous){
 	init();
 	oldSwapChain = nullptr;
 }
@@ -388,10 +390,10 @@ VkResult		VeSwapChain::acquireNextImage(uint32_t *imageIndex){
 	return (result);
 }
 
-VkResult 		VeSwapChain::submitCommandBuffers(const VkCommandBuffer *buffers, uint32_t *imageIndex){
-	if (imagesInFlight[*imageIndex] != VK_NULL_HANDLE) 
-		vkWaitForFences(device.device(), 1, &imagesInFlight[*imageIndex], VK_TRUE, UINT64_MAX);
-	imagesInFlight[*imageIndex] = inFlightFences[currentFrame];
+VkResult		VeSwapChain::submitCommandBuffers(const VkCommandBuffer *buffers, uint32_t *image){
+	if (imagesInFlight[*image] != VK_NULL_HANDLE) 
+		vkWaitForFences(device.device(), 1, &imagesInFlight[*image], VK_TRUE, UINT64_MAX);
+	imagesInFlight[*image] = inFlightFences[currentFrame];
 
 	VkSubmitInfo	submitInfo = {};
 	submitInfo.sType = VK_STRUCTURE_TYPE_SUBMIT_INFO;
@@ -423,7 +425,7 @@ VkResult 		VeSwapChain::submitCommandBuffers(const VkCommandBuffer *buffers, uin
 	presentInfo.swapchainCount = 1;
 	presentInfo.pSwapchains = swapChains;
 
-	presentInfo.pImageIndices = imageIndex;
+	presentInfo.pImageIndices = image;
 
 	auto	result = vkQueuePresentKHR(device.presentQueue(), &presentInfo);
 

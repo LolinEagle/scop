@@ -10,13 +10,13 @@ using namespace std;
 
 class MainClass{
 	private:
-		VeWindow				veWindow{WIDTH, HEIGHT};
-		VeDevice				veDevice{veWindow};
-		unique_ptr<VeSwapChain>	veSwapChain;
-		unique_ptr<VePipeline>	vePipeline;
-		VkPipelineLayout		pipelineLayout;
-		vector<VkCommandBuffer>	commandBuffers;
-		unique_ptr<VeModel>		veModel;
+		VeWindow				_veWindow{WIDTH, HEIGHT};
+		VeDevice				_veDevice{_veWindow};
+		unique_ptr<VeSwapChain>	_veSwapChain;
+		unique_ptr<VePipeline>	_vePipeline;
+		VkPipelineLayout		_pipelineLayout;
+		vector<VkCommandBuffer>	_commandBuffers;
+		unique_ptr<VeModel>		_veModel;
 
 		void	createPipelineLayout(void);
 		void	createPipeline(void);

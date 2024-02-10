@@ -240,11 +240,13 @@ void					VeDevice::populateDebugMessengerCreateInfo(
 ){
 	createInfo = {};
 	createInfo.sType = VK_STRUCTURE_TYPE_DEBUG_UTILS_MESSENGER_CREATE_INFO_EXT;
-	createInfo.messageSeverity = VK_DEBUG_UTILS_MESSAGE_SEVERITY_WARNING_BIT_EXT |
-									VK_DEBUG_UTILS_MESSAGE_SEVERITY_ERROR_BIT_EXT;
-	createInfo.messageType = VK_DEBUG_UTILS_MESSAGE_TYPE_GENERAL_BIT_EXT |
-								VK_DEBUG_UTILS_MESSAGE_TYPE_VALIDATION_BIT_EXT |
-								VK_DEBUG_UTILS_MESSAGE_TYPE_PERFORMANCE_BIT_EXT;
+	createInfo.messageSeverity =
+		VK_DEBUG_UTILS_MESSAGE_SEVERITY_WARNING_BIT_EXT |
+		VK_DEBUG_UTILS_MESSAGE_SEVERITY_ERROR_BIT_EXT;
+	createInfo.messageType =
+		VK_DEBUG_UTILS_MESSAGE_TYPE_GENERAL_BIT_EXT |
+		VK_DEBUG_UTILS_MESSAGE_TYPE_VALIDATION_BIT_EXT |
+		VK_DEBUG_UTILS_MESSAGE_TYPE_PERFORMANCE_BIT_EXT;
 	createInfo.pfnUserCallback = debugCallback;
 }
 
@@ -367,10 +369,7 @@ SwapChainSupportDetails	VeDevice::getSwapChainSupport(void){
 	return (querySwapChainSupport(physicalDevice));
 }
 
-uint32_t				VeDevice::findMemoryType(
-	uint32_t typeFilter,
-	VkMemoryPropertyFlags properties
-){
+uint32_t			VeDevice::findMemoryType(uint32_t typeFilter, VkMemoryPropertyFlags properties){
 	VkPhysicalDeviceMemoryProperties	memProperties;
 	vkGetPhysicalDeviceMemoryProperties(physicalDevice, &memProperties);
 
@@ -381,11 +380,11 @@ uint32_t				VeDevice::findMemoryType(
 	throw (runtime_error("failed to find suitable memory type!"));
 }
 
-QueueFamilyIndices		VeDevice::findPhysicalQueueFamilies(void){
+QueueFamilyIndices	VeDevice::findPhysicalQueueFamilies(void){
 	return (findQueueFamilies(physicalDevice));
 }
 
-VkFormat				VeDevice::findSupportedFormat(
+VkFormat			VeDevice::findSupportedFormat(
 	const vector<VkFormat> &candidates,
 	VkImageTiling tiling,
 	VkFormatFeatureFlags features

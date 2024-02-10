@@ -65,12 +65,11 @@ class VeDevice{
 		VkQueue			presentQueue(void);
 
 		SwapChainSupportDetails	getSwapChainSupport(void);
-		uint32_t				findMemoryType(
-			uint32_t typeFilter,
-			VkMemoryPropertyFlags properties
-		);
-		QueueFamilyIndices		findPhysicalQueueFamilies(void);
-		VkFormat				findSupportedFormat(
+
+		// Find
+		uint32_t			findMemoryType(uint32_t typeFilter, VkMemoryPropertyFlags properties);
+		QueueFamilyIndices	findPhysicalQueueFamilies(void);
+		VkFormat			findSupportedFormat(
 			const vector<VkFormat> &candidates,
 			VkImageTiling tiling,
 			VkFormatFeatureFlags features

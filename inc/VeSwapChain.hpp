@@ -34,8 +34,8 @@ class VeSwapChain{
 		void	createSyncObjects(void);
 
 		// Helper functions
-		VkSurfaceFormatKHR	chooseSwapSurfaceFormat(const vector<VkSurfaceFormatKHR> &availableFormats);
-		VkPresentModeKHR	chooseSwapPresentMode(const vector<VkPresentModeKHR> &availablePresentModes);
+		VkSurfaceFormatKHR	chooseSwapSurfaceFormat(const vector<VkSurfaceFormatKHR> &format);
+		VkPresentModeKHR	chooseSwapPresentMode(const vector<VkPresentModeKHR> &present);
 		VkExtent2D			chooseSwapExtent(const VkSurfaceCapabilitiesKHR &capabilities);
 	public:
 		static constexpr int MAX_FRAMES_IN_FLIGHT = 2;
@@ -55,5 +55,5 @@ class VeSwapChain{
 		float			extentAspectRatio(void);
 		VkFormat		findDepthFormat(void);
 		VkResult		acquireNextImage(uint32_t *imageIndex);
-		VkResult 		submitCommandBuffers(const VkCommandBuffer *buffers, uint32_t *imageIndex);
+		VkResult		submitCommandBuffers(const VkCommandBuffer *buffers, uint32_t *image);
 };
