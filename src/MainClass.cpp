@@ -3,12 +3,17 @@
 using namespace std;
 
 void	MainClass::createPipelineLayout(void){
+	VkPushConstantRange	pushConstantRange{};
+	pushConstantRange.stageFlags = VK_SHADER_STAGE_VERTEX_BIT | VK_SHADER_STAGE_FRAGMENT_BIT;
+	pushConstantRange.offset = 0;
+	pushConstantRange.size = sizeof(PushConstantData);
+
 	VkPipelineLayoutCreateInfo	pipelineLayoutInfo{};
 	pipelineLayoutInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_LAYOUT_CREATE_INFO;
 	pipelineLayoutInfo.setLayoutCount = 0;
 	pipelineLayoutInfo.pSetLayouts = nullptr;
-	pipelineLayoutInfo.pushConstantRangeCount = 0;
-	pipelineLayoutInfo.pPushConstantRanges = nullptr;
+	pipelineLayoutInfo.pushConstantRangeCount = 1;
+	pipelineLayoutInfo.pPushConstantRanges = &pushConstantRange;
 	if (vkCreatePipelineLayout(_veDevice.device(), &pipelineLayoutInfo, nullptr, &_pipelineLayout)
 	!= VK_SUCCESS)
 		throw (runtime_error("failed to create pipeline layout"));
@@ -78,7 +83,7 @@ void	MainClass::recordCommandBuffers(int imageIndex){
 	renderPassInfo.renderArea.extent = _veSwapChain->getSwapChainExtent();
 
 	array<VkClearValue, 2>	clearValues{};
-	clearValues[0].color = {0.1f, 0.1f, 0.1f, 1.0f};
+	clearValues[0].color = {0.01, 0.01, 0.01, 1};
 	clearValues[1].depthStencil = {1.0f, 0};
 	renderPassInfo.clearValueCount = static_cast<uint32_t>(clearValues.size());
 	renderPassInfo.pClearValues = clearValues.data();
@@ -98,8 +103,20 @@ void	MainClass::recordCommandBuffers(int imageIndex){
 
 	_vePipeline->bind(_commandBuffers[imageIndex]);
 	_veModel->bind(_commandBuffers[imageIndex]);
-	_veModel->draw(_commandBuffers[imageIndex]);
-
+	for (int i = 0; i < 4; i++){
+		PushConstantData	push{};
+		push.offset = {0, -0.3 + (i * 0.2)};
+		push.color = {0, 0.5 - (i * 0.1), 0};
+		vkCmdPushConstants(
+			_commandBuffers[imageIndex],
+			_pipelineLayout,
+			VK_SHADER_STAGE_VERTEX_BIT | VK_SHADER_STAGE_FRAGMENT_BIT,
+			0,
+			sizeof(PushConstantData),
+			&push
+		);
+		_veModel->draw(_commandBuffers[imageIndex]);
+	}
 	vkCmdEndRenderPass(_commandBuffers[imageIndex]);
 	if (vkEndCommandBuffer(_commandBuffers[imageIndex]) != VK_SUCCESS)
 		throw (runtime_error("failed to record command buffer"));
@@ -141,9 +158,9 @@ void	MainClass::drawFrame(void){
 
 void	MainClass::loadModels(void){
 	vector<VeModel::Vertex>	vertices{
-		{{-1,  1}, {1, 0, 0}},	// Left
-		{{ 1,  1}, {0, 1, 0}},	// Right
-		{{ 0, -1}, {0, 0, 1}}	// Top
+		{{-0.6,  0.6}, {1, 0, 0}},	// Left
+		{{ 0.6,  0.6}, {0, 1, 0}},	// Right
+		{{ 0.0, -0.6}, {0, 0, 1}}	// Top
 	};
 
 	_veModel = make_unique<VeModel>(_veDevice, vertices);

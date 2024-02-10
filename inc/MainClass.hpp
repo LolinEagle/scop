@@ -8,6 +8,11 @@
 
 using namespace std;
 
+struct PushConstantData{
+	glm::vec2				offset;
+	alignas(16) glm::vec3	color;
+};
+
 class MainClass{
 	private:
 		VeWindow				_veWindow{WIDTH, HEIGHT};
