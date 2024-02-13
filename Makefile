@@ -2,6 +2,7 @@ NAME		=	scop
 SRC			=	main.cpp\
 				MainClass.cpp\
 				VeDevice.cpp\
+				VeGameObject.cpp\
 				VeModel.cpp\
 				VePipeline.cpp\
 				VeSwapChain.cpp\

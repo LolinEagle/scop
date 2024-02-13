@@ -1,6 +1,7 @@
 #pragma once
 
 #include <VeDevice.hpp>
+#include <VeGameObject.hpp>
 #include <VeModel.hpp>
 #include <VePipeline.hpp>
 #include <VeSwapChain.hpp>
@@ -9,6 +10,7 @@
 using namespace std;
 
 struct PushConstantData{
+	glm::mat2				transform{1.f};
 	glm::vec2				offset;
 	alignas(16) glm::vec3	color;
 };
@@ -21,16 +23,17 @@ class MainClass{
 		unique_ptr<VePipeline>	_vePipeline;
 		VkPipelineLayout		_pipelineLayout;
 		vector<VkCommandBuffer>	_commandBuffers;
-		unique_ptr<VeModel>		_veModel;
+		vector<VeGameObject>	_gameObjects;
 
 		void	createPipelineLayout(void);
 		void	createPipeline(void);
 		void	createCommandBuffers(void);
 		void	freeCommandBuffers(void);
 		void	drawFrame(void);
-		void	loadModels(void);
+		void	loadGameObjects(void);
 		void	recreateSwapChain(void);
 		void	recordCommandBuffers(int imageIndex);
+		void	renderGameObjects(VkCommandBuffer commandBuffer);
 	public:
 		MainClass(void);
 		~MainClass();

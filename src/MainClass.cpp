@@ -100,23 +100,7 @@ void	MainClass::recordCommandBuffers(int imageIndex){
 	VkRect2D scissor{{0, 0}, _veSwapChain->getSwapChainExtent()};
 	vkCmdSetViewport(_commandBuffers[imageIndex], 0, 1, &viewport);
 	vkCmdSetScissor(_commandBuffers[imageIndex], 0, 1, &scissor);
-
-	_vePipeline->bind(_commandBuffers[imageIndex]);
-	_veModel->bind(_commandBuffers[imageIndex]);
-	for (int i = 0; i < 4; i++){
-		PushConstantData	push{};
-		push.offset = {0, -0.3 + (i * 0.2)};
-		push.color = {0, 0.5 - (i * 0.1), 0};
-		vkCmdPushConstants(
-			_commandBuffers[imageIndex],
-			_pipelineLayout,
-			VK_SHADER_STAGE_VERTEX_BIT | VK_SHADER_STAGE_FRAGMENT_BIT,
-			0,
-			sizeof(PushConstantData),
-			&push
-		);
-		_veModel->draw(_commandBuffers[imageIndex]);
-	}
+	renderGameObjects(_commandBuffers[imageIndex]);
 	vkCmdEndRenderPass(_commandBuffers[imageIndex]);
 	if (vkEndCommandBuffer(_commandBuffers[imageIndex]) != VK_SUCCESS)
 		throw (runtime_error("failed to record command buffer"));
@@ -156,18 +140,26 @@ void	MainClass::drawFrame(void){
 		throw (runtime_error("failed to present swap chain image"));
 }
 
-void	MainClass::loadModels(void){
+void	MainClass::loadGameObjects(void){
 	vector<VeModel::Vertex>	vertices{
 		{{-0.6,  0.6}, {1, 0, 0}},	// Left
 		{{ 0.6,  0.6}, {0, 1, 0}},	// Right
 		{{ 0.0, -0.6}, {0, 0, 1}}	// Top
 	};
 
-	_veModel = make_unique<VeModel>(_veDevice, vertices);
+	auto	veModel = make_shared<VeModel>(_veDevice, vertices);
+	auto	triangle = VeGameObject::createGameObject();
+	triangle._model = veModel;
+	triangle._color = {.1f, .1f, .1f};
+	triangle._transform2d.translation.x = .4f;
+	triangle._transform2d.scale = {2.f, .5f};
+	triangle._transform2d.rotation = .25f * glm::two_pi<float>();
+
+	_gameObjects.push_back(move(triangle));
 }
 
 MainClass::MainClass(void){
-	loadModels();
+	loadGameObjects();
 	createPipelineLayout();
 	recreateSwapChain();
 	createCommandBuffers();
@@ -183,4 +175,26 @@ void	MainClass::run(void){
 		drawFrame();
 	}
 	vkDeviceWaitIdle(_veDevice.device());
+}
+
+void	MainClass::renderGameObjects(VkCommandBuffer commandBuffer){
+	_vePipeline->bind(commandBuffer);
+	for (auto &obj: _gameObjects){
+		obj._transform2d.rotation = glm::mod(obj._transform2d.rotation + 0.001f, glm::two_pi<float>());
+
+		PushConstantData	push{};
+		push.offset = obj._transform2d.translation;
+		push.color = obj._color;
+		push.transform = obj._transform2d.mat2();
+		vkCmdPushConstants(
+			commandBuffer,
+			_pipelineLayout,
+			VK_SHADER_STAGE_VERTEX_BIT | VK_SHADER_STAGE_FRAGMENT_BIT,
+			0,
+			sizeof(PushConstantData),
+			&push
+		);
+		obj._model->bind(commandBuffer);
+		obj._model->draw(commandBuffer);
+	}
 }
