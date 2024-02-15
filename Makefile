@@ -1,10 +1,12 @@
 NAME		=	scop
 SRC			=	main.cpp\
 				MainClass.cpp\
+				SimpleRenderSystem.cpp\
 				VeDevice.cpp\
 				VeGameObject.cpp\
 				VeModel.cpp\
 				VePipeline.cpp\
+				VeRenderer.cpp\
 				VeSwapChain.cpp\
 				VeWindow.cpp
 
@@ -14,7 +16,7 @@ RM			=	rm -rf
 GLSLC		=	./shader/glslc
 
 # Flags
-CPPFLAGS	=	-std=c++17 -O2 -MMD
+CPPFLAGS	=	-std=c++17 -g3 -MMD
 LDFLAGS		=	-lglfw -lvulkan -ldl -lpthread -lX11 -lXxf86vm -lXrandr -lXi
 
 # Path

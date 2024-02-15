@@ -7,6 +7,7 @@ using namespace std;
 class VeSwapChain{
 	private:
 		VkFormat				swapChainImageFormat;
+		VkFormat				swapChainDepthFormat;
 		VkExtent2D				swapChainExtent;
 		vector<VkFramebuffer>	swapChainFramebuffers;
 		VkRenderPass			renderPass;
@@ -56,4 +57,5 @@ class VeSwapChain{
 		VkFormat		findDepthFormat(void);
 		VkResult		acquireNextImage(uint32_t *imageIndex);
 		VkResult		submitCommandBuffers(const VkCommandBuffer *buffers, uint32_t *image);
+		bool			compareSwapFormate(const VeSwapChain &swapChain) const;
 };
