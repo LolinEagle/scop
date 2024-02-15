@@ -31,7 +31,8 @@ void	SimpleRenderSystem::createPipeline(VkRenderPass renderPass){
 	);
 }
 
-SimpleRenderSystem::SimpleRenderSystem(VeDevice &veDevice, VkRenderPass renderPass) : _veDevice(veDevice){
+SimpleRenderSystem::SimpleRenderSystem(VeDevice &veDevice, VkRenderPass renderPass)
+: _veDevice(veDevice){
 	createPipelineLayout();
 	createPipeline(renderPass);
 }
@@ -45,13 +46,12 @@ void	SimpleRenderSystem::renderGameObjects(
 ){
 	_vePipeline->bind(commandBuffer);
 	for (auto &obj: gameObjects){
-		obj._transform2d.rotation =
-			glm::mod(obj._transform2d.rotation + 0.001f, glm::two_pi<float>());
+		obj._transform.rotation.x = glm::mod(obj._transform.rotation.x + 0.0005f, TWO_PI);
+		obj._transform.rotation.y = glm::mod(obj._transform.rotation.y + 0.0005f, TWO_PI);
 
 		PushConstantData	push{};
-		push.offset = obj._transform2d.translation;
 		push.color = obj._color;
-		push.transform = obj._transform2d.mat2();
+		push.transform = obj._transform.mat4();
 		vkCmdPushConstants(
 			commandBuffer,
 			_pipelineLayout,

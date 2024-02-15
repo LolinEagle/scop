@@ -7,7 +7,7 @@ using namespace std;
 class VeModel{
 	public:
 		struct Vertex{
-			glm::vec2	position;
+			glm::vec3	position;
 			glm::vec3	color;
 
 			static vector<VkVertexInputBindingDescription>		getBindingDescriptions(void);

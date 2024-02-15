@@ -9,6 +9,7 @@
 #define GLM_FORCE_DEPTH_ZERO_TO_ONE
 #include <glm.hpp>
 #include "../glm/gtc/constants.hpp"
+#include "../glm/gtc/matrix_transform.hpp"
 
 // Include
 #include <cstring>
@@ -28,3 +29,4 @@
 #define TITLE "scop"
 #define WIDTH 1600
 #define HEIGHT 900
+#define TWO_PI glm::two_pi<float>()
