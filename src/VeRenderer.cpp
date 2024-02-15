@@ -137,6 +137,10 @@ VkRenderPass	VeRenderer::getSwapchainRenderPass(void) const {
 	return (_veSwapChain->getRenderPass());
 }
 
+float			VeRenderer::getAspectRatio(void) const {
+	return (_veSwapChain->extentAspectRatio());
+}
+
 bool			VeRenderer::isFrameInProgress(void) const {
 	return (_isFrameStarted);
 }

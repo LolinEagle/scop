@@ -1,5 +1,6 @@
 #pragma once
 
+#include <VeCamera.hpp>
 #include <VeDevice.hpp>
 #include <VeGameObject.hpp>
 #include <VePipeline.hpp>
@@ -24,6 +25,6 @@ class SimpleRenderSystem{
 		~SimpleRenderSystem();
 
 		void	renderGameObjects(
-			VkCommandBuffer commandBuffer, vector<VeGameObject> &gameObjects
+			VkCommandBuffer commandBuffer, vector<VeGameObject> &gameObjects, const VeCamera &camera
 		);
 };

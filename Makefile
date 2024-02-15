@@ -2,6 +2,7 @@ NAME		=	scop
 SRC			=	main.cpp\
 				MainClass.cpp\
 				SimpleRenderSystem.cpp\
+				VeCamera.cpp\
 				VeDevice.cpp\
 				VeGameObject.cpp\
 				VeModel.cpp\

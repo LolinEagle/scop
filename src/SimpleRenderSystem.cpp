@@ -42,7 +42,7 @@ SimpleRenderSystem::~SimpleRenderSystem(){
 }
 
 void	SimpleRenderSystem::renderGameObjects(
-	VkCommandBuffer commandBuffer, vector<VeGameObject> &gameObjects
+	VkCommandBuffer commandBuffer, vector<VeGameObject> &gameObjects, const VeCamera &camera
 ){
 	_vePipeline->bind(commandBuffer);
 	for (auto &obj: gameObjects){
@@ -51,7 +51,7 @@ void	SimpleRenderSystem::renderGameObjects(
 
 		PushConstantData	push{};
 		push.color = obj._color;
-		push.transform = obj._transform.mat4();
+		push.transform = camera.getProjection() * obj._transform.mat4();
 		vkCmdPushConstants(
 			commandBuffer,
 			_pipelineLayout,
@@ -64,4 +64,3 @@ void	SimpleRenderSystem::renderGameObjects(
 		obj._model->draw(commandBuffer);
 	}
 }
-
