@@ -44,14 +44,16 @@ SimpleRenderSystem::~SimpleRenderSystem(){
 void	SimpleRenderSystem::renderGameObjects(
 	VkCommandBuffer commandBuffer, vector<VeGameObject> &gameObjects, const VeCamera &camera
 ){
+	auto	projectionView = camera.getProjection() * camera.getView();
+
 	_vePipeline->bind(commandBuffer);
 	for (auto &obj: gameObjects){
-		obj._transform.rotation.x = glm::mod(obj._transform.rotation.x + 0.0005f, TWO_PI);
-		obj._transform.rotation.y = glm::mod(obj._transform.rotation.y + 0.0005f, TWO_PI);
+		// obj._transform.rotation.x = glm::mod(obj._transform.rotation.x + 0.0005f, TWO_PI);
+		// obj._transform.rotation.y = glm::mod(obj._transform.rotation.y + 0.0005f, TWO_PI);
 
 		PushConstantData	push{};
 		push.color = obj._color;
-		push.transform = camera.getProjection() * obj._transform.mat4();
+		push.transform = projectionView * obj._transform.mat4();
 		vkCmdPushConstants(
 			commandBuffer,
 			_pipelineLayout,

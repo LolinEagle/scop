@@ -1,5 +1,6 @@
 NAME		=	scop
 SRC			=	main.cpp\
+				KeyboardController.cpp\
 				MainClass.cpp\
 				SimpleRenderSystem.cpp\
 				VeCamera.cpp\

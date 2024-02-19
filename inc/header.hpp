@@ -12,6 +12,7 @@
 #include "../glm/gtc/matrix_transform.hpp"
 
 // Include
+#include <chrono>
 #include <cstring>
 #include <fstream>
 #include <iostream>

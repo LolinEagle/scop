@@ -14,7 +14,7 @@ struct TransformComponent{
 
 class VeGameObject{
 	private:
-		int32_t					_id;
+		int32_t				_id;
 
 		VeGameObject(uint32_t id);
 	public:

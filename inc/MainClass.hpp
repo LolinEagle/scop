@@ -1,6 +1,8 @@
 #pragma once
 
+#include <KeyboardController.hpp>
 #include <SimpleRenderSystem.hpp>
+
 #include <VeCamera.hpp>
 #include <VeDevice.hpp>
 #include <VeGameObject.hpp>
