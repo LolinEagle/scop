@@ -15,9 +15,12 @@ class VeWindow{
 		VeWindow(int width, int height);
 		~VeWindow();
 
+		// Getter
 		VkExtent2D	getExtent(void);
 		bool		shouldClose(void);
 		bool		wasWindowResized(void);
+		GLFWwindow	*getGLFWwindow(void) const;
+
 		void		resetWindowResizedFlag(void);
 		void		createWindowSurface(VkInstance instance, VkSurfaceKHR *surface);
 };

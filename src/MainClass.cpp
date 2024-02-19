@@ -87,13 +87,25 @@ void	MainClass::run(void){
 	SimpleRenderSystem	simpleRenderSystem{_veDevice, _veRenderer.getSwapchainRenderPass()};
 	VeCamera			camera{};
 	float				aspect;
+	auto				viewerObject = VeGameObject::createGameObject();
+	KeyboardController	cameraController{};
 
-	// camera.setViewDirection(glm::vec3(0.f), glm::vec3(0.5f, 0.f, 1.f));
+	auto				currentTime = chrono::high_resolution_clock::now();
+	auto				newTime = currentTime;
+	float				frameTime;
+
 	camera.setViewTarget(glm::vec3(-1.f, -2.f, -2.f), glm::vec3{.0f, .0f, 1.5f});
 	while (!_veWindow.shouldClose()){
 		glfwPollEvents();
+
+		// Time
+		newTime = chrono::high_resolution_clock::now();
+		frameTime = chrono::duration<float, chrono::seconds::period>(newTime - currentTime).count();
+		currentTime = newTime;
+
+		cameraController.moveInPlaneXZ(_veWindow.getGLFWwindow(), frameTime, viewerObject);
+		camera.setViewYXZ(viewerObject._transform.translation, viewerObject._transform.rotation);
 		aspect = _veRenderer.getAspectRatio();
-		// camera.setOrthographicProjection(-aspect, aspect, -1, 1, -1, 1);
 		camera.setPerspectiveProjection(glm::radians(50.), aspect, .1f, 10);
 		if (auto commandBuffer = _veRenderer.beginFrame()){
 			_veRenderer.beginSwapChainRenderPass(commandBuffer);

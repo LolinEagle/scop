@@ -45,6 +45,10 @@ bool		VeWindow::wasWindowResized(void){
 	return (_framebufferResized);
 }
 
+GLFWwindow	*VeWindow::getGLFWwindow(void) const {
+	return (_window);
+}
+
 void		VeWindow::resetWindowResizedFlag(void){
 	_framebufferResized = false;
 }
