@@ -88,6 +88,8 @@ void	MainClass::run(void){
 	VeCamera			camera{};
 	float				aspect;
 
+	// camera.setViewDirection(glm::vec3(0.f), glm::vec3(0.5f, 0.f, 1.f));
+	camera.setViewTarget(glm::vec3(-1.f, -2.f, -2.f), glm::vec3{.0f, .0f, 1.5f});
 	while (!_veWindow.shouldClose()){
 		glfwPollEvents();
 		aspect = _veRenderer.getAspectRatio();
