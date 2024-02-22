@@ -30,4 +30,6 @@
 #define TITLE "scop"
 #define WIDTH 1600
 #define HEIGHT 900
+#define WIDTH_HALF 800
+#define HEIGHT_HALF 450
 #define TWO_PI glm::two_pi<float>()

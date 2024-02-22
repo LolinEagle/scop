@@ -79,7 +79,7 @@ void	MainClass::run(void){
 	VeCamera			camera{};
 	float				aspect;
 	auto				viewerObject = VeGameObject::createGameObject();
-	KeyboardController	cameraController{};
+	KeyboardController	cameraController{_veWindow.getGLFWwindow()};
 
 	auto				currentTime = chrono::high_resolution_clock::now();
 	auto				newTime = currentTime;
