@@ -10,6 +10,7 @@ struct TransformComponent{
 	glm::vec3	rotation{};
 
 	glm::mat4	mat4(void);
+	glm::mat3	normalMatrix(void);	
 };
 
 class VeGameObject{

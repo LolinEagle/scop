@@ -3,7 +3,7 @@
 using namespace std;
 
 void	MainClass::loadGameObjects(void){
-	shared_ptr<VeModel>	veModel = VeModel::createModelFromFile(_veDevice, "model/smooth_vase.obj");
+	shared_ptr<VeModel>	veModel = VeModel::createModelFromFile(_veDevice, "model/flat_vase.obj");
 	auto				gameObject = VeGameObject::createGameObject();
 
 	gameObject._model = veModel;
