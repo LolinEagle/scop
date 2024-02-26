@@ -1,6 +1,20 @@
 #include <VeModel.hpp>
 
+#define TINYOBJLOADER_IMPLEMENTATION
+#include <tiny_obj_loader.h>
+#define GLM_ENABLE_EXPERIMENTAL
+#include "../glm/gtx/hash.hpp"
+
 using namespace std;
+
+template <>
+struct hash<VeModel::Vertex>{
+	size_t	operator()(VeModel::Vertex const &vertex) const {
+		size_t	seed = 0;
+		hashCombine(seed, vertex.position, vertex.color, vertex.normal, vertex.uv);
+		return (seed);
+	}
+};
 
 vector<VkVertexInputBindingDescription>		VeModel::Vertex::getBindingDescriptions(void){
 	vector<VkVertexInputBindingDescription>		bindingDescription(1);
@@ -23,6 +37,78 @@ vector<VkVertexInputAttributeDescription>	VeModel::Vertex::getAttributeDescripti
 	attributeDescription[1].format = VK_FORMAT_R32G32B32_SFLOAT;
 	attributeDescription[1].offset = offsetof(Vertex, color);
 	return (attributeDescription);
+}
+
+bool	VeModel::Vertex::operator==(const Vertex &other) const {
+	return (
+		position == other.position &&
+		color == other.color &&
+		normal == other.normal &&
+		uv == other.uv
+	);
+}
+
+void	VeModel::Builder::loadModel(const string &filepath){
+	tinyobj::attrib_t			attrib;
+	vector<tinyobj::shape_t>	shapes;
+	vector<tinyobj::material_t>	materials;
+	string						warn, err;
+
+	if (!tinyobj::LoadObj(&attrib, &shapes, &materials, &warn, &err, filepath.c_str()))
+		throw (runtime_error(warn + err));
+	vertices.clear();
+	indices.clear();
+
+	unordered_map<Vertex, uint32_t>	uniqueVertices;
+	for (const auto &shape : shapes){
+		for (const auto &index : shape.mesh.indices){
+			Vertex	vertex{};
+
+			// Vertex
+			if (index.vertex_index >= 0){
+				vertex.position = {
+					attrib.vertices[3 * index.vertex_index + 0],
+					attrib.vertices[3 * index.vertex_index + 1],
+					attrib.vertices[3 * index.vertex_index + 2],
+				};
+
+				auto	colorIndex = 3 * index.vertex_index + 2;
+
+				if (colorIndex < attrib.colors.size()){
+					vertex.color = {
+						attrib.colors[colorIndex - 2],
+						attrib.colors[colorIndex - 1],
+						attrib.colors[colorIndex - 0],
+					};
+				} else {
+					vertex.color = {1.f, 1.f, 1.f};
+				}
+			}
+
+			// Normal
+			if (index.normal_index >= 0){
+				vertex.normal = {
+					attrib.normals[3 * index.normal_index + 0],
+					attrib.normals[3 * index.normal_index + 1],
+					attrib.normals[3 * index.normal_index + 2],
+				};
+			}
+
+			// Texcoord
+			if (index.texcoord_index >= 0){
+				vertex.uv = {
+					attrib.texcoords[2 * index.texcoord_index + 0],
+					attrib.texcoords[2 * index.texcoord_index + 1],
+				};
+			}
+
+			if (uniqueVertices.count(vertex) == 0){
+				uniqueVertices[vertex] = static_cast<uint32_t>(vertices.size());
+				vertices.push_back(vertex);
+			}
+			indices.push_back(uniqueVertices[vertex]);
+		}
+	}
 }
 
 void	VeModel::createVertexBuffers(const vector<Vertex> &vertices){
@@ -88,6 +174,12 @@ void	VeModel::createIndexBuffers(const vector<uint32_t> &indices){
 	_veDevice.copyBuffer(stagingBuffer, _indexBuffer, bufferSize);
 	vkDestroyBuffer(_veDevice.device(), stagingBuffer, nullptr);
 	vkFreeMemory(_veDevice.device(), stagingBufferMemory, nullptr);
+}
+
+unique_ptr<VeModel>	VeModel::createModelFromFile(VeDevice &device, const string &filepath){
+	Builder	builder{};
+	builder.loadModel(filepath);
+	return (make_unique<VeModel>(device, builder));
 }
 
 VeModel::VeModel(VeDevice &device, const VeModel::Builder &builder) : _veDevice(device){

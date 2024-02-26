@@ -15,14 +15,14 @@ SRC			=	main.cpp\
 # Commands
 CPP			=	c++
 RM			=	rm -rf
-GLSLC		=	./shader/glslc
+GLSLC		=	./lib/glslc
 
 # Flags
 CPPFLAGS	=	-std=c++17 -g3 -MMD
 LDFLAGS		=	-lglfw -lvulkan -ldl -lpthread -lX11 -lXxf86vm -lXrandr -lXi
 
 # Path
-INC			=	-Iglm -Iinc
+INC			=	-Iglm -Iinc -Ilib
 SRC_PATH	=	./src/
 OBJ_PATH	=	./obj/
 

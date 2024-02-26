@@ -2,69 +2,14 @@
 
 using namespace std;
 
-unique_ptr<VeModel>	createCubeModel(VeDevice& device, glm::vec3 offset){
-	VeModel::Builder	modelBuilder{};
-	const glm::vec3		c[6] = {
-		{.9f, .9f, .9f},// Left face (white)
-		{.8f, .8f, .1f},// Right face (yellow)
-		{.9f, .6f, .1f},// Top face (orange)
-		{.8f, .1f, .1f},// Bottom face (red)
-		{.1f, .1f, .8f},// Nose face (blue)
-		{.1f, .8f, .1f}	// Tail face (green)
-	};
-
-	modelBuilder.vertices = {
-		// Left face (white)
-		{{-.5f, -.5f, -.5f}, c[0]},
-		{{-.5f,  .5f,  .5f}, c[0]},
-		{{-.5f, -.5f,  .5f}, c[0]},
-		{{-.5f,  .5f, -.5f}, c[0]},
-
-		// Right face (yellow)
-		{{.5f, -.5f, -.5f}, c[1]},
-		{{.5f,  .5f,  .5f}, c[1]},
-		{{.5f, -.5f,  .5f}, c[1]},
-		{{.5f,  .5f, -.5f}, c[1]},
-
-		// Top face (orange, remember y axis points down)
-		{{-.5f, -.5f, -.5f}, c[2]},
-		{{ .5f, -.5f,  .5f}, c[2]},
-		{{-.5f, -.5f,  .5f}, c[2]},
-		{{ .5f, -.5f, -.5f}, c[2]},
-
-		// Bottom face (red)
-		{{-.5f, .5f, -.5f}, c[3]},
-		{{ .5f, .5f,  .5f}, c[3]},
-		{{-.5f, .5f,  .5f}, c[3]},
-		{{ .5f, .5f, -.5f}, c[3]},
-
-		// Nose face (blue)
-		{{-.5f, -.5f, .5f}, c[4]},
-		{{ .5f,  .5f, .5f}, c[4]},
-		{{-.5f,  .5f, .5f}, c[4]},
-		{{ .5f, -.5f, .5f}, c[4]},
-
-		// Tail face (green)
-		{{-.5f, -.5f, -.5f}, c[5]},
-		{{ .5f,  .5f, -.5f}, c[5]},
-		{{-.5f,  .5f, -.5f}, c[5]},
-		{{ .5f, -.5f, -.5f}, c[5]},
-	};
-	for (auto& v : modelBuilder.vertices){
-		v.position += offset;
-	}
-	modelBuilder.indices = {0, 1, 2, 0, 3, 1, 4, 5, 6, 4, 7, 5, 8, 9, 10, 8, 11, 9, 12, 13, 14, 12, 15, 13, 16, 17, 18, 16, 19, 17, 20, 21, 22, 20, 23, 21};
-	return (make_unique<VeModel>(device, modelBuilder));
-}
-
 void	MainClass::loadGameObjects(void){
-	shared_ptr<VeModel>	veModel = createCubeModel(_veDevice, {.0f, .0f, .0f});
-	auto				cube = VeGameObject::createGameObject();
+	shared_ptr<VeModel>	veModel = VeModel::createModelFromFile(_veDevice, "model/smooth_vase.obj");
+	auto				gameObject = VeGameObject::createGameObject();
 
-	cube._model = veModel;
-	cube._transform.translation = {.0f, .0f, 1.5f};
-	cube._transform.scale = {.5f, .5f, .5f};
-	_gameObjects.push_back(move(cube));
+	gameObject._model = veModel;
+	gameObject._transform.translation = {.0f, .0f, 1.5f};
+	gameObject._transform.scale = {.5f, .5f, .5f};
+	_gameObjects.push_back(move(gameObject));
 }
 
 MainClass::MainClass(void){

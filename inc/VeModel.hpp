@@ -1,6 +1,7 @@
 #pragma once
 
 #include <VeDevice.hpp>
+#include <VeUtils.hpp>
 
 using namespace std;
 
@@ -9,14 +10,20 @@ class VeModel{
 		struct Vertex{
 			glm::vec3	position;
 			glm::vec3	color;
+			glm::vec3	normal;
+			glm::vec2	uv;
 
 			static vector<VkVertexInputBindingDescription>		getBindingDescriptions(void);
 			static vector<VkVertexInputAttributeDescription>	getAttributeDescriptions(void);
+
+			bool	operator==(const Vertex &other) const;
 		};
 
 		struct Builder{
 			vector<Vertex>		vertices{};
 			vector<uint32_t>	indices{};
+
+			void	loadModel(const string &filepath);
 		};
 	private:
 		VeDevice		&_veDevice;
@@ -31,6 +38,8 @@ class VeModel{
 		void	createVertexBuffers(const vector<Vertex> &vertices);
 		void	createIndexBuffers(const vector<uint32_t> &indices);
 	public:
+		static unique_ptr<VeModel>	createModelFromFile(VeDevice &device, const string &filepath);
+
 		VeModel(VeDevice &device, const VeModel::Builder &builder);
 		~VeModel();
 
