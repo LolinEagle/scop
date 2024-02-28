@@ -1,15 +1,17 @@
 #include <SimpleRenderSystem.hpp>
 
-void	SimpleRenderSystem::createPipelineLayout(void){
+void	SimpleRenderSystem::createPipelineLayout(VkDescriptorSetLayout globalSetLayout){
 	VkPushConstantRange	pushConstantRange{};
 	pushConstantRange.stageFlags = VK_SHADER_STAGE_VERTEX_BIT | VK_SHADER_STAGE_FRAGMENT_BIT;
 	pushConstantRange.offset = 0;
 	pushConstantRange.size = sizeof(PushConstantData);
 
+	vector<VkDescriptorSetLayout>	descriptorSetLayouts{globalSetLayout};
+
 	VkPipelineLayoutCreateInfo	pipelineLayoutInfo{};
 	pipelineLayoutInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_LAYOUT_CREATE_INFO;
-	pipelineLayoutInfo.setLayoutCount = 0;
-	pipelineLayoutInfo.pSetLayouts = nullptr;
+	pipelineLayoutInfo.setLayoutCount = static_cast<uint32_t>(descriptorSetLayouts.size());
+	pipelineLayoutInfo.pSetLayouts = descriptorSetLayouts.data();
 	pipelineLayoutInfo.pushConstantRangeCount = 1;
 	pipelineLayoutInfo.pPushConstantRanges = &pushConstantRange;
 	if (vkCreatePipelineLayout(_veDevice.device(), &pipelineLayoutInfo, nullptr, &_pipelineLayout)
@@ -31,9 +33,10 @@ void	SimpleRenderSystem::createPipeline(VkRenderPass renderPass){
 	);
 }
 
-SimpleRenderSystem::SimpleRenderSystem(VeDevice &veDevice, VkRenderPass renderPass)
-: _veDevice(veDevice){
-	createPipelineLayout();
+SimpleRenderSystem::SimpleRenderSystem(
+	VeDevice &veDevice, VkRenderPass renderPass, VkDescriptorSetLayout globalSetLayout
+) : _veDevice(veDevice){
+	createPipelineLayout(globalSetLayout);
 	createPipeline(renderPass);
 }
 
@@ -42,13 +45,20 @@ SimpleRenderSystem::~SimpleRenderSystem(){
 }
 
 void	SimpleRenderSystem::renderObjects(FrameInfo &frameInfo, vector<VeGameObject> &gameObjects){
-	auto	projectionView = frameInfo.camera.getProjection() * frameInfo.camera.getView();
-
 	_vePipeline->bind(frameInfo.commandBuffer);
+	vkCmdBindDescriptorSets(
+		frameInfo.commandBuffer,
+		VK_PIPELINE_BIND_POINT_GRAPHICS,
+		_pipelineLayout,
+		0,
+		1,
+		&frameInfo.globalDescriptorSet,
+		0,
+		nullptr
+	);
 	for (auto &obj: gameObjects){
 		PushConstantData	push{};
-		auto				modelMatrix = obj._transform.mat4();
-		push.transform = projectionView * obj._transform.mat4();
+		push.modelMatrix = obj._transform.mat4();
 		push.normalMatrix = obj._transform.normalMatrix();
 		vkCmdPushConstants(
 			frameInfo.commandBuffer,

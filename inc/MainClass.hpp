@@ -5,6 +5,7 @@
 
 #include <VeBuffer.hpp>
 #include <VeCamera.hpp>
+#include <VeDescriptors.hpp>
 #include <VeDevice.hpp>
 #include <VeGameObject.hpp>
 #include <VeRenderer.hpp>
@@ -19,10 +20,12 @@ struct GlobalUbo{
 
 class MainClass{
 	private:
-		VeWindow				_veWindow{WIDTH, HEIGHT};
-		VeDevice				_veDevice{_veWindow};
-		VeRenderer				_veRenderer{_veWindow, _veDevice};
-		vector<VeGameObject>	_gameObjects;
+		VeWindow	_veWindow{WIDTH, HEIGHT};
+		VeDevice	_veDevice{_veWindow};
+		VeRenderer	_veRenderer{_veWindow, _veDevice};
+
+		unique_ptr<VeDescriptorPool>	_globalPool{};
+		vector<VeGameObject>			_gameObjects;
 
 		void	loadGameObjects(void);
 	public:

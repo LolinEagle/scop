@@ -5,6 +5,7 @@ SRC			=	main.cpp\
 				SimpleRenderSystem.cpp\
 				VeBuffer.cpp\
 				VeCamera.cpp\
+				VeDescriptors.cpp\
 				VeDevice.cpp\
 				VeGameObject.cpp\
 				VeModel.cpp\
@@ -16,14 +17,14 @@ SRC			=	main.cpp\
 # Commands
 CPP			=	c++
 RM			=	rm -rf
-GLSLC		=	./lib/glslc
+GLSLC		=	./glslc
 
 # Flags
 CPPFLAGS	=	-std=c++17 -g3 -MMD
 LDFLAGS		=	-lglfw -lvulkan -ldl -lpthread -lX11 -lXxf86vm -lXrandr -lXi
 
 # Path
-INC			=	-Iglm -Iinc -Ilib
+INC			=	-Iglm -Iinc
 SRC_PATH	=	./src/
 OBJ_PATH	=	./obj/
 

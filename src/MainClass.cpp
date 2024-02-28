@@ -13,6 +13,10 @@ void	MainClass::loadGameObjects(void){
 }
 
 MainClass::MainClass(void){
+	_globalPool = VeDescriptorPool::Builder(_veDevice)
+		.setMaxSets(VeSwapChain::MAX_FRAMES_IN_FLIGHT)
+		.addPoolSize(VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER, VeSwapChain::MAX_FRAMES_IN_FLIGHT)
+		.build();
 	loadGameObjects();
 }
 
@@ -33,7 +37,20 @@ void	MainClass::run(void){
 		uboBuffers[i]->map();
 	}
 
-	SimpleRenderSystem	simpleRenderSystem{_veDevice, _veRenderer.getSwapchainRenderPass()};
+	auto					globalSetLayout = VeDescriptorSetLayout::Builder(_veDevice)
+		.addBinding(0, VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER, VK_SHADER_STAGE_VERTEX_BIT)
+		.build();
+	vector<VkDescriptorSet>	globalDescriptorSets(VeSwapChain::MAX_FRAMES_IN_FLIGHT);
+	for (int i = 0; i < globalDescriptorSets.size(); i++){
+		auto	bufferInfo = uboBuffers[i]->descriptorInfo();
+		VeDescriptorWriter(*globalSetLayout, *_globalPool)
+			.writeBuffer(0, &bufferInfo)
+			.build(globalDescriptorSets[i]);
+	}
+
+	SimpleRenderSystem	simpleRenderSystem{
+		_veDevice, _veRenderer.getSwapchainRenderPass(), globalSetLayout->getDescriptorSetLayout()
+	};
 	VeCamera			camera{};
 	float				aspect;
 	auto				viewerObject = VeGameObject::createGameObject();
@@ -63,7 +80,8 @@ void	MainClass::run(void){
 				frameIndex,
 				frameTime,
 				commandBuffer,
-				camera
+				camera,
+				globalDescriptorSets[frameIndex]
 			};
 
 			// Update
