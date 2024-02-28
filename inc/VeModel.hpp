@@ -2,6 +2,7 @@
 
 #include <VeDevice.hpp>
 #include <VeUtils.hpp>
+#include <VeBuffer.hpp>
 
 using namespace std;
 
@@ -26,14 +27,12 @@ class VeModel{
 			void	loadModel(const string &filepath);
 		};
 	private:
-		VeDevice		&_veDevice;
-		VkBuffer		_vertexBuffer;
-		VkDeviceMemory	_vertexBufferMemory;
-		uint32_t		_vertexCount;
-		bool			_hasIndexBuffer = false;
-		VkBuffer		_indexBuffer;
-		VkDeviceMemory	_indexBufferMemory;
-		uint32_t		_indexCount;
+		VeDevice				&_veDevice;
+		unique_ptr<VeBuffer>	_vertexBuffer;
+		uint32_t				_vertexCount;
+		bool					_hasIndexBuffer = false;
+		unique_ptr<VeBuffer>	_indexBuffer;
+		uint32_t				_indexCount;
 
 		void	createVertexBuffers(const vector<Vertex> &vertices);
 		void	createIndexBuffers(const vector<uint32_t> &indices);

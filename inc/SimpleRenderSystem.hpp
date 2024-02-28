@@ -2,6 +2,7 @@
 
 #include <VeCamera.hpp>
 #include <VeDevice.hpp>
+#include <VeFrameInfo.hpp>
 #include <VeGameObject.hpp>
 #include <VePipeline.hpp>
 
@@ -24,7 +25,5 @@ class SimpleRenderSystem{
 		SimpleRenderSystem(VeDevice &veDevice, VkRenderPass renderPass);
 		~SimpleRenderSystem();
 
-		void	renderGameObjects(
-			VkCommandBuffer commandBuffer, vector<VeGameObject> &gameObjects, const VeCamera &camera
-		);
+		void	renderObjects(FrameInfo &frameInfo, vector<VeGameObject> &gameObjects);
 };

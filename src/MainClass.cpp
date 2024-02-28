@@ -20,6 +20,19 @@ MainClass::~MainClass(){
 }
 
 void	MainClass::run(void){
+	vector<unique_ptr<VeBuffer>>	uboBuffers(VeSwapChain::MAX_FRAMES_IN_FLIGHT);
+	for (int i = 0; i < uboBuffers.size(); i++){
+		uboBuffers[i] = make_unique<VeBuffer>(
+			_veDevice,
+			sizeof(GlobalUbo),
+			1,
+			VK_BUFFER_USAGE_UNIFORM_BUFFER_BIT,
+			VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT,
+			_veDevice.properties.limits.minUniformBufferOffsetAlignment
+		);
+		uboBuffers[i]->map();
+	}
+
 	SimpleRenderSystem	simpleRenderSystem{_veDevice, _veRenderer.getSwapchainRenderPass()};
 	VeCamera			camera{};
 	float				aspect;
@@ -29,6 +42,7 @@ void	MainClass::run(void){
 	auto				currentTime = chrono::high_resolution_clock::now();
 	auto				newTime = currentTime;
 	float				frameTime;
+	int					frameIndex;
 
 	camera.setViewTarget(glm::vec3(-1.f, -2.f, -2.f), glm::vec3{.0f, .0f, 1.5f});
 	while (!_veWindow.shouldClose()){
@@ -44,8 +58,23 @@ void	MainClass::run(void){
 		aspect = _veRenderer.getAspectRatio();
 		camera.setPerspectiveProjection(glm::radians(50.), aspect, .1f, 10);
 		if (auto commandBuffer = _veRenderer.beginFrame()){
+			frameIndex = _veRenderer.getCurrentFrameIndex();
+			FrameInfo	frameInfo{
+				frameIndex,
+				frameTime,
+				commandBuffer,
+				camera
+			};
+
+			// Update
+			GlobalUbo	ubo{};
+			ubo.projectionView = camera.getProjection() * camera.getView();
+			uboBuffers[frameIndex]->writeToBuffer(&ubo);
+			uboBuffers[frameIndex]->flush();
+
+			// Render
 			_veRenderer.beginSwapChainRenderPass(commandBuffer);
-			simpleRenderSystem.renderGameObjects(commandBuffer, _gameObjects, camera);
+			simpleRenderSystem.renderObjects(frameInfo, _gameObjects);
 			_veRenderer.endSwapChainRenderPass(commandBuffer);
 			_veRenderer.endFrame();
 		}

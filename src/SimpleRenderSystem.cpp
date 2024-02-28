@@ -41,26 +41,24 @@ SimpleRenderSystem::~SimpleRenderSystem(){
 	vkDestroyPipelineLayout(_veDevice.device(), _pipelineLayout, nullptr);
 }
 
-void	SimpleRenderSystem::renderGameObjects(
-	VkCommandBuffer commandBuffer, vector<VeGameObject> &gameObjects, const VeCamera &camera
-){
-	auto	projectionView = camera.getProjection() * camera.getView();
+void	SimpleRenderSystem::renderObjects(FrameInfo &frameInfo, vector<VeGameObject> &gameObjects){
+	auto	projectionView = frameInfo.camera.getProjection() * frameInfo.camera.getView();
 
-	_vePipeline->bind(commandBuffer);
+	_vePipeline->bind(frameInfo.commandBuffer);
 	for (auto &obj: gameObjects){
 		PushConstantData	push{};
 		auto				modelMatrix = obj._transform.mat4();
 		push.transform = projectionView * obj._transform.mat4();
 		push.normalMatrix = obj._transform.normalMatrix();
 		vkCmdPushConstants(
-			commandBuffer,
+			frameInfo.commandBuffer,
 			_pipelineLayout,
 			VK_SHADER_STAGE_VERTEX_BIT | VK_SHADER_STAGE_FRAGMENT_BIT,
 			0,
 			sizeof(PushConstantData),
 			&push
 		);
-		obj._model->bind(commandBuffer);
-		obj._model->draw(commandBuffer);
+		obj._model->bind(frameInfo.commandBuffer);
+		obj._model->draw(frameInfo.commandBuffer);
 	}
 }

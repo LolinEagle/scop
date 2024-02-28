@@ -3,6 +3,7 @@ SRC			=	main.cpp\
 				KeyboardController.cpp\
 				MainClass.cpp\
 				SimpleRenderSystem.cpp\
+				VeBuffer.cpp\
 				VeCamera.cpp\
 				VeDevice.cpp\
 				VeGameObject.cpp\
