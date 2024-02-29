@@ -44,7 +44,7 @@ SimpleRenderSystem::~SimpleRenderSystem(){
 	vkDestroyPipelineLayout(_veDevice.device(), _pipelineLayout, nullptr);
 }
 
-void	SimpleRenderSystem::renderObjects(FrameInfo &frameInfo, vector<VeGameObject> &gameObjects){
+void	SimpleRenderSystem::renderObjects(FrameInfo &frameInfo){
 	_vePipeline->bind(frameInfo.commandBuffer);
 	vkCmdBindDescriptorSets(
 		frameInfo.commandBuffer,
@@ -56,7 +56,10 @@ void	SimpleRenderSystem::renderObjects(FrameInfo &frameInfo, vector<VeGameObject
 		0,
 		nullptr
 	);
-	for (auto &obj: gameObjects){
+	for (auto &kv: frameInfo.gameObject){
+		auto	&obj = kv.second;
+		if (obj._model == nullptr)
+			continue;
 		PushConstantData	push{};
 		push.modelMatrix = obj._transform.mat4();
 		push.normalMatrix = obj._transform.normalMatrix();

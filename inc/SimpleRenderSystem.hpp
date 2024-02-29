@@ -27,5 +27,5 @@ class SimpleRenderSystem{
 		);
 		~SimpleRenderSystem();
 
-		void	renderObjects(FrameInfo &frameInfo, vector<VeGameObject> &gameObjects);
+		void	renderObjects(FrameInfo &frameInfo);
 };

@@ -28,7 +28,7 @@ class MainClass{
 		VeRenderer	_veRenderer{_veWindow, _veDevice};
 
 		unique_ptr<VeDescriptorPool>	_globalPool{};
-		vector<VeGameObject>			_gameObjects;
+		VeGameObject::Map				_gameObjects;
 
 		void	loadGameObjects(
 			const std::string &filepath, glm::vec3 translation, glm::vec3 scale

@@ -13,7 +13,7 @@ void	MainClass::loadGameObjects(
 	gameObject._model = veModel;
 	gameObject._transform.translation = translation;
 	gameObject._transform.scale = scale;
-	_gameObjects.push_back(move(gameObject));
+	_gameObjects.emplace(gameObject.getId(), move(gameObject));
 }
 
 MainClass::MainClass(void){
@@ -49,7 +49,7 @@ void	MainClass::run(void){
 	}
 
 	auto					globalSetLayout = VeDescriptorSetLayout::Builder(_veDevice)
-		.addBinding(0, VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER, VK_SHADER_STAGE_VERTEX_BIT)
+		.addBinding(0, VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER, VK_SHADER_STAGE_ALL_GRAPHICS)
 		.build();
 	vector<VkDescriptorSet>	globalDescriptorSets(MAX_FRAMES_IN_FLIGHT);
 	for (int i = 0; i < globalDescriptorSets.size(); i++){
@@ -94,7 +94,8 @@ void	MainClass::run(void){
 				frameTime,
 				commandBuffer,
 				camera,
-				globalDescriptorSets[frameIndex]
+				globalDescriptorSets[frameIndex],
+				_gameObjects
 			};
 
 			// Update
@@ -105,7 +106,7 @@ void	MainClass::run(void){
 
 			// Render
 			_veRenderer.beginSwapChainRenderPass(commandBuffer);
-			simpleRenderSystem.renderObjects(frameInfo, _gameObjects);
+			simpleRenderSystem.renderObjects(frameInfo);
 			_veRenderer.endSwapChainRenderPass(commandBuffer);
 			_veRenderer.endFrame();
 		}

@@ -15,10 +15,12 @@ struct TransformComponent{
 
 class VeGameObject{
 	private:
-		int32_t				_id;
+		uint32_t	_id;
 
 		VeGameObject(uint32_t id);
 	public:
+		using Map = unordered_map<uint32_t, VeGameObject>;
+
 		shared_ptr<VeModel>	_model{};
 		glm::vec3			_color{};
 		TransformComponent	_transform{};
