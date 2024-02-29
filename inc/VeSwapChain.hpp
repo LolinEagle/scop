@@ -39,8 +39,6 @@ class VeSwapChain{
 		VkPresentModeKHR	chooseSwapPresentMode(const vector<VkPresentModeKHR> &present);
 		VkExtent2D			chooseSwapExtent(const VkSurfaceCapabilitiesKHR &capabilities);
 	public:
-		static constexpr int MAX_FRAMES_IN_FLIGHT = 2;
-
 		VeSwapChain(VeDevice &deviceRef, VkExtent2D extent);
 		VeSwapChain(VeDevice &deviceRef, VkExtent2D extent, shared_ptr<VeSwapChain> previous);
 		~VeSwapChain();

@@ -15,7 +15,10 @@ using namespace std;
 
 struct GlobalUbo{
 	glm::mat4	projectionView{1.f};
-	glm::vec3	lightDirection = glm::normalize(glm::vec3(1.f, -3.f, -1.f));
+	glm::vec4	ambientLightColor{1.f, 1.f, 1.f, .02f};
+	glm::vec3	lightPosition{-1.f};
+	alignas(16)
+	glm::vec4	lightColor{1.f};
 };
 
 class MainClass{
@@ -27,7 +30,9 @@ class MainClass{
 		unique_ptr<VeDescriptorPool>	_globalPool{};
 		vector<VeGameObject>			_gameObjects;
 
-		void	loadGameObjects(void);
+		void	loadGameObjects(
+			const std::string &filepath, glm::vec3 translation, glm::vec3 scale
+		);
 	public:
 		MainClass(void);
 		~MainClass();
