@@ -3,16 +3,16 @@ SRC			=	main.cpp\
 				KeyboardController.cpp\
 				MainClass.cpp\
 				SimpleRenderSystem.cpp\
-				VeBuffer.cpp\
-				VeCamera.cpp\
-				VeDescriptors.cpp\
-				VeDevice.cpp\
-				VeGameObject.cpp\
-				VeModel.cpp\
-				VePipeline.cpp\
-				VeRenderer.cpp\
-				VeSwapChain.cpp\
-				VeWindow.cpp
+				VulkanEngine/VeBuffer.cpp\
+				VulkanEngine/VeCamera.cpp\
+				VulkanEngine/VeDescriptors.cpp\
+				VulkanEngine/VeDevice.cpp\
+				VulkanEngine/VeGameObject.cpp\
+				VulkanEngine/VeModel.cpp\
+				VulkanEngine/VePipeline.cpp\
+				VulkanEngine/VeRenderer.cpp\
+				VulkanEngine/VeSwapChain.cpp\
+				VulkanEngine/VeWindow.cpp
 
 # Commands
 CPP			=	c++
@@ -24,9 +24,10 @@ CPPFLAGS	=	-std=c++17 -g3 -MMD
 LDFLAGS		=	-lglfw -lvulkan -ldl -lpthread -lX11 -lXxf86vm -lXrandr -lXi
 
 # Path
-INC			=	-Iglm -Iinc
+INC			=	-Iglm -Iinc -Iinc/VulkanEngine
 SRC_PATH	=	./src/
 OBJ_PATH	=	./obj/
+OBJ_PATH_VE	=	./obj/VulkanEngine
 
 # Objects
 OBJ_DIRS	=	${OBJ_PATH}
@@ -55,7 +56,7 @@ ${OBJ_PATH}%.o:${SRC_PATH}%.cpp
 	${CPP} ${CPPFLAGS} ${INC} -c $< -o $@
 
 ${OBJ_DIRS}:
-	mkdir ${OBJ_DIRS}
+	mkdir ${OBJ_DIRS} ${OBJ_PATH_VE}
 
 ${NAME}:${OBJ_DIRS} ${OBJ} shaderclean
 	${CPP} ${OBJ} ${LDFLAGS} -o $@
