@@ -2,6 +2,7 @@ NAME		=	scop
 SRC			=	main.cpp\
 				KeyboardController.cpp\
 				MainClass.cpp\
+				PointLightSystem.cpp\
 				SimpleRenderSystem.cpp\
 				VulkanEngine/VeBuffer.cpp\
 				VulkanEngine/VeCamera.cpp\
@@ -62,6 +63,8 @@ ${NAME}:${OBJ_DIRS} ${OBJ} shaderclean
 	${CPP} ${OBJ} ${LDFLAGS} -o $@
 	${GLSLC} ./shader/simpleShader.vert -o ./shader/simpleShader.vert.spv
 	${GLSLC} ./shader/simpleShader.frag -o ./shader/simpleShader.frag.spv
+	${GLSLC} ./shader/pointLight.vert -o ./shader/pointLight.vert.spv
+	${GLSLC} ./shader/pointLight.frag -o ./shader/pointLight.frag.spv
 
 .PHONY:all clean shaderclean fclean re run
 

@@ -2,6 +2,7 @@
 
 #include <KeyboardController.hpp>
 #include <SimpleRenderSystem.hpp>
+#include <PointLightSystem.hpp>
 
 #include <VeBuffer.hpp>
 #include <VeCamera.hpp>
@@ -14,7 +15,8 @@
 using namespace std;
 
 struct GlobalUbo{
-	glm::mat4	projectionView{1.f};
+	glm::mat4	projection{1.f};
+	glm::mat4	view{1.f};
 	glm::vec4	ambientLightColor{1.f, 1.f, 1.f, .02f};
 	glm::vec3	lightPosition{-1.f};
 	alignas(16)

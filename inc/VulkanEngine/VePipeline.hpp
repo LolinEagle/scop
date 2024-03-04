@@ -6,6 +6,9 @@
 using namespace std;
 
 struct PipelineConfigInfo{
+	vector<VkVertexInputBindingDescription>		bindingDescription;
+	vector<VkVertexInputAttributeDescription>	attributeDescription;
+
 	VkPipelineViewportStateCreateInfo		viewportInfo;
 	VkPipelineInputAssemblyStateCreateInfo	inputAssemblyInfo;
 	VkPipelineRasterizationStateCreateInfo	rasterizationInfo;

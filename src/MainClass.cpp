@@ -62,6 +62,9 @@ void	MainClass::run(void){
 	SimpleRenderSystem	simpleRenderSystem{
 		_veDevice, _veRenderer.getSwapchainRenderPass(), globalSetLayout->getDescriptorSetLayout()
 	};
+	PointLightSystem	pointLightSystem{
+		_veDevice, _veRenderer.getSwapchainRenderPass(), globalSetLayout->getDescriptorSetLayout()
+	};
 	VeCamera			camera{};
 	float				aspect;
 	auto				viewerObject = VeGameObject::createGameObject();
@@ -100,13 +103,15 @@ void	MainClass::run(void){
 
 			// Update
 			GlobalUbo	ubo{};
-			ubo.projectionView = camera.getProjection() * camera.getView();
+			ubo.projection = camera.getProjection();
+			ubo.view = camera.getView();
 			uboBuffers[frameIndex]->writeToBuffer(&ubo);
 			uboBuffers[frameIndex]->flush();
 
 			// Render
 			_veRenderer.beginSwapChainRenderPass(commandBuffer);
 			simpleRenderSystem.renderObjects(frameInfo);
+			pointLightSystem.render(frameInfo);
 			_veRenderer.endSwapChainRenderPass(commandBuffer);
 			_veRenderer.endFrame();
 		}

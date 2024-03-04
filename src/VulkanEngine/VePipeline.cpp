@@ -44,8 +44,8 @@ void	VePipeline::createGraphicsPipeline(
 	shaderStages[1].pNext = nullptr;
 	shaderStages[1].pSpecializationInfo = nullptr;
 
-	auto	bindingDescriptions = VeModel::Vertex::getBindingDescriptions();
-	auto	attributeDescriptions = VeModel::Vertex::getAttributeDescriptions();
+	auto	&bindingDescriptions = configInfo.bindingDescription;
+	auto	&attributeDescriptions = configInfo.attributeDescription;
 
 	VkPipelineVertexInputStateCreateInfo	vertexInputInfo{};
 	vertexInputInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_VERTEX_INPUT_STATE_CREATE_INFO;
@@ -158,4 +158,7 @@ void	VePipeline::defaultPipelineConfigInfo(PipelineConfigInfo &config){
 	config.dynamicStateInfo.dynamicStateCount =
 		static_cast<uint32_t>(config.dynamicStateEnables.size());
 	config.dynamicStateInfo.flags = 0;
+
+	config.bindingDescription = VeModel::Vertex::getBindingDescriptions();
+	config.attributeDescription = VeModel::Vertex::getAttributeDescriptions();
 }

@@ -5,16 +5,18 @@
 #define GLM_ENABLE_EXPERIMENTAL
 #include "../glm/gtx/hash.hpp"
 
-using namespace std;
+namespace std{
+	template <>
+	struct hash<VeModel::Vertex>{
+		size_t	operator()(VeModel::Vertex const &vertex) const {
+			size_t	seed = 0;
+			hashCombine(seed, vertex.position, vertex.color, vertex.normal, vertex.uv);
+			return (seed);
+		}
+	};
+}
 
-template <>
-struct hash<VeModel::Vertex>{
-	size_t	operator()(VeModel::Vertex const &vertex) const {
-		size_t	seed = 0;
-		hashCombine(seed, vertex.position, vertex.color, vertex.normal, vertex.uv);
-		return (seed);
-	}
-};
+using namespace std;
 
 vector<VkVertexInputBindingDescription>		VeModel::Vertex::getBindingDescriptions(void){
 	vector<VkVertexInputBindingDescription>		bindingDescription(1);
