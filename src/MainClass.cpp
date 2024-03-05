@@ -2,9 +2,7 @@
 
 using namespace std;
 
-void	MainClass::loadGameObjects(
-	const std::string &filepath, glm::vec3 translation, glm::vec3 scale
-){
+void	MainClass::loadGameObjects(const string &filepath, glm::vec3 translation, glm::vec3 scale){
 	shared_ptr<VeModel>	veModel = VeModel::createModelFromFile(
 		_veDevice, "model/" + filepath + ".obj"
 	);
@@ -21,6 +19,8 @@ MainClass::MainClass(void){
 		.setMaxSets(MAX_FRAMES_IN_FLIGHT)
 		.addPoolSize(VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER, MAX_FRAMES_IN_FLIGHT)
 		.build();
+
+	// Objects
 	loadGameObjects("42",			{.0f, .0f, -6.f}, {.5f, -.5f, .5f});
 	loadGameObjects("colored_cube",	{.0f, .0f, -4.f}, {.5f, 0.5f, .5f});
 	loadGameObjects("cube",			{.0f, .0f, -2.f}, {.5f, 0.5f, .5f});
@@ -29,6 +29,28 @@ MainClass::MainClass(void){
 	loadGameObjects("teapot",		{.0f, .5f, 4.0f}, {.5f, -.5f, .5f});
 	loadGameObjects("teapot2",		{.0f, .0f, 6.0f}, {.5f, -.5f, .5f});
 	loadGameObjects("cube",			{.0f, .7f, 0.0f}, {4.f, 0.1f, 8.f});
+
+	// Lights
+	vector<glm::vec3>	lightColors{
+		{1.0f, 0.1f, 0.1f},
+		{0.1f, 0.1f, 1.0f},
+		{0.1f, 1.0f, 0.1f},
+		{1.0f, 1.0f, 0.1f},
+		{0.1f, 1.0f, 1.0f},
+		{1.0f, 1.0f, 1.0f}
+	};
+	for (int i = 0; i < lightColors.size(); i++){
+		auto	pointLight = VeGameObject::makePointLight(.2f);
+
+		pointLight._color = lightColors[i];
+		auto	rotateLight = glm::rotate(
+			glm::mat4(1.f),
+			(i * TWO_PI) / lightColors.size(),
+			{0.f, -1.f, 0.f}
+		);
+		pointLight._transform.translation = glm::vec3(rotateLight * glm::vec4(-1.f, -1.f, -1.f, -1.f));
+		_gameObjects.emplace(pointLight.getId(), move(pointLight));
+	}
 }
 
 MainClass::~MainClass(){
@@ -105,6 +127,7 @@ void	MainClass::run(void){
 			GlobalUbo	ubo{};
 			ubo.projection = camera.getProjection();
 			ubo.view = camera.getView();
+			pointLightSystem.update(frameInfo, ubo);
 			uboBuffers[frameIndex]->writeToBuffer(&ubo);
 			uboBuffers[frameIndex]->flush();
 

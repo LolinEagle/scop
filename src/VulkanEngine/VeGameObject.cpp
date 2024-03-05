@@ -68,12 +68,21 @@ VeGameObject::VeGameObject(void){
 VeGameObject::~VeGameObject(){
 }
 
-VeGameObject		VeGameObject::createGameObject(void){
+VeGameObject	VeGameObject::createGameObject(void){
 	static uint32_t	currentId = 0;
 
 	return (VeGameObject(currentId++));
 }
 
-const uint32_t		VeGameObject::getId(void){
+VeGameObject	VeGameObject::makePointLight(float intensity, float radius, glm::vec3 color){
+	VeGameObject obj = VeGameObject::createGameObject();
+	obj._color = color;
+	obj._transform.scale.x = radius;
+	obj._pointLight = make_unique<PointLightComponent>();
+	obj._pointLight->lightIntensity = intensity;
+	return (obj);
+}
+
+const uint32_t	VeGameObject::getId(void){
 	return (_id);
 }

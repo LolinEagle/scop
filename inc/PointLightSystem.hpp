@@ -8,6 +8,12 @@
 
 using namespace std;
 
+struct PointLightPushConstants{
+	glm::vec4	position{};
+	glm::vec4	color{};
+	float		radius;
+};
+
 class PointLightSystem{
 	private:
 		VeDevice				&_veDevice;
@@ -22,5 +28,6 @@ class PointLightSystem{
 		);
 		~PointLightSystem();
 
+		void	update(FrameInfo &frameInfo, GlobalUbo &ubo);
 		void	render(FrameInfo &frameInfo);
 };

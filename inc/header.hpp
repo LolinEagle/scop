@@ -35,3 +35,4 @@
 #define HEIGHT_HALF 450
 #define TWO_PI glm::two_pi<float>()
 #define MAX_FRAMES_IN_FLIGHT 2
+#define MAX_LIGHTS 16
