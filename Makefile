@@ -18,7 +18,7 @@ SRC			=	main.cpp\
 # Commands
 CPP			=	c++
 RM			=	rm -rf
-GLSLC		=	./glslc
+GLSLC		=	./shader/glslc
 
 # Flags
 CPPFLAGS	=	-std=c++17 -g3 -MMD
