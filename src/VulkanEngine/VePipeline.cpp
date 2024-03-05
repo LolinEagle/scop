@@ -162,3 +162,16 @@ void	VePipeline::defaultPipelineConfigInfo(PipelineConfigInfo &config){
 	config.bindingDescription = VeModel::Vertex::getBindingDescriptions();
 	config.attributeDescription = VeModel::Vertex::getAttributeDescriptions();
 }
+
+void	VePipeline::enableAlphaBlending(PipelineConfigInfo &config){
+	config.colorBlendAttachment.colorWriteMask =
+		VK_COLOR_COMPONENT_R_BIT | VK_COLOR_COMPONENT_G_BIT | VK_COLOR_COMPONENT_B_BIT |
+		VK_COLOR_COMPONENT_A_BIT;
+	config.colorBlendAttachment.blendEnable = VK_TRUE;
+	config.colorBlendAttachment.srcColorBlendFactor = VK_BLEND_FACTOR_SRC_ALPHA;
+	config.colorBlendAttachment.dstColorBlendFactor = VK_BLEND_FACTOR_ONE_MINUS_SRC_ALPHA;
+	config.colorBlendAttachment.colorBlendOp = VK_BLEND_OP_ADD;
+	config.colorBlendAttachment.srcAlphaBlendFactor = VK_BLEND_FACTOR_ONE;
+	config.colorBlendAttachment.dstAlphaBlendFactor = VK_BLEND_FACTOR_ZERO;
+	config.colorBlendAttachment.alphaBlendOp = VK_BLEND_OP_ADD;
+}

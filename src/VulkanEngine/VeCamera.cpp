@@ -121,3 +121,7 @@ const glm::mat4	&VeCamera::getView(void) const {
 const glm::mat4	&VeCamera::getInverseView(void) const {
 	return (_inverseViewMatrix);
 }
+
+const glm::vec3	VeCamera::getPosition(void) const {
+	return (glm::vec3(_inverseViewMatrix[3]));
+}

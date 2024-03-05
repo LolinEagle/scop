@@ -27,4 +27,5 @@ class VeCamera{
 		const glm::mat4	&getProjection(void) const;
 		const glm::mat4	&getView(void) const;
 		const glm::mat4	&getInverseView(void) const;
+		const glm::vec3	getPosition(void) const;
 };

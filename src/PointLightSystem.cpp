@@ -23,6 +23,7 @@ void	PointLightSystem::createPipeline(VkRenderPass renderPass){
 	PipelineConfigInfo	pipelineConfig{};
 
 	VePipeline::defaultPipelineConfigInfo(pipelineConfig);
+	VePipeline::enableAlphaBlending(pipelineConfig);
 	pipelineConfig.attributeDescription.clear();
 	pipelineConfig.bindingDescription.clear();
 	pipelineConfig.renderPass = renderPass;
@@ -67,6 +68,18 @@ void	PointLightSystem::update(FrameInfo &frameInfo, GlobalUbo &ubo){
 }
 
 void	PointLightSystem::render(FrameInfo &frameInfo){
+	map<float, uint32_t>	sorted;
+
+	for (auto &kv: frameInfo.gameObject){
+		auto	&obj = kv.second;
+		if (obj._pointLight == nullptr)
+			continue ;
+
+		auto	offset = frameInfo.camera.getPosition() - obj._transform.translation;
+		float	disSquared = glm::dot(offset, offset);
+
+		sorted[disSquared] = obj.getId();
+	}
 	_vePipeline->bind(frameInfo.commandBuffer);
 	vkCmdBindDescriptorSets(
 		frameInfo.commandBuffer,
@@ -78,11 +91,10 @@ void	PointLightSystem::render(FrameInfo &frameInfo){
 		0,
 		nullptr
 	);
-	for (auto &kv: frameInfo.gameObject){
-		auto	&obj = kv.second;
+	// Iterate through sorted lights in reverse order
+	for (auto it = sorted.rbegin(); it != sorted.rend(); it++){
+		auto	&obj = frameInfo.gameObject.at(it->second);// Use obj id to find light object
 
-		if (obj._pointLight == nullptr)
-			continue ;
 		PointLightPushConstants	push{};
 		push.position = glm::vec4(obj._transform.translation, 1.f);
 		push.color = glm::vec4(obj._color, obj._pointLight->lightIntensity);

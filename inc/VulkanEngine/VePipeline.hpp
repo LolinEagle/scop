@@ -6,6 +6,10 @@
 using namespace std;
 
 struct PipelineConfigInfo{
+	PipelineConfigInfo() = default;
+	PipelineConfigInfo(const PipelineConfigInfo&) = delete;
+	PipelineConfigInfo& operator=(const PipelineConfigInfo&) = delete;
+
 	vector<VkVertexInputBindingDescription>		bindingDescription;
 	vector<VkVertexInputAttributeDescription>	attributeDescription;
 
@@ -49,5 +53,6 @@ class VePipeline{
 		~VePipeline();
 
 		void		bind(VkCommandBuffer commandBuffer);
-		static void	defaultPipelineConfigInfo(PipelineConfigInfo &configInfo);
+		static void	defaultPipelineConfigInfo(PipelineConfigInfo &config);
+		static void	enableAlphaBlending(PipelineConfigInfo &config);
 };
