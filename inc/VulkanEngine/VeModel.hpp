@@ -24,7 +24,7 @@ class VeModel{
 			vector<Vertex>		vertices{};
 			vector<uint32_t>	indices{};
 
-			void	loadModel(const string &filepath);
+			void	oldLoadModel(const string &filepath);
 		};
 	private:
 		VeDevice				&_veDevice;

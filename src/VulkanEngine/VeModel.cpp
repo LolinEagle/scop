@@ -47,7 +47,7 @@ bool	VeModel::Vertex::operator==(const Vertex &other) const {
 	);
 }
 
-void	VeModel::Builder::loadModel(const string &filepath){
+void	VeModel::Builder::oldLoadModel(const string &filepath){
 	tinyobj::attrib_t			attrib;
 	vector<tinyobj::shape_t>	shapes;
 	vector<tinyobj::material_t>	materials;
@@ -158,9 +158,87 @@ void	VeModel::createIndexBuffers(const vector<uint32_t> &indices){
 	_veDevice.copyBuffer(stagingBuffer.getBuffer(), _indexBuffer->getBuffer(), bufferSize);
 }
 
+void	processFace(
+	const string vertexIndices[],
+	const vector<glm::vec3> &positions,
+	const vector<glm::vec3> &colors,
+	const vector<glm::vec3> &normals,
+	const vector<glm::vec2> &uvs,
+	vector<VeModel::Vertex> &vertices,
+	vector<uint32_t> &indices
+){
+	for (int i = 0; i < 3; ++i){
+		istringstream	indicesStream(vertexIndices[i]);
+		string			indexStr;
+		int				positionIndex, uvIndex, normalIndex;
+
+		getline(indicesStream, indexStr, '/');
+		positionIndex = stoi(indexStr) - 1;
+		getline(indicesStream, indexStr, '/');
+		uvIndex = stoi(indexStr) - 1;
+		getline(indicesStream, indexStr, '/');
+		normalIndex = stoi(indexStr) - 1;
+
+		VeModel::Vertex	vertex;
+		vertex.position = positions[positionIndex];
+		if (uvIndex >= 0) vertex.uv = uvs[uvIndex];
+		if (normalIndex >= 0) vertex.normal = normals[normalIndex];
+		if (!colors.empty()) vertex.color = colors[positionIndex];
+
+		auto	it = find(vertices.begin(), vertices.end(), vertex);
+		if (it == vertices.end()){
+			vertices.push_back(vertex);
+			indices.push_back(vertices.size() - 1);
+		} else {
+			indices.push_back(distance(vertices.begin(), it));
+		}
+	}
+}
+
+void	loadModel(
+	const string &filepath, vector<VeModel::Vertex> &vertices, vector<uint32_t> &indices
+){
+	ifstream			file(filepath);
+	vector<glm::vec3>	positions;
+	vector<glm::vec3>	colors;
+	vector<glm::vec3>	normals;
+	vector<glm::vec2>	uvs;
+	string				line;
+
+	while (getline(file, line)){
+		istringstream	iss(line);
+		string			token;
+		iss >> token;
+		if (token == "v"){
+			glm::vec3	position;
+			iss >> position.x >> position.y >> position.z;
+			positions.push_back(position);
+		} else if (token == "vn"){
+			glm::vec3	normal;
+			iss >> normal.x >> normal.y >> normal.z;
+			normals.push_back(normal);
+		} else if (token == "vt"){
+			glm::vec2	uv;
+			iss >> uv.x >> uv.y;
+			uvs.push_back(uv);
+		} else if (token == "vc"){
+			glm::vec3	color;
+			iss >> color.x >> color.y >> color.z;
+			colors.push_back(color);
+		} else if (token == "f"){
+			string	vertexIndices[3];
+			for (int i = 0; i < 3; ++i)
+				iss >> vertexIndices[i];
+			processFace(vertexIndices, positions, colors, normals, uvs, vertices, indices);
+		}
+	}
+	file.close();
+}
+
 unique_ptr<VeModel>	VeModel::createModelFromFile(VeDevice &device, const string &filepath){
 	Builder	builder{};
-	builder.loadModel(filepath);
+	// builder.oldLoadModel(filepath);
+	loadModel(filepath, builder.vertices, builder.indices);
 	return (make_unique<VeModel>(device, builder));
 }
 
