@@ -9,12 +9,12 @@ const vec2 OFFSETS[6] = vec2[](
 	vec2(1.0, 1.0)
 );
 
-layout (location = 0) out vec2 fragOffset;
-
 struct PointLight {
 	vec4	position;
 	vec4	color;
 };
+
+layout(location = 0) out vec2 fragOffset;
 
 layout(set = 0, binding = 0) uniform GlobalUbo {
 	mat4		projection;

@@ -8,13 +8,12 @@
 
 using namespace std;
 
-struct PointLightPushConstants{
-	glm::vec4	position{};
-	glm::vec4	color{};
-	float		radius;
+struct PushConstantData{
+	glm::mat4	modelMatrix{1.f};
+	glm::mat4	normalMatrix{1.f};
 };
 
-class PointLightSystem{
+class SimpleRender{
 	private:
 		VeDevice				&_veDevice;
 		unique_ptr<VePipeline>	_vePipeline;
@@ -23,11 +22,10 @@ class PointLightSystem{
 		void	createPipelineLayout(VkDescriptorSetLayout globalSetLayout);
 		void	createPipeline(VkRenderPass renderPass);
 	public:
-		PointLightSystem(
+		SimpleRender(
 			VeDevice &veDevice, VkRenderPass renderPass, VkDescriptorSetLayout globalSetLayout
 		);
-		~PointLightSystem();
+		~SimpleRender();
 
-		void	update(FrameInfo &frameInfo, GlobalUbo &ubo);
-		void	render(FrameInfo &frameInfo);
+		void	renderObjects(FrameInfo &frameInfo);
 };

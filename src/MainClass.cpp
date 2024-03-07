@@ -3,6 +3,14 @@
 using namespace std;
 
 void	MainClass::loadGameObjects(const string &filepath, glm::vec3 translation, glm::vec3 scale){
+	ifstream	file;
+
+	file.open("model/" + filepath + ".obj");
+	if (!file){
+		cout << "File \"" << filepath << ".obj\" does not exists" << endl;
+		return;
+	}
+
 	shared_ptr<VeModel>	veModel = VeModel::createModelFromFile(
 		_veDevice, "model/" + filepath + ".obj"
 	);
@@ -21,35 +29,26 @@ MainClass::MainClass(void){
 		.build();
 
 	// Objects
-	loadGameObjects("42",			{.0f, .0f, -6.f}, {.5f, -.5f, .5f});
-	loadGameObjects("colored_cube",	{.0f, .0f, -4.f}, {.5f, 0.5f, .5f});
-	loadGameObjects("cube",			{.0f, .0f, -2.f}, {.5f, 0.5f, .5f});
-	loadGameObjects("flat_vase",	{.0f, .5f, 0.0f}, {5.f, 5.0f, 5.f});
-	loadGameObjects("smooth_vase",	{.0f, .5f, 2.0f}, {5.f, 5.0f, 5.f});
-	loadGameObjects("teapot",		{.0f, .5f, 4.0f}, {.5f, -.5f, .5f});
-	loadGameObjects("teapot2",		{.0f, .0f, 6.0f}, {.5f, -.5f, .5f});
-	loadGameObjects("cube",			{.0f, .7f, 0.0f}, {4.f, 0.1f, 8.f});
+	loadGameObjects("cube", {.0f, 0.0f, .0f}, {1.f, 1.f, 1.f});
+	loadGameObjects("cube", {.0f, 1.1f, .0f}, {2.f, 0.1f, 2.f});
 
 	// Lights
 	vector<glm::vec3>	lightColors{
-		{1.0f, 0.1f, 0.1f},
-		{0.1f, 0.1f, 1.0f},
-		{0.1f, 1.0f, 0.1f},
-		{1.0f, 1.0f, 0.1f},
-		{0.1f, 1.0f, 1.0f},
-		{1.0f, 1.0f, 1.0f}
+		{1.f, 0.f, 0.f},// Red
+		{0.f, 1.f, 0.f},// Green
+		{0.f, 0.f, 1.f},// Blue
 	};
 	for (int i = 0; i < lightColors.size(); i++){
-		auto	pointLight = VeGameObject::makePointLight(.2f);
+		auto	p = VeGameObject::makePointLight(.8f);
 
-		pointLight._color = lightColors[i];
+		p._color = lightColors[i];
 		auto	rotateLight = glm::rotate(
-			glm::mat4(1.f),
+			glm::mat4(1.5f),
 			(i * TWO_PI) / lightColors.size(),
 			{0.f, -1.f, 0.f}
 		);
-		pointLight._transform.translation = glm::vec3(rotateLight * glm::vec4(-1.f, -1.f, -1.f, -1.f));
-		_gameObjects.emplace(pointLight.getId(), move(pointLight));
+		p._transform.translation = glm::vec3(rotateLight * glm::vec4(-1.f, -1.f, -1.f, -1.f));
+		_gameObjects.emplace(p.getId(), move(p));
 	}
 }
 
@@ -81,24 +80,25 @@ void	MainClass::run(void){
 			.build(globalDescriptorSets[i]);
 	}
 
-	SimpleRenderSystem	simpleRenderSystem{
+	SimpleRender	simpleRenderSystem{
 		_veDevice, _veRenderer.getSwapchainRenderPass(), globalSetLayout->getDescriptorSetLayout()
 	};
-	PointLightSystem	pointLightSystem{
+	PointLight		pointLightSystem{
 		_veDevice, _veRenderer.getSwapchainRenderPass(), globalSetLayout->getDescriptorSetLayout()
 	};
-	VeCamera			camera{};
-	float				aspect;
-	auto				viewerObject = VeGameObject::createGameObject();
-	KeyboardController	cameraController{_veWindow.getGLFWwindow()};
 
-	auto				currentTime = chrono::high_resolution_clock::now();
-	auto				newTime = currentTime;
-	float				frameTime;
-	int					frameIndex;
+	VeCamera	camera{};
+	float		aspect;
+	auto		viewerObject = VeGameObject::createGameObject();
+	Controller	cameraController{_veWindow.getGLFWwindow()};
+
+	auto		currentTime = chrono::high_resolution_clock::now();
+	auto		newTime = currentTime;
+	float		frameTime;
+	int			frameIndex;
 
 	// Default value for camera
-	viewerObject._transform.translation = {-8.f, .0f, .0f};
+	viewerObject._transform.translation = {-8.f, -2.0f, .0f};
 	viewerObject._transform.rotation = {.0f, 1.5f, .0f};
 	while (!_veWindow.shouldClose()){
 		glfwPollEvents();

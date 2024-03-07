@@ -1,9 +1,9 @@
 NAME		=	scop
 SRC			=	main.cpp\
-				KeyboardController.cpp\
+				Controller.cpp\
 				MainClass.cpp\
-				PointLightSystem.cpp\
-				SimpleRenderSystem.cpp\
+				PointLight.cpp\
+				SimpleRender.cpp\
 				VulkanEngine/VeBuffer.cpp\
 				VulkanEngine/VeCamera.cpp\
 				VulkanEngine/VeDescriptors.cpp\
@@ -21,14 +21,14 @@ RM			=	rm -rf
 GLSLC		=	./shader/glslc
 
 # Flags
-CPPFLAGS	=	-std=c++17 -g3 -MMD
+CPPFLAGS	=	-std=c++17 -MMD
 LDFLAGS		=	-lglfw -lvulkan -ldl -lpthread -lX11 -lXxf86vm -lXrandr -lXi
 
 # Path
 INC			=	-Iglm -Iinc -Iinc/VulkanEngine
 SRC_PATH	=	./src/
 OBJ_PATH	=	./obj/
-OBJ_PATH_VE	=	./obj/VulkanEngine
+OBJ_PATH_VE	=	./obj/VulkanEngine/
 
 # Objects
 OBJ_DIRS	=	${OBJ_PATH}
@@ -53,19 +53,21 @@ run:${NAME}
 	clear
 	./${NAME}
 
+shader:shaderclean
+	${GLSLC} ./shader/simpleShader.vert -o ./shader/simpleShader.vert.spv
+	${GLSLC} ./shader/simpleShader.frag -o ./shader/simpleShader.frag.spv
+	${GLSLC} ./shader/pointLight.vert -o ./shader/pointLight.vert.spv
+	${GLSLC} ./shader/pointLight.frag -o ./shader/pointLight.frag.spv
+
 ${OBJ_PATH}%.o:${SRC_PATH}%.cpp
 	${CPP} ${CPPFLAGS} ${INC} -c $< -o $@
 
 ${OBJ_DIRS}:
 	mkdir ${OBJ_DIRS} ${OBJ_PATH_VE}
 
-${NAME}:${OBJ_DIRS} ${OBJ} shaderclean
+${NAME}:${OBJ_DIRS} ${OBJ} shader
 	${CPP} ${OBJ} ${LDFLAGS} -o $@
-	${GLSLC} ./shader/simpleShader.vert -o ./shader/simpleShader.vert.spv
-	${GLSLC} ./shader/simpleShader.frag -o ./shader/simpleShader.frag.spv
-	${GLSLC} ./shader/pointLight.vert -o ./shader/pointLight.vert.spv
-	${GLSLC} ./shader/pointLight.frag -o ./shader/pointLight.frag.spv
 
-.PHONY:all clean shaderclean fclean re run
+.PHONY:all clean shaderclean fclean re run shader
 
 -include ${DEP}

@@ -1,6 +1,6 @@
-#include <PointLightSystem.hpp>
+#include <PointLight.hpp>
 
-void	PointLightSystem::createPipelineLayout(VkDescriptorSetLayout globalSetLayout){
+void	PointLight::createPipelineLayout(VkDescriptorSetLayout globalSetLayout){
 	VkPushConstantRange	pushConstantRange{};
 	pushConstantRange.stageFlags = VK_SHADER_STAGE_VERTEX_BIT | VK_SHADER_STAGE_FRAGMENT_BIT;
 	pushConstantRange.offset = 0;
@@ -19,7 +19,7 @@ void	PointLightSystem::createPipelineLayout(VkDescriptorSetLayout globalSetLayou
 		throw (runtime_error("failed to create pipeline layout"));
 }
 
-void	PointLightSystem::createPipeline(VkRenderPass renderPass){
+void	PointLight::createPipeline(VkRenderPass renderPass){
 	PipelineConfigInfo	pipelineConfig{};
 
 	VePipeline::defaultPipelineConfigInfo(pipelineConfig);
@@ -36,18 +36,18 @@ void	PointLightSystem::createPipeline(VkRenderPass renderPass){
 	);
 }
 
-PointLightSystem::PointLightSystem(
+PointLight::PointLight(
 	VeDevice &veDevice, VkRenderPass renderPass, VkDescriptorSetLayout globalSetLayout
 ) : _veDevice(veDevice){
 	createPipelineLayout(globalSetLayout);
 	createPipeline(renderPass);
 }
 
-PointLightSystem::~PointLightSystem(){
+PointLight::~PointLight(){
 	vkDestroyPipelineLayout(_veDevice.device(), _pipelineLayout, nullptr);
 }
 
-void	PointLightSystem::update(FrameInfo &frameInfo, GlobalUbo &ubo){
+void	PointLight::update(FrameInfo &frameInfo, GlobalUbo &ubo){
 	auto	rotateLight = glm::rotate(glm::mat4(1.f), frameInfo.frameTime, {0.f, -1.f, 0.f});
 	int		lightIndex = 0;
 
@@ -67,7 +67,7 @@ void	PointLightSystem::update(FrameInfo &frameInfo, GlobalUbo &ubo){
 	ubo.numLights = lightIndex;
 }
 
-void	PointLightSystem::render(FrameInfo &frameInfo){
+void	PointLight::render(FrameInfo &frameInfo){
 	map<float, uint32_t>	sorted;
 
 	for (auto &kv: frameInfo.gameObject){

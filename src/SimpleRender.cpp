@@ -1,6 +1,6 @@
-#include <SimpleRenderSystem.hpp>
+#include <SimpleRender.hpp>
 
-void	SimpleRenderSystem::createPipelineLayout(VkDescriptorSetLayout globalSetLayout){
+void	SimpleRender::createPipelineLayout(VkDescriptorSetLayout globalSetLayout){
 	VkPushConstantRange	pushConstantRange{};
 	pushConstantRange.stageFlags = VK_SHADER_STAGE_VERTEX_BIT | VK_SHADER_STAGE_FRAGMENT_BIT;
 	pushConstantRange.offset = 0;
@@ -19,7 +19,7 @@ void	SimpleRenderSystem::createPipelineLayout(VkDescriptorSetLayout globalSetLay
 		throw (runtime_error("failed to create pipeline layout"));
 }
 
-void	SimpleRenderSystem::createPipeline(VkRenderPass renderPass){
+void	SimpleRender::createPipeline(VkRenderPass renderPass){
 	PipelineConfigInfo	pipelineConfig{};
 
 	VePipeline::defaultPipelineConfigInfo(pipelineConfig);
@@ -33,18 +33,18 @@ void	SimpleRenderSystem::createPipeline(VkRenderPass renderPass){
 	);
 }
 
-SimpleRenderSystem::SimpleRenderSystem(
+SimpleRender::SimpleRender(
 	VeDevice &veDevice, VkRenderPass renderPass, VkDescriptorSetLayout globalSetLayout
 ) : _veDevice(veDevice){
 	createPipelineLayout(globalSetLayout);
 	createPipeline(renderPass);
 }
 
-SimpleRenderSystem::~SimpleRenderSystem(){
+SimpleRender::~SimpleRender(){
 	vkDestroyPipelineLayout(_veDevice.device(), _pipelineLayout, nullptr);
 }
 
-void	SimpleRenderSystem::renderObjects(FrameInfo &frameInfo){
+void	SimpleRender::renderObjects(FrameInfo &frameInfo){
 	_vePipeline->bind(frameInfo.commandBuffer);
 	vkCmdBindDescriptorSets(
 		frameInfo.commandBuffer,

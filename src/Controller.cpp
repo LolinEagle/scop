@@ -1,4 +1,4 @@
-#include <KeyboardController.hpp>
+#include <Controller.hpp>
 
 double	gScroll = 0;
 
@@ -6,15 +6,15 @@ void	scrollCallback(GLFWwindow *window, double xoffset, double yoffset){
 	gScroll = yoffset;
 }
 
-KeyboardController::KeyboardController(GLFWwindow *window){
+Controller::Controller(GLFWwindow *window){
 	glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_HIDDEN);
 	glfwSetScrollCallback(window, scrollCallback);
 }
 
-KeyboardController::~KeyboardController(){
+Controller::~Controller(){
 }
 
-void	KeyboardController::moveInPlaneXZ(GLFWwindow *window, float dt, VeGameObject &gameObject){
+void	Controller::moveInPlaneXZ(GLFWwindow *window, float dt, VeGameObject &gameObject){
 	// Escape
 	if (glfwGetKey(window, _keys.escape) == GLFW_PRESS) glfwSetWindowShouldClose(window, GLFW_TRUE);
 

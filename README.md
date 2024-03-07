@@ -1,2 +1,2 @@
 # scop
-Basic GPU rendering with OpenGL
+Basic GPU rendering with Vulkan

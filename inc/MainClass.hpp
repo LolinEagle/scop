@@ -1,8 +1,8 @@
 #pragma once
 
-#include <KeyboardController.hpp>
-#include <SimpleRenderSystem.hpp>
-#include <PointLightSystem.hpp>
+#include <Controller.hpp>
+#include <SimpleRender.hpp>
+#include <PointLight.hpp>
 
 #include <VeBuffer.hpp>
 #include <VeCamera.hpp>

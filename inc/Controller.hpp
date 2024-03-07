@@ -2,7 +2,7 @@
 
 #include <VeGameObject.hpp>
 
-class KeyboardController{
+class Controller{
 	private:
 		struct KeyMappings{
 			int	moveForward = GLFW_KEY_W;
@@ -17,8 +17,8 @@ class KeyboardController{
 		const float			_lookSpeed = 16.f;
 		const double		_lookOffset = 2.0;
 	public:
-		KeyboardController(GLFWwindow *window);
-		~KeyboardController();
+		Controller(GLFWwindow *window);
+		~Controller();
 
 		void	moveInPlaneXZ(GLFWwindow *window, float dt, VeGameObject &gameObject);
 };
