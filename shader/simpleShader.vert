@@ -28,8 +28,13 @@ layout(push_constant) uniform Push {
 } push;
 
 void	main(void){
+	// Transforms position into world space coordinates
 	vec4	positionWorld = push.modelMatrix * vec4(position, 1.0);
 
+	// 1. Calculates the vertex pos by applying projection and view matrices
+	// 2. Normal is multiplied by this matrix and then normalized
+	// 3. Assigns the position of the vertex in world space to fragPosWorld
+	// 4. Pass the fragment color to the fragment shader.
 	gl_Position = ubo.projection * ubo.view * positionWorld;
 	fragNormalWorld = normalize(mat3(push.normalMatrix) * normal);
 	fragPosWorld = positionWorld.xyz;
