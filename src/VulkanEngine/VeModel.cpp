@@ -47,9 +47,7 @@ bool	VeModel::Vertex::operator==(const Vertex &other) const {
 
 void	VeModel::Builder::loadModel(const string &filepath){
 	ifstream			file(filepath);
-	vector<glm::vec3>	positions;
-	vector<glm::vec3>	colors;
-	vector<glm::vec3>	normals;
+	vector<glm::vec3>	positions, colors, normals;
 	vector<glm::vec2>	uvs;
 	string				line;
 
@@ -70,33 +68,57 @@ void	VeModel::Builder::loadModel(const string &filepath){
 			iss >> uv.x >> uv.y;
 			uvs.push_back(uv);
 		} else if (token == "f"){// Face
-			string	vertexIndices[3];
-			for (int i = 0; i < 3; ++i){
-				iss >> vertexIndices[i];
+			string		vertexIndices, indexStr;
+			int			position, uv, normal;
+			size_t		found;
+			uint32_t	x[4];
 
-				istringstream	indicesStream(vertexIndices[i]);
-				string			indexStr;
-				int				positionIndex, uvIndex, normalIndex;
+			for (int i = 0; i < 4; i++){
+				vertexIndices.clear();	// Clear vertex indices string
+				iss >> vertexIndices;	// Get vertex indices
 
-				getline(indicesStream, indexStr, '/');
-				positionIndex = stoi(indexStr) - 1;
-				getline(indicesStream, indexStr, '/');
-				uvIndex = stoi(indexStr) - 1;
-				getline(indicesStream, indexStr, '/');
-				normalIndex = stoi(indexStr) - 1;
+				// For corners with four face
+				if (vertexIndices.empty())
+					break ;
+				if (i == 3){
+					indices.push_back(x[0]);
+					indices.push_back(x[2]);
+				}
 
+				istringstream	indicesStream(vertexIndices);	// Make it a input string stream
+				found = vertexIndices.find('/');				// Find if face have uv and normal
+
+				// Get from line vertex indices
+				if (found != string::npos){
+					getline(indicesStream, indexStr, '/');
+					position = stoi(indexStr) - 1;
+					getline(indicesStream, indexStr, '/');
+					uv = stoi(indexStr) - 1;
+					getline(indicesStream, indexStr, '/');
+					normal = stoi(indexStr) - 1;
+				} else {
+					getline(indicesStream, indexStr);
+					position = stoi(indexStr) - 1;
+					uv = -1;
+					normal = -1;
+				}
+
+				// Build the vertex
 				Vertex	vertex{};
-				vertex.position = positions[positionIndex];
-				if (uvIndex >= 0) vertex.uv = uvs[uvIndex];
-				if (normalIndex >= 0) vertex.normal = normals[normalIndex];
+				vertex.position = positions[position];
+				if (uv >= 0) vertex.uv = uvs[uv];
+				if (normal >= 0) vertex.normal = normals[normal];
 				vertex.color = glm::vec3(1.f, 1.f, 1.f);
 
+				// Add it
 				auto	it = find(vertices.begin(), vertices.end(), vertex);
 				if (it == vertices.end()){
 					vertices.push_back(vertex);
-					indices.push_back(vertices.size() - 1);
+					x[i] = vertices.size() - 1;
+					indices.push_back(x[i]);
 				} else {
-					indices.push_back(distance(vertices.begin(), it));
+					x[i] = distance(vertices.begin(), it);
+					indices.push_back(x[i]);
 				}
 			}
 		}

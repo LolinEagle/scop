@@ -14,6 +14,7 @@ void	SimpleRender::createPipelineLayout(VkDescriptorSetLayout globalSetLayout){
 	pipelineLayoutInfo.pSetLayouts = descriptorSetLayouts.data();
 	pipelineLayoutInfo.pushConstantRangeCount = 1;
 	pipelineLayoutInfo.pPushConstantRanges = &pushConstantRange;
+
 	if (vkCreatePipelineLayout(_veDevice.device(), &pipelineLayoutInfo, nullptr, &_pipelineLayout)
 	!= VK_SUCCESS)
 		throw (runtime_error("failed to create pipeline layout"));
@@ -25,6 +26,7 @@ void	SimpleRender::createPipeline(VkRenderPass renderPass){
 	VePipeline::defaultPipelineConfigInfo(pipelineConfig);
 	pipelineConfig.renderPass = renderPass;
 	pipelineConfig.pipelineLayout = _pipelineLayout;
+
 	_vePipeline = make_unique<VePipeline>(
 		_veDevice,
 		"shader/simpleShader.vert.spv",
@@ -59,10 +61,12 @@ void	SimpleRender::renderObjects(FrameInfo &frameInfo){
 	for (auto &kv: frameInfo.gameObject){
 		auto	&obj = kv.second;
 		if (obj._model == nullptr)
-			continue;
+			continue ;
+
 		PushConstantData	push{};
 		push.modelMatrix = obj._transform.mat4();
 		push.normalMatrix = obj._transform.normalMatrix();
+
 		vkCmdPushConstants(
 			frameInfo.commandBuffer,
 			_pipelineLayout,

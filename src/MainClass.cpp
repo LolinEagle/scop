@@ -8,7 +8,7 @@ void	MainClass::loadGameObjects(const string &filepath, glm::vec3 translation, g
 	file.open("model/" + filepath + ".obj");
 	if (!file){
 		cout << "File \"" << filepath << ".obj\" does not exists" << endl;
-		return;
+		return ;
 	}
 
 	shared_ptr<VeModel>	veModel = VeModel::createModelFromFile(
@@ -28,9 +28,19 @@ MainClass::MainClass(void){
 		.addPoolSize(VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER, MAX_FRAMES_IN_FLIGHT)
 		.build();
 
-	// Objects
-	loadGameObjects("cube", {.0f, 0.0f, .0f}, {1.f, 1.f, 1.f});
-	loadGameObjects("cube", {.0f, 1.1f, .0f}, {2.f, 0.1f, 2.f});
+	// Objects (filepath, translation, scale)
+	const int	scene = 4;
+	if (scene == 0) loadGameObjects("42",		{0.f, 0.f, 0.f}, {1.f, -1.f, 1.f});
+	if (scene == 1) loadGameObjects("cube",		{0.f, 0.f, 0.f}, {1.f,  1.f, 1.f});
+	if (scene == 2) loadGameObjects("teapot",	{0.f, 0.f, 0.f}, {1.f, -1.f, 1.f});
+	if (scene == 3) loadGameObjects("teapot2",	{0.f, 0.f, 0.f}, {1.f, -1.f, 1.f});
+	if (scene == 4){
+		loadGameObjects("42",		{-2.f, 0.0f,  1.f}, {1.f, -1.0f, 1.f});
+		loadGameObjects("cube",		{-2.f, 0.0f, -2.f}, {1.f,  1.0f, 1.f});
+		loadGameObjects("teapot",	{ 2.f, 1.0f,  2.f}, {1.f, -1.0f, 1.f});
+		loadGameObjects("teapot2",	{ 2.f, 0.0f, -2.f}, {1.f, -1.0f, 1.f});
+		loadGameObjects("cube",		{ 0.f, 1.2f,  0.f}, {8.f,  0.1f, 8.f});
+	}
 
 	// Lights
 	vector<glm::vec3>	lightColors{
