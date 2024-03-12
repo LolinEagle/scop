@@ -5,11 +5,13 @@
 #include <GLFW/glfw3.h>
 
 // glm
-#define GLM_FORCE_RADIANS
+#define GLM_ENABLE_EXPERIMENTAL
 #define GLM_FORCE_DEPTH_ZERO_TO_ONE
+#define GLM_FORCE_RADIANS
 #include <glm.hpp>
 #include "../glm/gtc/constants.hpp"
 #include "../glm/gtc/matrix_transform.hpp"
+#include "../glm/gtx/hash.hpp"
 
 // Include
 #include <chrono>

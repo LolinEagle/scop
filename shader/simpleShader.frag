@@ -67,5 +67,5 @@ void	main(void){
 		blinnTerm = pow(blinnTerm, SHININESS);
 		specularLight += intensity * blinnTerm;
 	}
-	outColor = vec4(diffuseLight * fragColor + specularLight * fragColor, 1.0);
+	outColor = vec4((diffuseLight + specularLight + 0.2) * fragColor, 1.0);
 }

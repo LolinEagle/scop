@@ -30,16 +30,17 @@ MainClass::MainClass(void){
 
 	// Objects (filepath, translation, scale)
 	const int	scene = 4;
-	if (scene == 0) loadGameObjects("42",		{0.f, 0.f, 0.f}, {1.f, -1.f, 1.f});
-	if (scene == 1) loadGameObjects("cube",		{0.f, 0.f, 0.f}, {1.f,  1.f, 1.f});
-	if (scene == 2) loadGameObjects("teapot",	{0.f, 0.f, 0.f}, {1.f, -1.f, 1.f});
-	if (scene == 3) loadGameObjects("teapot2",	{0.f, 0.f, 0.f}, {1.f, -1.f, 1.f});
+	if (scene == 0) loadGameObjects("42",		{0.f, 0.f, -1.f}, {1.f, -1.f, 1.f});
+	if (scene == 1) loadGameObjects("cube",		{0.f, 0.f,  0.f}, {1.f,  1.f, 1.f});
+	if (scene == 2) loadGameObjects("teapot",	{0.f, 0.f,  0.f}, {1.f, -1.f, 1.f});
+	if (scene == 3) loadGameObjects("teapot2",	{0.f, 0.f,  0.f}, {1.f, -1.f, 1.f});
 	if (scene == 4){
-		loadGameObjects("42",		{-2.f, 0.0f,  1.f}, {1.f, -1.0f, 1.f});
-		loadGameObjects("cube",		{-2.f, 0.0f, -2.f}, {1.f,  1.0f, 1.f});
-		loadGameObjects("teapot",	{ 2.f, 1.0f,  2.f}, {1.f, -1.0f, 1.f});
-		loadGameObjects("teapot2",	{ 2.f, 0.0f, -2.f}, {1.f, -1.0f, 1.f});
-		loadGameObjects("cube",		{ 0.f, 1.2f,  0.f}, {8.f,  0.1f, 8.f});
+		loadGameObjects("42",		{-2.0f, -0.2f,  1.0f}, {1.0f, -1.0f, 1.0f});
+		loadGameObjects("cube",		{-2.0f,  0.0f, -2.0f}, {1.0f,  1.0f, 1.0f});
+		loadGameObjects("teapot",	{ 2.0f,  1.1f,  2.0f}, {1.0f, -1.0f, 1.0f});
+		loadGameObjects("teapot2",	{ 2.0f, -0.3f, -2.0f}, {1.0f, -1.0f, 1.0f});
+		loadGameObjects("cube",		{ 0.0f,  1.2f,  0.0f}, {4.0f,  0.1f, 4.0f});
+		loadGameObjects("cube",		{ 0.0f, -4.0f,  0.0f}, {4.0f,  0.1f, 4.0f});
 	}
 
 	// Lights
@@ -47,13 +48,16 @@ MainClass::MainClass(void){
 		{1.f, 0.f, 0.f},// Red
 		{0.f, 1.f, 0.f},// Green
 		{0.f, 0.f, 1.f},// Blue
+		{1.f, 0.f, 0.f},// Red
+		{0.f, 1.f, 0.f},// Green
+		{0.f, 0.f, 1.f}	// Blue
 	};
 	for (int i = 0; i < lightColors.size(); i++){
-		auto	p = VeGameObject::makePointLight(.8f);
+		auto	p = VeGameObject::makePointLight();
 
 		p._color = lightColors[i];
 		auto	rotateLight = glm::rotate(
-			glm::mat4(1.5f),
+			glm::mat4(2.2f),
 			(i * TWO_PI) / lightColors.size(),
 			{0.f, -1.f, 0.f}
 		);

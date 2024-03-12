@@ -1,20 +1,15 @@
 #include <VeModel.hpp>
 
-#define GLM_ENABLE_EXPERIMENTAL
-#include "../glm/gtx/hash.hpp"
-
-namespace std{
-	template <>
-	struct hash<VeModel::Vertex>{
-		size_t	operator()(VeModel::Vertex const &vertex) const {
-			size_t	seed = 0;
-			hashCombine(seed, vertex.position, vertex.color, vertex.normal, vertex.uv);
-			return (seed);
-		}
-	};
-}
-
 using namespace std;
+
+template <>
+struct hash<VeModel::Vertex>{
+	size_t	operator()(VeModel::Vertex const &vertex) const {
+		size_t	seed = 0;
+		hashCombine(seed, vertex.position, vertex.color, vertex.normal, vertex.uv);
+		return (seed);
+	}
+};
 
 vector<VkVertexInputBindingDescription>		VeModel::Vertex::getBindingDescriptions(void){
 	vector<VkVertexInputBindingDescription>		bindingDescription(1);
@@ -63,15 +58,16 @@ void	VeModel::Builder::loadModel(const string &filepath){
 			glm::vec3	normal;
 			iss >> normal.x >> normal.y >> normal.z;
 			normals.push_back(normal);
-		} else if (token == "vt"){// Texcoord
+		} else if (token == "vt"){// Texture
 			glm::vec2	uv;
 			iss >> uv.x >> uv.y;
 			uvs.push_back(uv);
 		} else if (token == "f"){// Face
-			string		vertexIndices, indexStr;
-			int			position, uv, normal;
-			size_t		found;
-			uint32_t	x[4];
+			string		vertexIndices, indexStr;// Vertex indices, temporary index
+			int			position, uv, normal;	// Position, texture, normal
+			size_t		found;					// Found if face have uv and normal
+			uint32_t	x[4];					// Keep indices for square face
+			int			verticeAdded = 0;		// How many vertices have be added
 
 			for (int i = 0; i < 4; i++){
 				vertexIndices.clear();	// Clear vertex indices string
@@ -114,12 +110,23 @@ void	VeModel::Builder::loadModel(const string &filepath){
 				auto	it = find(vertices.begin(), vertices.end(), vertex);
 				if (it == vertices.end()){
 					vertices.push_back(vertex);
+					verticeAdded++;
 					x[i] = vertices.size() - 1;
 					indices.push_back(x[i]);
 				} else {
 					x[i] = distance(vertices.begin(), it);
 					indices.push_back(x[i]);
 				}
+			}
+			// Build the vertex normal if not build already
+			if (normal < 0){
+				glm::vec3	tmp = glm::vec3(
+					vertices[indices[indices.size() - 1] - 0].position +
+					vertices[indices[indices.size() - 2] - 0].position +
+					vertices[indices[indices.size() - 3] - 0].position
+				) / glm::vec3(3.f);
+				for(; verticeAdded > 0; verticeAdded--)
+					vertices[vertices.size() - verticeAdded].normal = tmp;
 			}
 		}
 	}
