@@ -285,17 +285,16 @@ bool					VeDevice::checkDeviceExtensionSupport(VkPhysicalDevice device){
 
 	set<string>	requiredExtensions(deviceExtensions.begin(), deviceExtensions.end());
 
-	for (const auto &extension : availableExtensions){
+	for (const auto &extension : availableExtensions)
 		requiredExtensions.erase(extension.extensionName);
-	}
 	return (requiredExtensions.empty());
 }
 
 SwapChainSupportDetails	VeDevice::querySwapChainSupport(VkPhysicalDevice device){
-	SwapChainSupportDetails details;
+	SwapChainSupportDetails	details;
 	vkGetPhysicalDeviceSurfaceCapabilitiesKHR(device, surface_, &details.capabilities);
 
-	uint32_t formatCount;
+	uint32_t	formatCount;
 	vkGetPhysicalDeviceSurfaceFormatsKHR(device, surface_, &formatCount, nullptr);
 
 	if (formatCount != 0){
@@ -303,7 +302,7 @@ SwapChainSupportDetails	VeDevice::querySwapChainSupport(VkPhysicalDevice device)
 		vkGetPhysicalDeviceSurfaceFormatsKHR(device, surface_, &formatCount, details.formats.data());
 	}
 
-	uint32_t presentModeCount;
+	uint32_t	presentModeCount;
 	vkGetPhysicalDeviceSurfacePresentModesKHR(device, surface_, &presentModeCount, nullptr);
 
 	if (presentModeCount != 0){
@@ -312,7 +311,8 @@ SwapChainSupportDetails	VeDevice::querySwapChainSupport(VkPhysicalDevice device)
 			device,
 			surface_,
 			&presentModeCount,
-			details.presentModes.data());
+			details.presentModes.data()
+		);
 	}
 	return (details);
 }
@@ -331,7 +331,7 @@ void	DestroyDebugUtilsMessengerEXT(
 	VkDebugUtilsMessengerEXT debugMessenger,
 	const VkAllocationCallbacks *pAllocator
 ){
-	auto func = (PFN_vkDestroyDebugUtilsMessengerEXT)vkGetInstanceProcAddr(instance, "vkDestroyDebugUtilsMessengerEXT");
+	auto	func = (PFN_vkDestroyDebugUtilsMessengerEXT)vkGetInstanceProcAddr(instance, "vkDestroyDebugUtilsMessengerEXT");
 	if (func != nullptr)
 		func(instance, debugMessenger, pAllocator);
 }
@@ -510,7 +510,7 @@ void			VeDevice::createImageWithInfo(
 	VkDeviceMemory &imageMemory
 ){
 	if (vkCreateImage(device_, &imageInfo, nullptr, &image) != VK_SUCCESS)
-		throw (runtime_error("failed to create image!"));
+		throw (runtime_error("failed to create image"));
 
 	VkMemoryRequirements memRequirements;
 	vkGetImageMemoryRequirements(device_, image, &memRequirements);
@@ -521,8 +521,8 @@ void			VeDevice::createImageWithInfo(
 	allocInfo.memoryTypeIndex = findMemoryType(memRequirements.memoryTypeBits, properties);
 
 	if (vkAllocateMemory(device_, &allocInfo, nullptr, &imageMemory) != VK_SUCCESS)
-		throw (runtime_error("failed to allocate image memory!"));
+		throw (runtime_error("failed to allocate image memory"));
 
 	if (vkBindImageMemory(device_, image, imageMemory, 0) != VK_SUCCESS)
-		throw (runtime_error("failed to bind image memory!"));
+		throw (runtime_error("failed to bind image memory"));
 }

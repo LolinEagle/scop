@@ -8,21 +8,19 @@ void	SimpleRender::createPipelineLayout(VkDescriptorSetLayout globalSetLayout){
 
 	vector<VkDescriptorSetLayout>	descriptorSetLayouts{globalSetLayout};
 
-	VkPipelineLayoutCreateInfo	pipelineLayoutInfo{};
-	pipelineLayoutInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_LAYOUT_CREATE_INFO;
-	pipelineLayoutInfo.setLayoutCount = static_cast<uint32_t>(descriptorSetLayouts.size());
-	pipelineLayoutInfo.pSetLayouts = descriptorSetLayouts.data();
-	pipelineLayoutInfo.pushConstantRangeCount = 1;
-	pipelineLayoutInfo.pPushConstantRanges = &pushConstantRange;
+	VkPipelineLayoutCreateInfo	layoutInfo{};
+	layoutInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_LAYOUT_CREATE_INFO;
+	layoutInfo.setLayoutCount = static_cast<uint32_t>(descriptorSetLayouts.size());
+	layoutInfo.pSetLayouts = descriptorSetLayouts.data();
+	layoutInfo.pushConstantRangeCount = 1;
+	layoutInfo.pPushConstantRanges = &pushConstantRange;
 
-	if (vkCreatePipelineLayout(_veDevice.device(), &pipelineLayoutInfo, nullptr, &_pipelineLayout)
-	!= VK_SUCCESS)
+	if (vkCreatePipelineLayout(_veDevice.device(), &layoutInfo, nullptr, &_pipelineLayout) != 0)
 		throw (runtime_error("failed to create pipeline layout"));
 }
 
 void	SimpleRender::createPipeline(VkRenderPass renderPass){
 	PipelineConfigInfo	pipelineConfig{};
-
 	VePipeline::defaultPipelineConfigInfo(pipelineConfig);
 	pipelineConfig.renderPass = renderPass;
 	pipelineConfig.pipelineLayout = _pipelineLayout;

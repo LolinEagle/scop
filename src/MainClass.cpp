@@ -39,8 +39,7 @@ MainClass::MainClass(void){
 		loadGameObjects("cube",		{-2.0f,  0.0f, -2.0f}, {1.0f,  1.0f, 1.0f});
 		loadGameObjects("teapot",	{ 2.0f,  1.1f,  2.0f}, {1.0f, -1.0f, 1.0f});
 		loadGameObjects("teapot2",	{ 2.0f, -0.3f, -2.0f}, {1.0f, -1.0f, 1.0f});
-		loadGameObjects("cube",		{ 0.0f,  1.2f,  0.0f}, {4.0f,  0.1f, 4.0f});
-		loadGameObjects("cube",		{ 0.0f, -4.0f,  0.0f}, {4.0f,  0.1f, 4.0f});
+		loadGameObjects("cube",		{ 0.0f,  1.2f,  0.0f}, {8.0f,  0.1f, 8.0f});
 	}
 
 	// Lights

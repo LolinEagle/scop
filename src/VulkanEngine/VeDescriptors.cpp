@@ -105,9 +105,8 @@ bool VeDescriptorPool::allocateDescriptor(
 
 	// Might want to create a "DescriptorPoolManager" class that handles this case, and builds
 	// a new pool whenever an old pool fills up. But this is beyond our current scope
-	if (vkAllocateDescriptorSets(veDevice.device(), &allocInfo, &descriptor) != VK_SUCCESS){
+	if (vkAllocateDescriptorSets(veDevice.device(), &allocInfo, &descriptor) != VK_SUCCESS)
 		return false;
-	}
 	return true;
 }
 
@@ -174,16 +173,14 @@ VeDescriptorWriter &VeDescriptorWriter::writeImage(
 
 bool VeDescriptorWriter::build(VkDescriptorSet &set){
 	bool success = pool.allocateDescriptor(setLayout.getDescriptorSetLayout(), set);
-	if (!success){
-		return false;
-	}
+	if (!success)
+		return (false);
 	overwrite(set);
 	return true;
 }
 
 void VeDescriptorWriter::overwrite(VkDescriptorSet &set){
-	for (auto &write : writes){
+	for (auto &write : writes)
 		write.dstSet = set;
-	}
 	vkUpdateDescriptorSets(pool.veDevice.device(), writes.size(), writes.data(), 0, nullptr);
 }

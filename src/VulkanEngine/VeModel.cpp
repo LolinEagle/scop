@@ -2,6 +2,12 @@
 
 using namespace std;
 
+template <typename T, typename... Rest>
+void hashCombine(size_t& seed, const T& v, const Rest&... rest){
+	seed ^= hash<T>{}(v) + 0x9e3779b9 + (seed << 6) + (seed >> 2);
+	(hashCombine(seed, rest), ...);
+};
+
 template <>
 struct hash<VeModel::Vertex>{
 	size_t	operator()(VeModel::Vertex const &vertex) const {
@@ -121,11 +127,11 @@ void	VeModel::Builder::loadModel(const string &filepath){
 			// Build the vertex normal if not build already
 			if (normal < 0){
 				glm::vec3	tmp = glm::vec3(
-					vertices[indices[indices.size() - 1] - 0].position +
-					vertices[indices[indices.size() - 2] - 0].position +
-					vertices[indices[indices.size() - 3] - 0].position
+					vertices[indices[indices.size() - 1]].position +
+					vertices[indices[indices.size() - 2]].position +
+					vertices[indices[indices.size() - 3]].position
 				) / glm::vec3(3.f);
-				for(; verticeAdded > 0; verticeAdded--)
+				for (; verticeAdded > 0; verticeAdded--)
 					vertices[vertices.size() - verticeAdded].normal = tmp;
 			}
 		}

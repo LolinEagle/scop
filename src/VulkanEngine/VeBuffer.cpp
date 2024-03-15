@@ -1,11 +1,9 @@
 #include <VeBuffer.hpp>
-#include <cassert>
 
-VkDeviceSize VeBuffer::getAlignment(VkDeviceSize instanceSize, VkDeviceSize minOffsetAlignment){
-	if (minOffsetAlignment > 0){
-		return (instanceSize + minOffsetAlignment - 1) & ~(minOffsetAlignment - 1);
-	}
-	return instanceSize;
+VkDeviceSize	VeBuffer::getAlignment(VkDeviceSize deviceSize, VkDeviceSize minOffsetAlignment){
+	if (minOffsetAlignment > 0)
+		return ((deviceSize + minOffsetAlignment - 1) & ~(minOffsetAlignment - 1));
+	return (deviceSize);
 }
 
 VeBuffer::VeBuffer(
@@ -16,85 +14,94 @@ VeBuffer::VeBuffer(
 	VkMemoryPropertyFlags memoryPropertyFlags,
 	VkDeviceSize minOffsetAlignment
 ):
-	veDevice{device},
-	instanceSize{instanceSize},
-	instanceCount{instanceCount},
-	usageFlags{usageFlags},
-	memoryPropertyFlags{memoryPropertyFlags}
+	_veDevice(device),
+	_instanceSize(instanceSize),
+	_instanceCount(instanceCount),
+	_usageFlags(usageFlags),
+	_memoryPropertyFlags(memoryPropertyFlags)
 {
-	alignmentSize = getAlignment(instanceSize, minOffsetAlignment);
-	bufferSize = alignmentSize * instanceCount;
-	device.createBuffer(bufferSize, usageFlags, memoryPropertyFlags, buffer, memory);
+	_alignmentSize = getAlignment(_instanceSize, minOffsetAlignment);
+	_bufferSize = _alignmentSize * _instanceCount;
+	device.createBuffer(_bufferSize, _usageFlags, _memoryPropertyFlags, _buffer, _memory);
 }
 
 VeBuffer::~VeBuffer(){
 	unmap();
-	vkDestroyBuffer(veDevice.device(), buffer, nullptr);
-	vkFreeMemory(veDevice.device(), memory, nullptr);
+	vkDestroyBuffer(_veDevice.device(), _buffer, nullptr);
+	vkFreeMemory(_veDevice.device(), _memory, nullptr);
 }
 
 VkResult VeBuffer::map(VkDeviceSize size, VkDeviceSize offset){
-	assert(buffer && memory && "Called map on buffer before create");
-	return vkMapMemory(veDevice.device(), memory, offset, size, 0, &mapped);
+	return (vkMapMemory(_veDevice.device(), _memory, offset, size, 0, &_mapped));
 }
 
 void VeBuffer::unmap(){
-	if (mapped){
-		vkUnmapMemory(veDevice.device(), memory);
-		mapped = nullptr;
+	if (_mapped){
+		vkUnmapMemory(_veDevice.device(), _memory);
+		_mapped = nullptr;
 	}
 }
 
 void VeBuffer::writeToBuffer(void *data, VkDeviceSize size, VkDeviceSize offset){
-	assert(mapped && "Cannot copy to unmapped buffer");
-
 	if (size == VK_WHOLE_SIZE){
-		memcpy(mapped, data, bufferSize);
+		memcpy(_mapped, data, _bufferSize);
 	} else {
-		char *memOffset = (char *)mapped;
+		char	*memOffset = (char *)_mapped;
 		memOffset += offset;
 		memcpy(memOffset, data, size);
 	}
 }
 
 VkResult VeBuffer::flush(VkDeviceSize size, VkDeviceSize offset){
-	VkMappedMemoryRange mappedRange = {};
+	VkMappedMemoryRange	mappedRange{};
 	mappedRange.sType = VK_STRUCTURE_TYPE_MAPPED_MEMORY_RANGE;
-	mappedRange.memory = memory;
+	mappedRange.memory = _memory;
 	mappedRange.offset = offset;
 	mappedRange.size = size;
-	return vkFlushMappedMemoryRanges(veDevice.device(), 1, &mappedRange);
+	return (vkFlushMappedMemoryRanges(_veDevice.device(), 1, &mappedRange));
 }
 
 VkResult VeBuffer::invalidate(VkDeviceSize size, VkDeviceSize offset){
-	VkMappedMemoryRange mappedRange = {};
+	VkMappedMemoryRange	mappedRange{};
 	mappedRange.sType = VK_STRUCTURE_TYPE_MAPPED_MEMORY_RANGE;
-	mappedRange.memory = memory;
+	mappedRange.memory = _memory;
 	mappedRange.offset = offset;
 	mappedRange.size = size;
-	return vkInvalidateMappedMemoryRanges(veDevice.device(), 1, &mappedRange);
+	return (vkInvalidateMappedMemoryRanges(_veDevice.device(), 1, &mappedRange));
 }
 
 VkDescriptorBufferInfo VeBuffer::descriptorInfo(VkDeviceSize size, VkDeviceSize offset){
-	return VkDescriptorBufferInfo{
-		buffer,
-		offset,
-		size,
-	};
+	return (VkDescriptorBufferInfo{_buffer, offset, size});
 }
 
-void VeBuffer::writeToIndex(void *data, int index){
-	writeToBuffer(data, instanceSize, index * alignmentSize);
+VkBuffer				VeBuffer::getBuffer(void) const {
+	return(_buffer);
 }
 
-VkResult VeBuffer::flushIndex(int index){
-	return flush(alignmentSize, index * alignmentSize);
+void*					VeBuffer::getMappedMemory(void) const {
+	return(_mapped);
 }
 
-VkDescriptorBufferInfo VeBuffer::descriptorInfoForIndex(int index){
-	return descriptorInfo(alignmentSize, index * alignmentSize);
+uint32_t				VeBuffer::getInstanceCount(void) const {
+	return(_instanceCount);
 }
 
-VkResult VeBuffer::invalidateIndex(int index){
-	return invalidate(alignmentSize, index * alignmentSize);
+VkDeviceSize			VeBuffer::getInstanceSize(void) const {
+	return(_instanceSize);
+}
+
+VkDeviceSize			VeBuffer::getAlignmentSize(void) const {
+	return(_instanceSize);
+}
+
+VkBufferUsageFlags		VeBuffer::getUsageFlags(void) const {
+	return(_usageFlags);
+}
+
+VkMemoryPropertyFlags	VeBuffer::getMemoryPropertyFlags(void) const {
+	return(_memoryPropertyFlags);
+}
+
+VkDeviceSize			VeBuffer::getBufferSize(void) const {
+	return(_bufferSize);
 }

@@ -1,7 +1,6 @@
 #pragma once
 
 #include <VeDevice.hpp>
-#include <VeUtils.hpp>
 #include <VeBuffer.hpp>
 
 using namespace std;

@@ -8,26 +8,26 @@ void	PointLight::createPipelineLayout(VkDescriptorSetLayout globalSetLayout){
 
 	vector<VkDescriptorSetLayout>	descriptorSetLayouts{globalSetLayout};
 
-	VkPipelineLayoutCreateInfo	pipelineLayoutInfo{};
-	pipelineLayoutInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_LAYOUT_CREATE_INFO;
-	pipelineLayoutInfo.setLayoutCount = static_cast<uint32_t>(descriptorSetLayouts.size());
-	pipelineLayoutInfo.pSetLayouts = descriptorSetLayouts.data();
-	pipelineLayoutInfo.pushConstantRangeCount = 1;
-	pipelineLayoutInfo.pPushConstantRanges = &pushConstantRange;
-	if (vkCreatePipelineLayout(_veDevice.device(), &pipelineLayoutInfo, nullptr, &_pipelineLayout)
-	!= VK_SUCCESS)
+	VkPipelineLayoutCreateInfo	layoutInfo{};
+	layoutInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_LAYOUT_CREATE_INFO;
+	layoutInfo.setLayoutCount = static_cast<uint32_t>(descriptorSetLayouts.size());
+	layoutInfo.pSetLayouts = descriptorSetLayouts.data();
+	layoutInfo.pushConstantRangeCount = 1;
+	layoutInfo.pPushConstantRanges = &pushConstantRange;
+
+	if (vkCreatePipelineLayout(_veDevice.device(), &layoutInfo, nullptr, &_pipelineLayout) != 0)
 		throw (runtime_error("failed to create pipeline layout"));
 }
 
 void	PointLight::createPipeline(VkRenderPass renderPass){
 	PipelineConfigInfo	pipelineConfig{};
-
 	VePipeline::defaultPipelineConfigInfo(pipelineConfig);
 	VePipeline::enableAlphaBlending(pipelineConfig);
 	pipelineConfig.attributeDescription.clear();
 	pipelineConfig.bindingDescription.clear();
 	pipelineConfig.renderPass = renderPass;
 	pipelineConfig.pipelineLayout = _pipelineLayout;
+
 	_vePipeline = make_unique<VePipeline>(
 		_veDevice,
 		"shader/pointLight.vert.spv",
@@ -53,9 +53,9 @@ void	PointLight::update(FrameInfo &frameInfo, GlobalUbo &ubo){
 
 	for (auto &kv: frameInfo.gameObject){
 		auto	&obj = kv.second;
-
 		if (obj._pointLight == nullptr)
 			continue ;
+
 		// Time
 		obj._transform.translation = glm::vec3(
 			rotateLight * glm::vec4(obj._transform.translation, 1.f)
