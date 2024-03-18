@@ -22,9 +22,7 @@ class SimpleRender{
 		void	createPipelineLayout(VkDescriptorSetLayout globalSetLayout);
 		void	createPipeline(VkRenderPass renderPass);
 	public:
-		SimpleRender(
-			VeDevice &veDevice, VkRenderPass renderPass, VkDescriptorSetLayout globalSetLayout
-		);
+		SimpleRender(VeDevice &device, VkRenderPass renderPass, VkDescriptorSetLayout layout);
 		~SimpleRender();
 
 		void	renderObjects(FrameInfo &frameInfo);

@@ -34,15 +34,5 @@ class VeBuffer{
 		void					writeToBuffer(void *data, VE_BUFFER_DEFAULT_ARGUMENT);
 		VkResult				flush(VE_BUFFER_DEFAULT_ARGUMENT);
 		VkDescriptorBufferInfo	descriptorInfo(VE_BUFFER_DEFAULT_ARGUMENT);
-		VkResult				invalidate(VE_BUFFER_DEFAULT_ARGUMENT);
-
-		// Getter
 		VkBuffer				getBuffer(void) const;
-		void*					getMappedMemory(void) const;
-		uint32_t				getInstanceCount(void) const;
-		VkDeviceSize			getInstanceSize(void) const;
-		VkDeviceSize			getAlignmentSize(void) const;
-		VkBufferUsageFlags		getUsageFlags(void) const;
-		VkMemoryPropertyFlags	getMemoryPropertyFlags(void) const;
-		VkDeviceSize			getBufferSize(void) const;
 };

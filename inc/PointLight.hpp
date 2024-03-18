@@ -23,9 +23,7 @@ class PointLight{
 		void	createPipelineLayout(VkDescriptorSetLayout globalSetLayout);
 		void	createPipeline(VkRenderPass renderPass);
 	public:
-		PointLight(
-			VeDevice &veDevice, VkRenderPass renderPass, VkDescriptorSetLayout globalSetLayout
-		);
+		PointLight(VeDevice &device, VkRenderPass renderPass, VkDescriptorSetLayout layout);
 		~PointLight();
 
 		void	update(FrameInfo &frameInfo, GlobalUbo &ubo);

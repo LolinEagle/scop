@@ -1,8 +1,8 @@
 #include <VeGameObject.hpp>
 
-// Matrix corrsponds to Translate * Ry * Rx * Rz * Scale
-// Rotations correspond to Tait-bryan angles of Y(1), X(2), Z(3)
 glm::mat4	TransformComponent::mat4(void){
+	// Matrix corrsponds to Translate * Ry * Rx * Rz * Scale
+	// Rotations correspond to Tait-bryan angles of Y(1), X(2), Z(3)
 	const float	c3 = glm::cos(rotation.z);
 	const float	s3 = glm::sin(rotation.z);
 	const float	c2 = glm::cos(rotation.x);
@@ -75,11 +75,12 @@ VeGameObject	VeGameObject::createGameObject(void){
 }
 
 VeGameObject	VeGameObject::makePointLight(float intensity, float radius, glm::vec3 color){
-	VeGameObject obj = VeGameObject::createGameObject();
+	VeGameObject	obj = VeGameObject::createGameObject();
 	obj._color = color;
 	obj._transform.scale.x = radius;
 	obj._pointLight = make_unique<PointLightComponent>();
 	obj._pointLight->lightIntensity = intensity;
+
 	return (obj);
 }
 

@@ -13,9 +13,9 @@ class Controller{
 		};
 
 		const KeyMappings	_keys{};
-		const float			_moveSpeed = 2.5f;
+		const float			_moveSpeed = 4.f;
 		const float			_lookSpeed = 16.f;
-		const double		_lookOffset = 2.0;
+		const double		_lookOffset = 2.;
 	public:
 		Controller(GLFWwindow *window);
 		~Controller();

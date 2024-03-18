@@ -32,6 +32,5 @@ class VeRenderer{
 		void			endSwapChainRenderPass(VkCommandBuffer commandBuffer);
 		VkRenderPass	getSwapchainRenderPass(void) const;
 		float			getAspectRatio(void) const;
-		bool			isFrameInProgress(void) const;
 		VkCommandBuffer	getCurrentCommandBuffer(void) const;
 };

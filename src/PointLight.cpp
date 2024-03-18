@@ -36,10 +36,9 @@ void	PointLight::createPipeline(VkRenderPass renderPass){
 	);
 }
 
-PointLight::PointLight(
-	VeDevice &veDevice, VkRenderPass renderPass, VkDescriptorSetLayout globalSetLayout
-) : _veDevice(veDevice){
-	createPipelineLayout(globalSetLayout);
+PointLight::PointLight(VeDevice &device, VkRenderPass renderPass, VkDescriptorSetLayout layout)
+: _veDevice(device){
+	createPipelineLayout(layout);
 	createPipeline(renderPass);
 }
 

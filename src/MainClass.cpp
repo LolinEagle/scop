@@ -3,17 +3,7 @@
 using namespace std;
 
 void	MainClass::loadGameObjects(const string &filepath, glm::vec3 translation, glm::vec3 scale){
-	ifstream	file;
-
-	file.open("model/" + filepath + ".obj");
-	if (!file){
-		cout << "File \"" << filepath << ".obj\" does not exists" << endl;
-		return ;
-	}
-
-	shared_ptr<VeModel>	veModel = VeModel::createModelFromFile(
-		_veDevice, "model/" + filepath + ".obj"
-	);
+	shared_ptr<VeModel>	veModel = VeModel::createModelFromFile(_veDevice, filepath);
 	auto				gameObject = VeGameObject::createGameObject();
 
 	gameObject._model = veModel;
@@ -30,16 +20,16 @@ MainClass::MainClass(void){
 
 	// Objects (filepath, translation, scale)
 	const int	scene = 4;
-	if (scene == 0) loadGameObjects("42",		{0.f, 0.f, -1.f}, {1.f, -1.f, 1.f});
-	if (scene == 1) loadGameObjects("cube",		{0.f, 0.f,  0.f}, {1.f,  1.f, 1.f});
-	if (scene == 2) loadGameObjects("teapot",	{0.f, 0.f,  0.f}, {1.f, -1.f, 1.f});
-	if (scene == 3) loadGameObjects("teapot2",	{0.f, 0.f,  0.f}, {1.f, -1.f, 1.f});
+	if (scene == 0) loadGameObjects("model/42.obj",			{0.f, 0.f, -1.f}, {1.f, -1.f, 1.f});
+	if (scene == 1) loadGameObjects("model/cube.obj",		{0.f, 0.f,  0.f}, {1.f,  1.f, 1.f});
+	if (scene == 2) loadGameObjects("model/teapot.obj",		{0.f, 0.f,  0.f}, {1.f, -1.f, 1.f});
+	if (scene == 3) loadGameObjects("model/teapot2.obj",	{0.f, 0.f,  0.f}, {1.f, -1.f, 1.f});
 	if (scene == 4){
-		loadGameObjects("42",		{-2.0f, -0.2f,  1.0f}, {1.0f, -1.0f, 1.0f});
-		loadGameObjects("cube",		{-2.0f,  0.0f, -2.0f}, {1.0f,  1.0f, 1.0f});
-		loadGameObjects("teapot",	{ 2.0f,  1.1f,  2.0f}, {1.0f, -1.0f, 1.0f});
-		loadGameObjects("teapot2",	{ 2.0f, -0.3f, -2.0f}, {1.0f, -1.0f, 1.0f});
-		loadGameObjects("cube",		{ 0.0f,  1.2f,  0.0f}, {8.0f,  0.1f, 8.0f});
+		loadGameObjects("model/42.obj",			{-2.0f, -0.2f,  1.0f}, {1.0f, -1.0f, 1.0f});
+		loadGameObjects("model/cube.obj",		{-2.0f,  0.0f, -2.0f}, {1.0f,  1.0f, 1.0f});
+		loadGameObjects("model/teapot.obj",		{ 2.0f,  1.1f,  2.0f}, {1.0f, -1.0f, 1.0f});
+		loadGameObjects("model/teapot2.obj",	{ 2.0f, -0.3f, -2.0f}, {1.0f, -1.0f, 1.0f});
+		loadGameObjects("model/cube.obj",		{ 0.0f,  1.2f,  0.0f}, {8.0f,  0.1f, 8.0f});
 	}
 
 	// Lights
@@ -47,19 +37,19 @@ MainClass::MainClass(void){
 		{1.f, 0.f, 0.f},// Red
 		{0.f, 1.f, 0.f},// Green
 		{0.f, 0.f, 1.f},// Blue
-		{1.f, 0.f, 0.f},// Red
-		{0.f, 1.f, 0.f},// Green
-		{0.f, 0.f, 1.f}	// Blue
+		{1.f, 1.f, 0.f},// Yellow
+		{0.f, 1.f, 1.f},// Cyan
+		{1.f, 0.f, 1.f} // Purple
 	};
 	for (int i = 0; i < lightColors.size(); i++){
-		auto	p = VeGameObject::makePointLight();
+		auto	p = VeGameObject::makePointLight(8.f, .1f, glm::vec3(1.f));
+		auto	rotateLight = glm::rotate(
+			glm::mat4(2.2f),// Spreading
+			(i * TWO_PI) / lightColors.size(),
+			{0.f, -1.f, 0.f}// Axis
+		);
 
 		p._color = lightColors[i];
-		auto	rotateLight = glm::rotate(
-			glm::mat4(2.2f),
-			(i * TWO_PI) / lightColors.size(),
-			{0.f, -1.f, 0.f}
-		);
 		p._transform.translation = glm::vec3(rotateLight * glm::vec4(-1.f, -1.f, -1.f, -1.f));
 		_gameObjects.emplace(p.getId(), move(p));
 	}
@@ -105,6 +95,7 @@ void	MainClass::run(void){
 	auto		viewerObject = VeGameObject::createGameObject();
 	Controller	cameraController{_veWindow.getGLFWwindow()};
 
+	// Time
 	auto		currentTime = chrono::high_resolution_clock::now();
 	auto		newTime = currentTime;
 	float		frameTime;

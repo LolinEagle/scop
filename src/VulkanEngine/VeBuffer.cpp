@@ -58,16 +58,8 @@ VkResult VeBuffer::flush(VkDeviceSize size, VkDeviceSize offset){
 	mappedRange.memory = _memory;
 	mappedRange.offset = offset;
 	mappedRange.size = size;
-	return (vkFlushMappedMemoryRanges(_veDevice.device(), 1, &mappedRange));
-}
 
-VkResult VeBuffer::invalidate(VkDeviceSize size, VkDeviceSize offset){
-	VkMappedMemoryRange	mappedRange{};
-	mappedRange.sType = VK_STRUCTURE_TYPE_MAPPED_MEMORY_RANGE;
-	mappedRange.memory = _memory;
-	mappedRange.offset = offset;
-	mappedRange.size = size;
-	return (vkInvalidateMappedMemoryRanges(_veDevice.device(), 1, &mappedRange));
+	return (vkFlushMappedMemoryRanges(_veDevice.device(), 1, &mappedRange));
 }
 
 VkDescriptorBufferInfo VeBuffer::descriptorInfo(VkDeviceSize size, VkDeviceSize offset){
@@ -76,32 +68,4 @@ VkDescriptorBufferInfo VeBuffer::descriptorInfo(VkDeviceSize size, VkDeviceSize 
 
 VkBuffer				VeBuffer::getBuffer(void) const {
 	return(_buffer);
-}
-
-void*					VeBuffer::getMappedMemory(void) const {
-	return(_mapped);
-}
-
-uint32_t				VeBuffer::getInstanceCount(void) const {
-	return(_instanceCount);
-}
-
-VkDeviceSize			VeBuffer::getInstanceSize(void) const {
-	return(_instanceSize);
-}
-
-VkDeviceSize			VeBuffer::getAlignmentSize(void) const {
-	return(_instanceSize);
-}
-
-VkBufferUsageFlags		VeBuffer::getUsageFlags(void) const {
-	return(_usageFlags);
-}
-
-VkMemoryPropertyFlags	VeBuffer::getMemoryPropertyFlags(void) const {
-	return(_memoryPropertyFlags);
-}
-
-VkDeviceSize			VeBuffer::getBufferSize(void) const {
-	return(_bufferSize);
 }

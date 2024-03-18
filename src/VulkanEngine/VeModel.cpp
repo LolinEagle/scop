@@ -19,7 +19,6 @@ struct hash<VeModel::Vertex>{
 
 vector<VkVertexInputBindingDescription>		VeModel::Vertex::getBindingDescriptions(void){
 	vector<VkVertexInputBindingDescription>		bindingDescription(1);
-
 	bindingDescription[0].binding = 0;
 	bindingDescription[0].stride = sizeof(Vertex);
 	bindingDescription[0].binding = VK_VERTEX_INPUT_RATE_VERTEX;

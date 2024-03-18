@@ -33,10 +33,9 @@ void	SimpleRender::createPipeline(VkRenderPass renderPass){
 	);
 }
 
-SimpleRender::SimpleRender(
-	VeDevice &veDevice, VkRenderPass renderPass, VkDescriptorSetLayout globalSetLayout
-) : _veDevice(veDevice){
-	createPipelineLayout(globalSetLayout);
+SimpleRender::SimpleRender(VeDevice &device, VkRenderPass renderPass, VkDescriptorSetLayout layout)
+: _veDevice(device){
+	createPipelineLayout(layout);
 	createPipeline(renderPass);
 }
 

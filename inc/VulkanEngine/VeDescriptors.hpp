@@ -2,22 +2,24 @@
 
 #include <VeDevice.hpp>
 
+using Binding = unordered_map<uint32_t, VkDescriptorSetLayoutBinding>;
+
 class VeDescriptorSetLayout{
 	private:
-		VeDevice				&veDevice;
-		VkDescriptorSetLayout	descriptorSetLayout;
-		unordered_map<uint32_t, VkDescriptorSetLayoutBinding>	bindings;
+		VeDevice				&_device;
+		VkDescriptorSetLayout	_descriptorSetLayout;
+		Binding					_bindings;
 
 		friend class VeDescriptorWriter;
 	public:
-		class Builder {
+		class Builder{
 			private:
-				VeDevice &veDevice;
-				unordered_map<uint32_t, VkDescriptorSetLayoutBinding> bindings{};
+				VeDevice	&_device;
+				Binding		_bindings{};
 			public:
-				Builder(VeDevice &veDevice) : veDevice{veDevice} {}
+				Builder(VeDevice &device);
 
-				Builder &addBinding(
+				Builder	&addBinding(
 					uint32_t binding,
 					VkDescriptorType descriptorType,
 					VkShaderStageFlags stageFlags,
@@ -26,38 +28,36 @@ class VeDescriptorSetLayout{
 				unique_ptr<VeDescriptorSetLayout> build() const;
 		};
 
-		VeDescriptorSetLayout(
-			VeDevice &veDevice, unordered_map<uint32_t, VkDescriptorSetLayoutBinding> bindings
-		);
+		VeDescriptorSetLayout(VeDevice &device, Binding bindings);
 		~VeDescriptorSetLayout();
 
-		VkDescriptorSetLayout	getDescriptorSetLayout() const { return descriptorSetLayout; }
+		VkDescriptorSetLayout	getDescriptorSetLayout(void) const {return (_descriptorSetLayout);}
 };
 
 class VeDescriptorPool{
 	private:
-		VeDevice			&veDevice;
-		VkDescriptorPool	descriptorPool;
+		VeDevice			&_device;
+		VkDescriptorPool	_descriptorPool;
 
 		friend class VeDescriptorWriter;
 	public:
 		class Builder{
 			private:
-				VeDevice &veDevice;
-				vector<VkDescriptorPoolSize> poolSizes{};
-				uint32_t maxSets = 1000;
-				VkDescriptorPoolCreateFlags poolFlags = 0;
+				VeDevice						&_device;
+				vector<VkDescriptorPoolSize>	_poolSizes{};
+				uint32_t						_maxSets = 1000;
+				VkDescriptorPoolCreateFlags		_poolFlags = 0;
 			public:
-				Builder(VeDevice &veDevice) : veDevice{veDevice} {}
+				Builder(VeDevice &device);
 
-				Builder &addPoolSize(VkDescriptorType descriptorType, uint32_t count);
-				Builder &setPoolFlags(VkDescriptorPoolCreateFlags flags);
-				Builder &setMaxSets(uint32_t count);
-				unique_ptr<VeDescriptorPool> build() const;
+				Builder	&addPoolSize(VkDescriptorType descriptorType, uint32_t count);
+				Builder	&setPoolFlags(VkDescriptorPoolCreateFlags flags);
+				Builder	&setMaxSets(uint32_t count);
+				unique_ptr<VeDescriptorPool>	build() const;
 		};
 
 		VeDescriptorPool(
-			VeDevice &veDevice,
+			VeDevice &device,
 			uint32_t maxSets,
 			VkDescriptorPoolCreateFlags poolFlags,
 			const vector<VkDescriptorPoolSize> &poolSizes
@@ -68,19 +68,19 @@ class VeDescriptorPool{
 			const VkDescriptorSetLayout descriptorSetLayout, VkDescriptorSet &descriptor
 		) const;
 		void	freeDescriptors(vector<VkDescriptorSet> &descriptors) const;
-		void	resetPool();
+		void	resetPool(void);
 };
 
 class VeDescriptorWriter{
 	private:
-		VeDescriptorSetLayout			&setLayout;
-		VeDescriptorPool				&pool;
-		vector<VkWriteDescriptorSet>	writes;
+		VeDescriptorSetLayout			&_setLayout;
+		VeDescriptorPool				&_pool;
+		vector<VkWriteDescriptorSet>	_writes;
 	public:
 		VeDescriptorWriter(VeDescriptorSetLayout &setLayout, VeDescriptorPool &pool);
 
-		VeDescriptorWriter	&writeBuffer(uint32_t binding, VkDescriptorBufferInfo *bufferInfo);
-		VeDescriptorWriter	&writeImage(uint32_t binding, VkDescriptorImageInfo *imageInfo);
+		VeDescriptorWriter	&writeBuffer(uint32_t bind, VkDescriptorBufferInfo *buffer);
+		VeDescriptorWriter	&writeImage(uint32_t bind, VkDescriptorImageInfo *image);
 
 		bool	build(VkDescriptorSet &set);
 		void	overwrite(VkDescriptorSet &set);

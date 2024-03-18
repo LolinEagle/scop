@@ -42,8 +42,6 @@ void	VeSwapChain::createSwapChain(void){
 		createInfo.pQueueFamilyIndices = queueFamilyIndices;
 	} else {
 		createInfo.imageSharingMode = VK_SHARING_MODE_EXCLUSIVE;
-		createInfo.queueFamilyIndexCount = 0;      // Optional
-		createInfo.pQueueFamilyIndices = nullptr;  // Optional
 	}
 
 	createInfo.preTransform = swapChainSupport.capabilities.currentTransform;
@@ -54,9 +52,8 @@ void	VeSwapChain::createSwapChain(void){
 
 	createInfo.oldSwapchain = oldSwapChain == nullptr ? VK_NULL_HANDLE : oldSwapChain->swapChain;
 
-	if (vkCreateSwapchainKHR(device.device(), &createInfo, nullptr, &swapChain) != VK_SUCCESS){
-		throw runtime_error("failed to create swap chain!");
-	}
+	if (vkCreateSwapchainKHR(device.device(), &createInfo, nullptr, &swapChain) != VK_SUCCESS)
+		throw (runtime_error("failed to create swap chain"));
 
 	// We only specified a minimum number of images in the swap chain, so the implementation is
 	// allowed to create a swap chain with more. That's why we'll first query the final number of
@@ -85,7 +82,7 @@ void	VeSwapChain::createImageViews(void){
 		viewInfo.subresourceRange.layerCount = 1;
 
 		if (vkCreateImageView(device.device(), &viewInfo, nullptr, &swapChainImageViews[i]) != 0)
-			throw (runtime_error("failed to create texture image view!"));
+			throw (runtime_error("failed to create texture image view"));
 	}
 }
 
@@ -133,7 +130,7 @@ void	VeSwapChain::createDepthResources(void){
 		viewInfo.subresourceRange.layerCount = 1;
 
 		if (vkCreateImageView(device.device(), &viewInfo, nullptr, &depthImageViews[i]) != 0)
-			throw runtime_error("failed to create texture image view!");
+			throw (runtime_error("failed to create texture image view"));
 	}
 }
 
@@ -194,7 +191,7 @@ void	VeSwapChain::createRenderPass(void){
 	renderPassInfo.pDependencies = &dependency;
 
 	if (vkCreateRenderPass(device.device(), &renderPassInfo, nullptr, &renderPass) != VK_SUCCESS)
-		throw runtime_error("failed to create render pass!");
+		throw (runtime_error("failed to create render pass"));
 }
 
 void	VeSwapChain::createFramebuffers(void){
@@ -217,9 +214,8 @@ void	VeSwapChain::createFramebuffers(void){
 			&framebufferInfo,
 			nullptr,
 			&swapChainFramebuffers[i]) != VK_SUCCESS
-		){
-			throw runtime_error("failed to create framebuffer!");
-		}
+		)
+			throw (runtime_error("failed to create framebuffer"));
 	}
 }
 
@@ -240,9 +236,8 @@ void	VeSwapChain::createSyncObjects(void){
 		if (vkCreateSemaphore(device.device(), &semaphoreInfo, nullptr, &imageAvailableSemaphores[i]) != VK_SUCCESS ||
 			vkCreateSemaphore(device.device(), &semaphoreInfo, nullptr, &renderFinishedSemaphores[i]) != VK_SUCCESS ||
 			vkCreateFence(device.device(), &fenceInfo, nullptr, &inFlightFences[i]) != VK_SUCCESS
-		){
-			throw runtime_error("failed to create synchronization objects for a frame!");
-		}
+		)
+			throw (runtime_error("failed to create synchronization objects for a frame"));
 	}
 }
 
@@ -414,7 +409,7 @@ VkResult		VeSwapChain::submitCommandBuffers(const VkCommandBuffer *buffers, uint
 
 	vkResetFences(device.device(), 1, &inFlightFences[currentFrame]);
 	if (vkQueueSubmit(device.graphicsQueue(), 1, &submitInfo, inFlightFences[currentFrame]) != 0)
-		throw runtime_error("failed to submit draw command buffer!");
+		throw (runtime_error("failed to submit draw command buffer"));
 
 	VkPresentInfoKHR	presentInfo{};
 	presentInfo.sType = VK_STRUCTURE_TYPE_PRESENT_INFO_KHR;

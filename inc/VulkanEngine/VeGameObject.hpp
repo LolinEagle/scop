@@ -39,8 +39,6 @@ class VeGameObject{
 		VeGameObject &operator=(VeGameObject &&) = default;
 
 		static VeGameObject	createGameObject(void);
-		static VeGameObject	makePointLight(
-			float intensity = 8.f, float radius = .1f, glm::vec3 color = glm::vec3(1.f)
-		);
+		static VeGameObject	makePointLight(float intensity, float radius, glm::vec3 color);
 		const uint32_t		getId(void);
 };
