@@ -21,17 +21,17 @@ struct QueueFamilyIndices{
 
 class VeDevice{
 	private:
-		VkInstance					instance;
-		VkDebugUtilsMessengerEXT	debugMessenger;
-		VkPhysicalDevice			physicalDevice = VK_NULL_HANDLE;
-		VeWindow					&window;
-		VkCommandPool				commandPool;
-		VkDevice					device_;
-		VkSurfaceKHR				surface_;
-		VkQueue 					graphicsQueue_;
-		VkQueue						presentQueue_;
-		const vector<const char*>	validationLayers = {"VK_LAYER_KHRONOS_validation"};
-		const vector<const char*>	deviceExtensions = {VK_KHR_SWAPCHAIN_EXTENSION_NAME};
+		VkInstance					_instance;
+		VkDebugUtilsMessengerEXT	_debugMessenger;
+		VkPhysicalDevice			_physicalDevice = VK_NULL_HANDLE;
+		VeWindow					&_window;
+		VkCommandPool				_commandPool;
+		VkDevice					_device;
+		VkSurfaceKHR				_surface;
+		VkQueue 					_graphicsQueue;
+		VkQueue						_presentQueue;
+		const vector<const char*>	_validationLayers = {"VK_LAYER_KHRONOS_validation"};
+		const vector<const char*>	_deviceExtensions = {VK_KHR_SWAPCHAIN_EXTENSION_NAME};
 
 		void	createInstance(void);
 		void	setupDebugMessenger(void);
@@ -45,37 +45,32 @@ class VeDevice{
 		vector<const char*>		getRequiredExtensions(void);
 		bool					checkValidationLayerSupport(void);
 		QueueFamilyIndices		findQueueFamilies(VkPhysicalDevice device);
-		void					populateDebugMessengerCreateInfo(
-			VkDebugUtilsMessengerCreateInfoEXT &createInfo
-		);
-		void					hasGflwRequiredInstanceExtensions(void);
+		void					populateDebugMessenger(VkDebugUtilsMessengerCreateInfoEXT &info);
 		bool					checkDeviceExtensionSupport(VkPhysicalDevice device);
 		SwapChainSupportDetails	querySwapChainSupport(VkPhysicalDevice device);
 	public:
-		const bool 					enableValidationLayers = true;
-		VkPhysicalDeviceProperties	properties;
+		const bool 					_enableValidationLayers = true;
+		VkPhysicalDeviceProperties	_properties;
 
 		VeDevice(VeWindow &window);
 		~VeDevice(void);
 
-		VkCommandPool	getCommandPool(void);
-		VkDevice		device(void);
-		VkSurfaceKHR	surface(void);
-		VkQueue			graphicsQueue(void);
-		VkQueue			presentQueue(void);
-
+		// Getter
+		VkCommandPool			getCommandPool(void);
+		VkDevice				device(void);
+		VkSurfaceKHR			surface(void);
+		VkQueue					graphicsQueue(void);
+		VkQueue					presentQueue(void);
 		SwapChainSupportDetails	getSwapChainSupport(void);
 
-		// Find
+		// Find functions
 		uint32_t			findMemoryType(uint32_t typeFilter, VkMemoryPropertyFlags properties);
 		QueueFamilyIndices	findPhysicalQueueFamilies(void);
 		VkFormat			findSupportedFormat(
-			const vector<VkFormat> &candidates,
-			VkImageTiling tiling,
-			VkFormatFeatureFlags features
+			const vector<VkFormat> &candidates, VkImageTiling tiling, VkFormatFeatureFlags features
 		);
 
-		// Buffer Helper Functions
+		// Buffer helper functions
 		void			createBuffer(
 			VkDeviceSize size,
 			VkBufferUsageFlags usage,
@@ -87,11 +82,7 @@ class VeDevice{
 		void			endSingleTimeCommands(VkCommandBuffer commandBuffer);
 		void			copyBuffer(VkBuffer srcBuffer, VkBuffer dstBuffer, VkDeviceSize size);
 		void			copyBufferToImage(
-			VkBuffer buffer,
-			VkImage image,
-			uint32_t width,
-			uint32_t height,
-			uint32_t layerCount
+			VkBuffer buffer, VkImage image, uint32_t width, uint32_t height, uint32_t layerCount
 		);
 		void			createImageWithInfo(
 			const VkImageCreateInfo &imageInfo,

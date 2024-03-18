@@ -54,6 +54,6 @@ void		VeWindow::resetWindowResizedFlag(void){
 }
 
 void		VeWindow::createWindowSurface(VkInstance instance, VkSurfaceKHR *surface){
-	if (glfwCreateWindowSurface(instance, _window, nullptr, surface) != VK_SUCCESS)
+	if (glfwCreateWindowSurface(instance, _window, nullptr, surface) != 0)
 		throw (runtime_error("failed to create window surface"));
 }

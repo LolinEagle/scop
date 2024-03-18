@@ -6,25 +6,25 @@ using namespace std;
 
 class VeSwapChain{
 	private:
-		VkFormat				swapChainImageFormat;
-		VkFormat				swapChainDepthFormat;
-		VkExtent2D				swapChainExtent;
-		vector<VkFramebuffer>	swapChainFramebuffers;
-		VkRenderPass			renderPass;
-		vector<VkImage>			depthImages;
-		vector<VkDeviceMemory>	depthImageMemorys;
-		vector<VkImageView>		depthImageViews;
-		vector<VkImage>			swapChainImages;
-		vector<VkImageView>		swapChainImageViews;
-		VeDevice				&device;
-		VkExtent2D				windowExtent;
-		VkSwapchainKHR			swapChain;
-		shared_ptr<VeSwapChain>	oldSwapChain;
-		vector<VkSemaphore>		imageAvailableSemaphores;
-		vector<VkSemaphore>		renderFinishedSemaphores;
-		vector<VkFence>			inFlightFences;
-		vector<VkFence>			imagesInFlight;
-		size_t					currentFrame = 0;
+		VkFormat				_swapChainImageFormat;
+		VkFormat				_swapChainDepthFormat;
+		VkExtent2D				_swapChainExtent;
+		vector<VkFramebuffer>	_swapChainFramebuffers;
+		VkRenderPass			_renderPass;
+		vector<VkImage>			_depthImages;
+		vector<VkDeviceMemory>	_depthImageMemorys;
+		vector<VkImageView>		_depthImageViews;
+		vector<VkImage>			_swapChainImages;
+		vector<VkImageView>		_swapChainImageViews;
+		VeDevice				&_device;
+		VkExtent2D				_windowExtent;
+		VkSwapchainKHR			_swapChain;
+		shared_ptr<VeSwapChain>	_oldSwapChain;
+		vector<VkSemaphore>		_imageAvailableSemaphores;
+		vector<VkSemaphore>		_renderFinishedSemaphores;
+		vector<VkFence>			_inFlightFences;
+		vector<VkFence>			_imagesInFlight;
+		size_t					_currentFrame = 0;
 
 		void	init(void);
 		void	createSwapChain(void);

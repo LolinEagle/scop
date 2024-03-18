@@ -3,7 +3,7 @@
 using namespace std;
 
 vector<char>	VePipeline::readFile(const string &filepath){
-	ifstream		file(filepath, ios::ate | ios::binary);
+	ifstream	file(filepath, ios::ate | ios::binary);
 
 	if (!file.is_open())
 		throw (runtime_error("failed to open file: " + filepath));
@@ -73,13 +73,8 @@ void	VePipeline::createGraphicsPipeline(
 	pipelineInfo.basePipelineHandle = VK_NULL_HANDLE;
 
 	if (vkCreateGraphicsPipelines(
-		_veDevice.device(),
-		VK_NULL_HANDLE,
-		1,
-		&pipelineInfo,
-		nullptr,
-		&_graphicsPipeline
-	) != VK_SUCCESS)
+		_veDevice.device(), VK_NULL_HANDLE, 1, &pipelineInfo, nullptr, &_graphicsPipeline) != 0
+	)
 		throw (runtime_error("failed to create graphics pipelines"));
 }
 
@@ -88,7 +83,7 @@ void	VePipeline::createShaderModule(const vector<char>& code, VkShaderModule *sh
 	createInfo.sType = VK_STRUCTURE_TYPE_SHADER_MODULE_CREATE_INFO;
 	createInfo.codeSize = code.size();
 	createInfo.pCode = reinterpret_cast<const uint32_t*>(code.data());
-	if (vkCreateShaderModule(_veDevice.device(), &createInfo, nullptr, shaderModule) != VK_SUCCESS)
+	if (vkCreateShaderModule(_veDevice.device(), &createInfo, nullptr, shaderModule) != 0)
 		throw (runtime_error("failed to create shader module"));
 }
 

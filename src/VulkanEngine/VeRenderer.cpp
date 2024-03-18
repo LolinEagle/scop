@@ -62,7 +62,7 @@ VkCommandBuffer	VeRenderer::beginFrame(void){
 		recreateSwapChain();
 		return (nullptr);
 	}
-	if (result != VK_SUCCESS && result != VK_SUBOPTIMAL_KHR)
+	if (result != 0 && result != VK_SUBOPTIMAL_KHR)
 		throw (runtime_error("failed to acquire swap chain image"));
 	_isFrameStarted = true;
 
@@ -71,7 +71,7 @@ VkCommandBuffer	VeRenderer::beginFrame(void){
 	VkCommandBufferBeginInfo	beginInfo{};
 	beginInfo.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_BEGIN_INFO;
 
-	if (vkBeginCommandBuffer(commandBuffer, &beginInfo) != VK_SUCCESS)
+	if (vkBeginCommandBuffer(commandBuffer, &beginInfo) != 0)
 		throw (runtime_error("failed to begin recording command buffer"));
 	return (commandBuffer);
 }
@@ -79,7 +79,7 @@ VkCommandBuffer	VeRenderer::beginFrame(void){
 void			VeRenderer::endFrame(void){
 	auto	commandBuffer = getCurrentCommandBuffer();
 
-	if (vkEndCommandBuffer(commandBuffer) != VK_SUCCESS)
+	if (vkEndCommandBuffer(commandBuffer) != 0)
 		throw (runtime_error("failed to record command buffer"));
 
 	auto	result = _veSwapChain->submitCommandBuffers(&commandBuffer, &_currentImageIndex);
@@ -90,7 +90,7 @@ void			VeRenderer::endFrame(void){
 	){
 		_veWindow.resetWindowResizedFlag();
 		recreateSwapChain();
-	} else if (result != VK_SUCCESS)
+	} else if (result != 0)
 		throw (runtime_error("failed to present swap chain image"));
 	_isFrameStarted = false;
 	_currentFrameIndex = (_currentFrameIndex + 1) % MAX_FRAMES_IN_FLIGHT;

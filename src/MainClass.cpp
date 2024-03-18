@@ -67,7 +67,7 @@ void	MainClass::run(void){
 			1,
 			VK_BUFFER_USAGE_UNIFORM_BUFFER_BIT,
 			VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT,
-			_veDevice.properties.limits.minUniformBufferOffsetAlignment
+			_veDevice._properties.limits.minUniformBufferOffsetAlignment
 		);
 		uboBuffers[i]->map();
 	}

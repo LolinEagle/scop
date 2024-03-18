@@ -31,14 +31,12 @@ VeDescriptorSetLayout::VeDescriptorSetLayout(VeDevice &device, Binding bindings)
 	for (auto kv : bindings)
 		setLayoutBindings.push_back(kv.second);
 
-	VkDescriptorSetLayoutCreateInfo	descriptorSetLayoutInfo{};
-	descriptorSetLayoutInfo.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_SET_LAYOUT_CREATE_INFO;
-	descriptorSetLayoutInfo.bindingCount = static_cast<uint32_t>(setLayoutBindings.size());
-	descriptorSetLayoutInfo.pBindings = setLayoutBindings.data();
+	VkDescriptorSetLayoutCreateInfo	info{};
+	info.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_SET_LAYOUT_CREATE_INFO;
+	info.bindingCount = static_cast<uint32_t>(setLayoutBindings.size());
+	info.pBindings = setLayoutBindings.data();
 
-	if (vkCreateDescriptorSetLayout(
-		_device.device(), &descriptorSetLayoutInfo, nullptr, &_descriptorSetLayout) != VK_SUCCESS
-	)
+	if (vkCreateDescriptorSetLayout(_device.device(), &info, nullptr, &_descriptorSetLayout) != 0)
 		throw (runtime_error("failed to create descriptor set layout"));
 }
 
@@ -106,7 +104,7 @@ bool	VeDescriptorPool::allocateDescriptor(
 
 	// Might want to create a "DescriptorPoolManager" class that handles this case, and builds
 	// a new pool whenever an old pool fills up. But this is beyond our current scope
-	if (vkAllocateDescriptorSets(_device.device(), &allocInfo, &descriptor) != VK_SUCCESS)
+	if (vkAllocateDescriptorSets(_device.device(), &allocInfo, &descriptor) != 0)
 		return (false);
 	return (true);
 }
