@@ -30,7 +30,23 @@ class VeModel{
 		bool					_hasIndexBuffer = false;
 		unique_ptr<VeBuffer>	_indexBuffer;
 		uint32_t				_indexCount;
+		VkImage					_textureImage;
+		VkDeviceMemory			_textureImageMemory;
 
+		void	copyBufferToImage(VkBuffer buffer, VkImage image, uint32_t width, uint32_t height);
+		void	transitionImageLayout(
+			VkImage image,VkFormat format, VkImageLayout oldLayout, VkImageLayout newLayout
+		);
+		void	createImage(
+			uint32_t width, uint32_t height,
+			VkFormat format,
+			VkImageTiling tiling,
+			VkImageUsageFlags usage,
+			VkMemoryPropertyFlags properties,
+			VkImage &image,
+			VkDeviceMemory &imageMemory
+		);
+		void	createTextureImages(void);
 		void	createVertexBuffers(const vector<Vertex> &vertices);
 		void	createIndexBuffers(const vector<uint32_t> &indices);
 	public:

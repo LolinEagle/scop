@@ -12,14 +12,14 @@ void		VeWindow::framebufferResizedCallback(GLFWwindow *window, int width, int he
 
 void		VeWindow::initWindow(void){
 	if (!glfwInit())
-		throw (runtime_error("Failed to initialize GLFW"));
+		throw (runtime_error("failed to initialize GLFW"));
 	if (!glfwVulkanSupported())
-		throw (runtime_error("Vulkan not supported"));
+		throw (runtime_error("vulkan not supported"));
 	glfwWindowHint(GLFW_CLIENT_API, GLFW_NO_API);
 	glfwWindowHint(GLFW_RESIZABLE, GLFW_TRUE);
 	_window = glfwCreateWindow(_width, _height, TITLE, nullptr, nullptr);
 	if (!_window)
-		throw (runtime_error("Failed to create GLFW window"));
+		throw (runtime_error("failed to create GLFW window"));
 	glfwSetWindowUserPointer(_window, this);
 	glfwSetFramebufferSizeCallback(_window, framebufferResizedCallback);
 }
