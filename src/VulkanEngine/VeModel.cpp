@@ -241,7 +241,7 @@ void	VeModel::createImage(
 	imageInfo.samples = VK_SAMPLE_COUNT_1_BIT;
 	imageInfo.sharingMode = VK_SHARING_MODE_EXCLUSIVE;
 
-	if (vkCreateImage(_veDevice.device(), &imageInfo, nullptr, &image) != VK_SUCCESS)
+	if (vkCreateImage(_veDevice.device(), &imageInfo, nullptr, &image) != 0)
 		throw (runtime_error("failed to create image"));
 
 	VkMemoryRequirements	memRequirements;
@@ -252,7 +252,7 @@ void	VeModel::createImage(
 	allocInfo.allocationSize = memRequirements.size;
 	allocInfo.memoryTypeIndex = _veDevice.findMemoryType(memRequirements.memoryTypeBits, properties);
 
-	if (vkAllocateMemory(_veDevice.device(), &allocInfo, nullptr, &imageMemory) != VK_SUCCESS)
+	if (vkAllocateMemory(_veDevice.device(), &allocInfo, nullptr, &imageMemory) != 0)
 		throw (runtime_error("failed to allocate image memory"));
 
 	vkBindImageMemory(_veDevice.device(), image, imageMemory, 0);
@@ -319,6 +319,45 @@ void	VeModel::createTextureImages(void){
 	vkFreeMemory(_veDevice.device(), stagingBufferMemory, nullptr);
 }
 
+void	VeModel::createTextureImageView(void){
+	VkImageViewCreateInfo	viewInfo{};
+	viewInfo.sType = VK_STRUCTURE_TYPE_IMAGE_VIEW_CREATE_INFO;
+	viewInfo.image = _textureImage;
+	viewInfo.viewType = VK_IMAGE_VIEW_TYPE_2D;
+	viewInfo.format = VK_FORMAT_R8G8B8A8_SRGB;
+	viewInfo.subresourceRange.aspectMask = VK_IMAGE_ASPECT_COLOR_BIT;
+	viewInfo.subresourceRange.baseMipLevel = 0;
+	viewInfo.subresourceRange.levelCount = 1;
+	viewInfo.subresourceRange.baseArrayLayer = 0;
+	viewInfo.subresourceRange.layerCount = 1;
+
+	if (vkCreateImageView(_veDevice.device(), &viewInfo, nullptr, &_textureImageView) != 0)
+		throw (runtime_error("failed to create texture image view"));
+}
+
+void	VeModel::createTextureSampler(void){
+	VkSamplerCreateInfo	samplerInfo{};
+	samplerInfo.sType = VK_STRUCTURE_TYPE_SAMPLER_CREATE_INFO;
+	samplerInfo.magFilter = VK_FILTER_LINEAR;
+	samplerInfo.minFilter = VK_FILTER_LINEAR;
+	samplerInfo.addressModeU = VK_SAMPLER_ADDRESS_MODE_REPEAT;
+	samplerInfo.addressModeV = VK_SAMPLER_ADDRESS_MODE_REPEAT;
+	samplerInfo.addressModeW = VK_SAMPLER_ADDRESS_MODE_REPEAT;
+	samplerInfo.anisotropyEnable = VK_TRUE;
+	samplerInfo.maxAnisotropy = 16.f;
+	samplerInfo.borderColor = VK_BORDER_COLOR_INT_OPAQUE_BLACK;
+	samplerInfo.unnormalizedCoordinates = VK_FALSE;
+	samplerInfo.compareEnable = VK_FALSE;
+	samplerInfo.compareOp = VK_COMPARE_OP_ALWAYS;
+	samplerInfo.mipmapMode = VK_SAMPLER_MIPMAP_MODE_LINEAR;
+	samplerInfo.mipLodBias = 0.f;
+	samplerInfo.minLod = 0.f;
+	samplerInfo.maxLod = 0.f;
+
+	if (vkCreateSampler(_veDevice.device(), &samplerInfo, nullptr, &_textureSampler) != 0)
+        throw (runtime_error("failed to create a sampler"));   
+}
+
 void	VeModel::createVertexBuffers(const vector<Vertex> &vertices){
 	_vertexCount = static_cast<uint32_t>(vertices.size());
 	if (_vertexCount < 3)
@@ -382,11 +421,15 @@ unique_ptr<VeModel>	VeModel::createModelFromFile(VeDevice &device, const string 
 
 VeModel::VeModel(VeDevice &device, const VeModel::Builder &builder) : _veDevice(device){
 	createTextureImages();
+	createTextureImageView();
+	createTextureSampler();
 	createVertexBuffers(builder.vertices);
 	createIndexBuffers(builder.indices);
 }
 
 VeModel::~VeModel(){
+	vkDestroySampler(_veDevice.device(), _textureSampler, nullptr);
+	vkDestroyImageView(_veDevice.device(), _textureImageView, nullptr);
 	vkDestroyImage(_veDevice.device(), _textureImage, nullptr);
 	vkFreeMemory(_veDevice.device(), _textureImageMemory, nullptr);
 }
