@@ -62,4 +62,5 @@ class VeModel{
 
 		void	bind(VkCommandBuffer commandBuffer);
 		void	draw(VkCommandBuffer commandBuffer);
+		VkDescriptorImageInfo	descriptorImageInfo(void);
 };

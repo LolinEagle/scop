@@ -31,7 +31,7 @@ class VeDescriptorSetLayout{
 		VeDescriptorSetLayout(VeDevice &device, Binding bindings);
 		~VeDescriptorSetLayout();
 
-		VkDescriptorSetLayout	getDescriptorSetLayout(void) const {return (_descriptorSetLayout);}
+		VkDescriptorSetLayout	getDescriptorSetLayout(void) const;
 };
 
 class VeDescriptorPool{

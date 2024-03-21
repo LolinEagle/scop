@@ -62,7 +62,7 @@ VkResult VeBuffer::flush(VkDeviceSize size, VkDeviceSize offset){
 	return (vkFlushMappedMemoryRanges(_veDevice.device(), 1, &mappedRange));
 }
 
-VkDescriptorBufferInfo VeBuffer::descriptorInfo(VkDeviceSize size, VkDeviceSize offset){
+VkDescriptorBufferInfo VeBuffer::descriptorBufferInfo(VkDeviceSize size, VkDeviceSize offset){
 	return (VkDescriptorBufferInfo{_buffer, offset, size});
 }
 

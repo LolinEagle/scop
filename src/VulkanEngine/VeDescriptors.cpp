@@ -13,8 +13,9 @@ VeDescriptorSetLayout::Builder &VeDescriptorSetLayout::Builder::addBinding(
 ){
 	VkDescriptorSetLayoutBinding	layoutBinding{};
 	layoutBinding.binding = binding;
-	layoutBinding.descriptorType = descriptorType;
 	layoutBinding.descriptorCount = count;
+	layoutBinding.descriptorType = descriptorType;
+	layoutBinding.pImmutableSamplers = nullptr;
 	layoutBinding.stageFlags = stageFlags;
 
 	_bindings[binding] = layoutBinding;
@@ -42,6 +43,10 @@ VeDescriptorSetLayout::VeDescriptorSetLayout(VeDevice &device, Binding bindings)
 
 VeDescriptorSetLayout::~VeDescriptorSetLayout(){
 	vkDestroyDescriptorSetLayout(_device.device(), _descriptorSetLayout, nullptr);
+}
+
+VkDescriptorSetLayout	VeDescriptorSetLayout::getDescriptorSetLayout(void) const {
+	return (_descriptorSetLayout);
 }
 
 /* VeDescriptorPool ***************************************************************************** */
@@ -122,7 +127,7 @@ void	VeDescriptorPool::resetPool(void){
 	vkResetDescriptorPool(_device.device(), _descriptorPool, 0);
 }
 
-/* VeDescriptorWriter  ************************************************************************** */
+/* VeDescriptorWriter *************************************************************************** */
 
 VeDescriptorWriter::VeDescriptorWriter(VeDescriptorSetLayout &setLayout, VeDescriptorPool &pool)
 : _setLayout(setLayout), _pool(pool){

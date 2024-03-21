@@ -33,6 +33,6 @@ class VeBuffer{
 		void					unmap(void);
 		void					writeToBuffer(void *data, VE_BUFFER_DEFAULT_ARGUMENT);
 		VkResult				flush(VE_BUFFER_DEFAULT_ARGUMENT);
-		VkDescriptorBufferInfo	descriptorInfo(VE_BUFFER_DEFAULT_ARGUMENT);
+		VkDescriptorBufferInfo	descriptorBufferInfo(VE_BUFFER_DEFAULT_ARGUMENT);
 		VkBuffer				getBuffer(void) const;
 };
