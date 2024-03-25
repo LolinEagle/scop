@@ -12,7 +12,7 @@ void	MainClass::loadGameObjects(const string &filepath, glm::vec3 translation, g
 	_gameObjects.emplace(gameObject.getId(), move(gameObject));
 }
 
-MainClass::MainClass(void){
+MainClass::MainClass(int scene){
 	_globalPool = VeDescriptorPool::Builder(_veDevice)
 		.setMaxSets(MAX_FRAMES_IN_FLIGHT * 2)
 		.addPoolSize(VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER, MAX_FRAMES_IN_FLIGHT)
@@ -20,7 +20,6 @@ MainClass::MainClass(void){
 		.build();
 
 	// Objects (filepath, translation, scale)
-	const int	scene = 4;
 	if (scene == 0) loadGameObjects("model/42.obj",			{0.f, 0.f, -1.f}, {1.f, -1.f, 1.f});
 	if (scene == 1) loadGameObjects("model/cube.obj",		{0.f, 0.f,  0.f}, {1.f,  1.f, 1.f});
 	if (scene == 2) loadGameObjects("model/teapot.obj",		{0.f, 0.f,  0.f}, {1.f, -1.f, 1.f});
@@ -142,6 +141,7 @@ void	MainClass::run(void){
 			ubo.projection = camera.getProjection();
 			ubo.view = camera.getView();
 			ubo.inverseView = camera.getInverseView();
+			ubo.textureOn = cameraController.getTextureOn();
 			pointLightSystem.update(frameInfo, ubo);
 			uboBuffers[frameIndex]->writeToBuffer(&ubo);
 			uboBuffers[frameIndex]->flush();

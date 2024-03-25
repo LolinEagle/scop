@@ -15,6 +15,7 @@ struct GlobalUbo{
 	glm::vec4			ambientLightColor{1.f, 1.f, 1.f, .02f};
 	PointLightEntity	pointLights[MAX_LIGHTS];
 	int					numLights;
+	bool				textureOn;
 };
 
 struct FrameInfo{

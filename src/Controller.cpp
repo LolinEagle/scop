@@ -14,6 +14,10 @@ Controller::Controller(GLFWwindow *window){
 Controller::~Controller(){
 }
 
+bool	Controller::getTextureOn(void) const {
+	return (_textureOn);
+}
+
 void	Controller::moveInPlaneXZ(GLFWwindow *window, float dt, VeGameObject &gameObject){
 	// Escape
 	if (glfwGetKey(window, _keys.escape) == GLFW_PRESS) glfwSetWindowShouldClose(window, GLFW_TRUE);
@@ -62,4 +66,12 @@ void	Controller::moveInPlaneXZ(GLFWwindow *window, float dt, VeGameObject &gameO
 	// Translation
 	if (glm::dot(moveDir, moveDir) > numeric_limits<float>::epsilon())
 		gameObject._transform.translation += _moveSpeed * dt * glm::normalize(moveDir);
+
+	// Texture on
+	if (glfwGetKey(window, _keys.texture) == GLFW_PRESS && _textureOnPress == false){
+		_textureOn = !_textureOn;
+		_textureOnPress = true;
+	}
+	if (glfwGetKey(window, _keys.texture) == GLFW_RELEASE)
+		_textureOnPress = false;
 }

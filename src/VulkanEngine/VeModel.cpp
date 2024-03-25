@@ -110,7 +110,14 @@ void	VeModel::Builder::loadModel(const string &filepath){
 				// Build the vertex
 				Vertex	vertex{};
 				vertex.position = positions[position];
-				if (uv >= 0) vertex.uv = uvs[uv];
+				if (uv >= 0){
+					vertex.uv = uvs[uv];
+				} else {
+					if (i == 0) vertex.uv = glm::vec2(0.f, 1.f);
+					if (i == 1) vertex.uv = glm::vec2(0.f, 0.f);
+					if (i == 2) vertex.uv = glm::vec2(1.f, 0.f);
+					if (i == 3) vertex.uv = glm::vec2(1.f, 1.f);
+				}
 				if (normal >= 0) vertex.normal = normals[normal];
 				vertex.color = glm::vec3(1.f, 1.f, 1.f);
 
@@ -259,13 +266,13 @@ void	VeModel::createImage(
 }
 
 void	VeModel::createTextureImages(void){
-	int		texWidth, texHeight, texChannels;
-	stbi_uc	*pixels = stbi_load(
+	int				texWidth, texHeight, texChannels;
+	unsigned char	*pixels = stbi_load(
 		"model/texture/LolinEagle.png",
 		&texWidth,
 		&texHeight,
 		&texChannels,
-		STBI_rgb_alpha
+		4
 	);
 
 	if (!pixels)

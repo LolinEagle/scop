@@ -24,7 +24,7 @@ class MainClass{
 
 		void	loadGameObjects(const string &filepath, glm::vec3 translation, glm::vec3 scale);
 	public:
-		MainClass(void);
+		MainClass(int scene);
 		~MainClass();
 
 		void	run(void);
