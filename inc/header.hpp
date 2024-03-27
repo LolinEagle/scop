@@ -21,6 +21,7 @@
 #include <iostream>
 #include <limits>
 #include <memory>
+#include <png.h>
 #include <sstream>
 #include <stdexcept>
 

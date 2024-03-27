@@ -20,7 +20,7 @@ layout(set = 0, binding = 0) uniform GlobalUbo {
 	vec4		ambientLightColor;
 	PointLight	pointLights[16];
 	int			numLights;
-	float		textureOn;
+	int			textureOn;
 } ubo;
 
 layout(binding = 1) uniform sampler2D texSampler;
@@ -71,7 +71,7 @@ void	main(void){
 		blinnTerm = pow(blinnTerm, SHININESS);
 		specularLight += intensity * blinnTerm;
 	}
-	if (ubo.textureOn > 0)
+	if (ubo.textureOn > 0)// Is true
 		outColor = texture(texSampler, fragUv);
 	else
 		outColor = vec4((diffuseLight + specularLight + 0.2) * fragColor, 1.0);

@@ -22,7 +22,7 @@ GLSLC		=	./shader/glslc
 
 # Flags
 CPPFLAGS	=	-std=c++17 -MMD
-LDFLAGS		=	-lglfw -lvulkan -ldl -lpthread -lX11 -lXxf86vm -lXrandr -lXi
+LDFLAGS		=	-lglfw -lvulkan -ldl -lpthread -lX11 -lXxf86vm -lXrandr -lXi -lpng
 
 # Path
 INC			=	-Iglm -Iinc -Iinc/VulkanEngine

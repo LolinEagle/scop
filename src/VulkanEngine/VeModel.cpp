@@ -1,8 +1,5 @@
 #include <VeModel.hpp>
 
-#define STB_IMAGE_IMPLEMENTATION
-#include <stb_image.h>
-
 using namespace std;
 
 template <typename T, typename... Rest>
@@ -265,9 +262,80 @@ void	VeModel::createImage(
 	vkBindImageMemory(_veDevice.device(), image, imageMemory, 0);
 }
 
+unsigned char	*loadImage(const char *filename, int *x, int *y, int *comp, int req_comp){
+	FILE	*fp = fopen(filename, "rb");
+	if (!fp){
+		cerr << "Error: Failed to open file " << filename << endl;
+		return (NULL);
+	}
+
+	png_structp	png_ptr = png_create_read_struct(PNG_LIBPNG_VER_STRING, NULL, NULL, NULL);
+	if (!png_ptr){
+		fclose(fp);
+		cerr << "Error: png_create_read_struct failed" << endl;
+		return (NULL);
+	}
+
+	png_infop	info_ptr = png_create_info_struct(png_ptr);
+	if (!info_ptr){
+		fclose(fp);
+		png_destroy_read_struct(&png_ptr, NULL, NULL);
+		cerr << "Error: png_create_info_struct failed" << endl;
+		return (NULL);
+	}
+	if (setjmp(png_jmpbuf(png_ptr))){
+		fclose(fp);
+		png_destroy_read_struct(&png_ptr, &info_ptr, NULL);
+		cerr << "Error: Error during png_read_image" << endl;
+		return (NULL);
+	}
+	png_init_io(png_ptr, fp);
+	png_read_info(png_ptr, info_ptr);
+	*x = png_get_image_width(png_ptr, info_ptr);
+	*y = png_get_image_height(png_ptr, info_ptr);
+	*comp = png_get_channels(png_ptr, info_ptr);
+	if (req_comp != 0 && req_comp != *comp){
+		png_set_palette_to_rgb(png_ptr);
+		png_set_filler(png_ptr, 0xFF, PNG_FILLER_AFTER);
+		png_read_update_info(png_ptr, info_ptr);
+		*comp = req_comp;
+	}
+
+	unsigned char	*image_data = static_cast<unsigned char*>(
+		malloc(sizeof(unsigned char) * (*x) * (*y) * (*comp))
+	);
+
+	if (!image_data){
+		fclose(fp);
+		png_destroy_read_struct(&png_ptr, &info_ptr, NULL);
+		cerr << "Error: Failed to allocate memory for image" << endl;
+		return (NULL);
+	}
+
+	png_bytep	*row_pointers = (png_bytep *)malloc(sizeof(png_bytep) * (*y));
+	if (!row_pointers){
+		fclose(fp);
+		png_destroy_read_struct(&png_ptr, &info_ptr, NULL);
+		free(image_data);
+		cerr << "Error: Failed to allocate memory for row pointers" << endl;
+		return (NULL);
+	}
+
+	int	row_bytes = png_get_rowbytes(png_ptr, info_ptr);
+
+	for (int row = 0; row < *y; row++)
+		row_pointers[row] = image_data + row * row_bytes;
+	png_read_image(png_ptr, row_pointers);
+	png_read_end(png_ptr, NULL);
+	free(row_pointers);
+	png_destroy_read_struct(&png_ptr, &info_ptr, NULL);
+	fclose(fp);
+	return (image_data);
+}
+
 void	VeModel::createTextureImages(void){
 	int				texWidth, texHeight, texChannels;
-	unsigned char	*pixels = stbi_load(
+	unsigned char	*pixels = loadImage(
 		"model/texture/LolinEagle.png",
 		&texWidth,
 		&texHeight,
@@ -293,7 +361,7 @@ void	VeModel::createTextureImages(void){
 	vkMapMemory(_veDevice.device(), stagingBufferMemory, 0, imageSize, 0, &data);
 	memcpy(data, pixels, static_cast<size_t>(imageSize));
 	vkUnmapMemory(_veDevice.device(), stagingBufferMemory);
-	stbi_image_free(pixels);
+	free(pixels);
 	createImage(
 		texWidth,
 		texHeight,
