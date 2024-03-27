@@ -21,7 +21,7 @@ layout(set = 0, binding = 0) uniform GlobalUbo {
 	vec4		ambientLightColor;
 	PointLight	pointLights[16];
 	int			numLights;
-	bool		textureOn;
+	float		textureOn;
 } ubo;
 
 layout(push_constant) uniform Push {
