@@ -8,11 +8,11 @@ bool		QueueFamilyIndices::isComplete(void){
 
 void	VeDevice::createInstance(void){
 	if (_enableValidationLayers && !checkValidationLayerSupport())
-		throw (runtime_error("validation layers requested, but not available!"));
+		throw (runtime_error("validation layers requested, but not available"));
 
 	VkApplicationInfo	appInfo{};
 	appInfo.sType = VK_STRUCTURE_TYPE_APPLICATION_INFO;
-	appInfo.pApplicationName = "LittleVulkanEngine App";
+	appInfo.pApplicationName = "VulkanEngine";
 	appInfo.applicationVersion = VK_MAKE_VERSION(1, 0, 0);
 	appInfo.pEngineName = "No Engine";
 	appInfo.engineVersion = VK_MAKE_VERSION(1, 0, 0);
@@ -26,18 +26,19 @@ void	VeDevice::createInstance(void){
 	createInfo.enabledExtensionCount = static_cast<uint32_t>(extensions.size());
 	createInfo.ppEnabledExtensionNames = extensions.data();
 
-	VkDebugUtilsMessengerCreateInfoEXT	debugCreateInfo;
 	if (_enableValidationLayers){
+		VkDebugUtilsMessengerCreateInfoEXT	debugCreateInfo;
 		createInfo.enabledLayerCount = static_cast<uint32_t>(_validationLayers.size());
 		createInfo.ppEnabledLayerNames = _validationLayers.data();
 		populateDebugMessenger(debugCreateInfo);
-		createInfo.pNext = (VkDebugUtilsMessengerCreateInfoEXT *)&debugCreateInfo;
+		// createInfo.pNext = static_cast<VkDebugUtilsMessengerCreateInfoEXT*>(&debugCreateInfo);
+		createInfo.pNext = nullptr;
 	} else {
 		createInfo.enabledLayerCount = 0;
 		createInfo.pNext = nullptr;
 	}
 	if (vkCreateInstance(&createInfo, nullptr, &_instance) != 0)
-		throw (runtime_error("failed to create instance!"));
+		throw (runtime_error("failed to create instance"));
 }
 
 VkResult CreateDebugUtilsMessengerEXT(
@@ -61,7 +62,7 @@ void	VeDevice::setupDebugMessenger(void){
 	VkDebugUtilsMessengerCreateInfoEXT	createInfo;
 	populateDebugMessenger(createInfo);
 	if (CreateDebugUtilsMessengerEXT(_instance, &createInfo, nullptr, &_debugMessenger) != 0)
-		throw (runtime_error("failed to set up debug messenger!"));
+		throw (runtime_error("failed to set up debug messenger"));
 }
 
 void	VeDevice::createSurface(void){
@@ -82,7 +83,7 @@ void	VeDevice::pickPhysicalDevice(void){
 		}
 	}
 	if (_physicalDevice == VK_NULL_HANDLE)
-		throw (runtime_error("failed to find a suitable GPU!"));
+		throw (runtime_error("failed to find a suitable GPU"));
 	vkGetPhysicalDeviceProperties(_physicalDevice, &_properties);
 }
 
@@ -397,7 +398,7 @@ void			VeDevice::createBuffer(
 	allocInfo.memoryTypeIndex = findMemoryType(memRequirements.memoryTypeBits, properties);
 
 	if (vkAllocateMemory(_device, &allocInfo, nullptr, &bufferMemory) != 0)
-		throw (runtime_error("failed to allocate vertex buffer memory!"));
+		throw (runtime_error("failed to allocate vertex buffer memory"));
 	vkBindBufferMemory(_device, buffer, bufferMemory, 0);
 }
 
