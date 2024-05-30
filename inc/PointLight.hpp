@@ -9,8 +9,8 @@
 using namespace std;
 
 struct PointLightPushConstants{
-	glm::vec4	position{};
-	glm::vec4	color{};
+	vem::vec4	position{};
+	vem::vec4	color{};
 	float		radius;
 };
 

@@ -47,7 +47,7 @@ PointLight::~PointLight(){
 }
 
 void	PointLight::update(FrameInfo &frameInfo, GlobalUbo &ubo){
-	auto	rotateLight = glm::rotate(glm::mat4(1.f), frameInfo.frameTime, {0.f, -1.f, 0.f});
+	auto	rotateLight = vem::rotate(vem::mat4(1.f), frameInfo.frameTime, {0.f, -1.f, 0.f});
 	int		lightIndex = 0;
 
 	for (auto &kv: frameInfo.gameObject){
@@ -56,11 +56,11 @@ void	PointLight::update(FrameInfo &frameInfo, GlobalUbo &ubo){
 			continue ;
 
 		// Time
-		obj._transform.translation = glm::vec3(
-			rotateLight * glm::vec4(obj._transform.translation, 1.f)
+		obj._transform.translation = vem::vec3(
+			rotateLight * vem::vec4(obj._transform.translation, 1.f)
 		);
-		ubo.pointLights[lightIndex].position = glm::vec4(obj._transform.translation, 1.f);
-		ubo.pointLights[lightIndex].color = glm::vec4(obj._color, obj._pointLight->lightIntensity);
+		ubo.pointLights[lightIndex].position = vem::vec4(obj._transform.translation, 1.f);
+		ubo.pointLights[lightIndex].color = vem::vec4(obj._color, obj._pointLight->lightIntensity);
 		lightIndex++;
 	}
 	ubo.numLights = lightIndex;
@@ -75,7 +75,7 @@ void	PointLight::render(FrameInfo &frameInfo){
 			continue ;
 
 		auto	offset = frameInfo.camera.getPosition() - obj._transform.translation;
-		float	disSquared = glm::dot(offset, offset);
+		float	disSquared = vem::dot(offset, offset);
 
 		sorted[disSquared] = obj.getId();
 	}
@@ -95,8 +95,8 @@ void	PointLight::render(FrameInfo &frameInfo){
 		auto	&obj = frameInfo.gameObject.at(it->second);// Use obj id to find light object
 
 		PointLightPushConstants	push{};
-		push.position = glm::vec4(obj._transform.translation, 1.f);
-		push.color = glm::vec4(obj._color, obj._pointLight->lightIntensity);
+		push.position = vem::vec4(obj._transform.translation, 1.f);
+		push.color = vem::vec4(obj._color, obj._pointLight->lightIntensity);
 		push.radius = obj._transform.scale.x;
 		vkCmdPushConstants(
 			frameInfo.commandBuffer,

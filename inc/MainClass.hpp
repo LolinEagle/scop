@@ -22,7 +22,7 @@ class MainClass{
 		unique_ptr<VeDescriptorPool>	_globalPool{};
 		VeGameObject::Map				_gameObjects;
 
-		void	loadGameObjects(const string &filepath, glm::vec3 translation, glm::vec3 scale);
+		void	loadGameObjects(const string &filepath, vem::vec3 translation, vem::vec3 scale);
 	public:
 		MainClass(int scene);
 		~MainClass();

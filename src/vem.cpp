@@ -1,6 +1,6 @@
 #include <vem.hpp>
 
-namespace glm{
+namespace vem{
 
 vec2::vec2(void){
 }

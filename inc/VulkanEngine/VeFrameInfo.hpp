@@ -4,15 +4,15 @@
 #include <VeGameObject.hpp>
 
 struct PointLightEntity{
-	glm::vec4	position{};
-	glm::vec4	color{};
+	vem::vec4	position{};
+	vem::vec4	color{};
 };
 
 struct GlobalUbo{
-	glm::mat4			projection{1.f};
-	glm::mat4			view{1.f};
-	glm::mat4			inverseView{1.f};
-	glm::vec4			ambientLightColor{1.f, 1.f, 1.f, .02f};
+	vem::mat4			projection{1.f};
+	vem::mat4			view{1.f};
+	vem::mat4			inverseView{1.f};
+	vem::vec4			ambientLightColor{1.f, 1.f, 1.f, .02f};
 	PointLightEntity	pointLights[MAX_LIGHTS];
 	int					numLights;
 	int					textureOn;

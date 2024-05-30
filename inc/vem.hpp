@@ -3,7 +3,7 @@
 
 #include <cmath>
 
-namespace glm{
+namespace vem{
 
 class	mat4;
 

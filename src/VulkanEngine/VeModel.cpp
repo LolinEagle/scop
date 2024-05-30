@@ -32,8 +32,8 @@ bool	VeModel::Vertex::operator==(const Vertex &other) const {
 
 void	VeModel::Builder::loadModel(const string &filepath){
 	ifstream			file(filepath);
-	vector<glm::vec3>	positions, colors, normals;
-	vector<glm::vec2>	uvs;
+	vector<vem::vec3>	positions, colors, normals;
+	vector<vem::vec2>	uvs;
 	string				line;
 
 	while (getline(file, line)){
@@ -41,15 +41,15 @@ void	VeModel::Builder::loadModel(const string &filepath){
 		string			token;
 		iss >> token;
 		if (token == "v"){// Vertex
-			glm::vec3	position;
+			vem::vec3	position;
 			iss >> position.x >> position.y >> position.z;
 			positions.push_back(position);
 		} else if (token == "vn"){// Normal
-			glm::vec3	normal;
+			vem::vec3	normal;
 			iss >> normal.x >> normal.y >> normal.z;
 			normals.push_back(normal);
 		} else if (token == "vt"){// Texture
-			glm::vec2	uv;
+			vem::vec2	uv;
 			iss >> uv.x >> uv.y;
 			uvs.push_back(uv);
 		} else if (token == "f"){// Face
@@ -95,13 +95,13 @@ void	VeModel::Builder::loadModel(const string &filepath){
 				if (uv >= 0){
 					vertex.uv = uvs[uv];
 				} else {
-					if (i == 0) vertex.uv = glm::vec2(0.f, 1.f);
-					if (i == 1) vertex.uv = glm::vec2(0.f, 0.f);
-					if (i == 2) vertex.uv = glm::vec2(1.f, 0.f);
-					if (i == 3) vertex.uv = glm::vec2(1.f, 1.f);
+					if (i == 0) vertex.uv = vem::vec2(0.f, 1.f);
+					if (i == 1) vertex.uv = vem::vec2(0.f, 0.f);
+					if (i == 2) vertex.uv = vem::vec2(1.f, 0.f);
+					if (i == 3) vertex.uv = vem::vec2(1.f, 1.f);
 				}
 				if (normal >= 0) vertex.normal = normals[normal];
-				vertex.color = glm::vec3(1.f, 1.f, 1.f);
+				vertex.color = vem::vec3(1.f, 1.f, 1.f);
 
 				// Add it
 				auto	it = find(vertices.begin(), vertices.end(), vertex);
@@ -117,11 +117,11 @@ void	VeModel::Builder::loadModel(const string &filepath){
 			}
 			// Build the vertex normal if not build already
 			if (normal < 0){
-				glm::vec3	tmp = glm::vec3(
+				vem::vec3	tmp = vem::vec3(
 					vertices[indices[indices.size() - 1]].position +
 					vertices[indices[indices.size() - 2]].position +
 					vertices[indices[indices.size() - 3]].position
-				) / glm::vec3(3.f);
+				) / vem::vec3(3.f);
 				for (; verticeAdded > 0; verticeAdded--)
 					vertices[vertices.size() - verticeAdded].normal = tmp;
 			}
