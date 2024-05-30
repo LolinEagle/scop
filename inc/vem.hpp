@@ -1,11 +1,15 @@
-
 #pragma once
 
 #include <cmath>
+#include <stdexcept>
 
 namespace vem{
 
-class	mat4;
+class vec2;
+class vec3;
+class vec4;
+class mat3;
+class mat4;
 
 class vec2{
 	public:
