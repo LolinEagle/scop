@@ -2,21 +2,6 @@
 
 using namespace std;
 
-template <typename T, typename... Rest>
-void	hashCombine(size_t &seed, const T &v, const Rest&... rest){
-	seed ^= hash<T>{}(v) + 0x9e3779b9 + (seed << 6) + (seed >> 2);
-	(hashCombine(seed, rest), ...);
-};
-
-template <>
-struct hash<VeModel::Vertex>{
-	size_t	operator()(VeModel::Vertex const &vertex) const {
-		size_t	seed = 0;
-		hashCombine(seed, vertex.position, vertex.color, vertex.normal, vertex.uv);
-		return (seed);
-	}
-};
-
 vector<VkVertexInputBindingDescription>		VeModel::Vertex::getBindingDescriptions(void){
 	vector<VkVertexInputBindingDescription>		bindingDescription(1);
 	bindingDescription[0].binding = 0;
