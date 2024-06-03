@@ -33,6 +33,7 @@ class vec3{
 		vec3(const float &f);
 		vec3(const float &fx, const float &fy, const float &fz);
 		vec3(const vec3 &v);
+		vec3(const vec4 &v);
 		vec3(const mat4 &m);
 
 		void	operator+=(const vec3 &v);
@@ -53,7 +54,6 @@ class vec4{
 		void	operator+=(const vec4 &v);
 		void	operator-=(const vec4 &v);
 		float	operator[](int i);
-
 };
 
 class mat3{
@@ -87,7 +87,6 @@ vec4	operator-(const vec4 &v1, const vec4 &v2);
 vec2	operator*(const vec2 &v1, const vec2 &v2);
 vec3	operator*(const vec3 &v1, const vec3 &v2);
 vec4	operator*(const vec4 &v1, const vec4 &v2);
-mat4	operator*(const mat4 &m, const vec4 &v);
 vec2	operator/(const vec2 &v1, const vec2 &v2);
 vec3	operator/(const vec3 &v1, const vec3 &v2);
 vec4	operator/(const vec4 &v1, const vec4 &v2);

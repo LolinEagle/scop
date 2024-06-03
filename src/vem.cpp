@@ -42,6 +42,9 @@ vec3::vec3(const float &fx, const float &fy, const float &fz): x(fx), y(fy), z(f
 vec3::vec3(const vec3 &v): x(v.x), y(v.y), z(v.z){
 }
 
+vec3::vec3(const vec4 &v): x(v.x), y(v.y), z(v.z){
+}
+
 vec3::vec3(const mat4 &m): x(m.mat[0][0]), y(m.mat[0][1]), z(m.mat[0][2]){
 }
 
@@ -216,23 +219,6 @@ vec3	operator*(const vec3 &v1, const vec3 &v2){
 
 vec4	operator*(const vec4 &v1, const vec4 &v2){
 	return (vec4(v1.x * v2.x, v1.y * v2.y, v1.z * v2.z, v1.a * v2.a));
-}
-
-vec3	operator*(const float &f, const vec3 &v){
-	return (vec3(v.x * f, v.y * f, v.z * f));
-}
-
-mat4	operator*(const mat4 &m, const vec4 &v){
-	mat4	ret;
-	for (int y = 0; y < 4; y++){
-		for (int x = 0; x < 4; x++){
-			if (x == 0) ret.mat[y][x] = v.x;
-			else if (x == 1) ret.mat[y][x] = v.y;
-			else if (x == 2) ret.mat[y][x] = v.z;
-			else ret.mat[y][x] = v.a;
-		}
-	}
-	return (ret);
 }
 
 vec2	operator/(const vec2 &v1, const vec2 &v2){
