@@ -62,7 +62,6 @@ class mat3{
 
 		mat3(void);
 		mat3(const float &f);
-		mat3(const float &f1, const float &f2, const float &f3);
 		mat3(const vec3 &v1, const vec3 &v2, const vec3 &v3);
 };
 
@@ -72,7 +71,6 @@ class mat4{
 
 		mat4(void);
 		mat4(const float &f);
-		mat4(const float &f1, const float &f2, const float &f3, const float &f4);
 		mat4(const vec4 &v1, const vec4 &v2, const vec4 &v3, const vec4 &v4);
 	
 		mat4	operator*(const mat4 &m);

@@ -2,7 +2,7 @@
 
 namespace vem{
 
-vec2::vec2(void){
+vec2::vec2(void): x(0.f), y(0.f){
 }
 
 vec2::vec2(const float &f): x(f), y(f){
@@ -30,7 +30,7 @@ float	vec2::operator[](int i){
 	throw (std::runtime_error("index is past the end of the vector"));
 }
 
-vec3::vec3(void){
+vec3::vec3(void): x(0.f), y(0.f), z(0.f){
 }
 
 vec3::vec3(const float &f): x(f), y(f), z(f){
@@ -64,7 +64,7 @@ float	vec3::operator[](int i){
 	throw (std::runtime_error("index is past the end of the vector"));
 }
 
-vec4::vec4(void){
+vec4::vec4(void): x(0.f), y(0.f), z(0.f), a(0.f){
 };
 
 vec4::vec4(const float &f): x(f), y(f), z(f), a(f){
@@ -103,22 +103,16 @@ float	vec4::operator[](int i){
 }
 
 mat3::mat3(void){
+	for (int x = 0; x < 3; x++){
+		for (int y = 0; y < 3; y++)
+			mat[x][y] = 0.f;
+	}
 }
 
 mat3::mat3(const float &f){
 	for (int x = 0; x < 3; x++){
 		for (int y = 0; y < 3; y++)
 			mat[x][y] = f;
-	}
-}
-
-mat3::mat3(const float &f1, const float &f2, const float &f3){
-	for (int y = 0; y < 3; y++){
-		for (int x = 0; x < 3; x++){
-			if (x == 0) mat[y][x] = f1;
-			else if (x == 1) mat[y][x] = f2;
-			else mat[y][x] = f3;
-		}
 	}
 }
 
@@ -135,23 +129,16 @@ mat3::mat3(const vec3 &v1, const vec3 &v2, const vec3 &v3){
 }
 
 mat4::mat4(void){
+	for (int y = 0; y < 4; y++){
+		for (int x = 0; x < 4; x++)
+			mat[y][x] = 0.f;
+	}
 }
 
 mat4::mat4(const float &f){
 	for (int y = 0; y < 4; y++){
 		for (int x = 0; x < 4; x++)
 			mat[y][x] = f;
-	}
-}
-
-mat4::mat4(const float &f1, const float &f2, const float &f3, const float &f4){
-	for (int y = 0; y < 4; y++){
-		for (int x = 0; x < 4; x++){
-			if (x == 0) mat[y][x] = f1;
-			else if (x == 1) mat[y][x] = f2;
-			else if (x == 2) mat[y][x] = f3;
-			else mat[y][x] = f4;
-		}
 	}
 }
 
@@ -296,7 +283,7 @@ vec3	normalize(const vec3 &v){
 
 float	mod(float value, float divisor){
 	if (divisor == 0.f)
-		return (0);
+		return (0.f);
 	float	remainder = fmod(value, divisor);
 	if ((remainder < 0.f && divisor > 0.f) || (remainder > 0.f && divisor < 0.f))
 		remainder += divisor;
