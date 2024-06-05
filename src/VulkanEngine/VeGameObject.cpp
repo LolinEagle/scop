@@ -1,6 +1,6 @@
 #include <VeGameObject.hpp>
 
-glm::mat4	TransformComponent::mat4(void){
+vem::mat4	TransformComponent::mat4(void){
 	// Matrix corrsponds to Translate * Ry * Rx * Rz * Scale
 	// Rotations correspond to Tait-bryan angles of Y(1), X(2), Z(3)
 	const float	c3 = cos(rotation.z);
@@ -10,7 +10,7 @@ glm::mat4	TransformComponent::mat4(void){
 	const float	c1 = cos(rotation.y);
 	const float	s1 = sin(rotation.y);
 
-	return (glm::mat4{
+	return (vem::mat4{
 		{
 			scale.x * (c1 * c3 + s1 * s2 * s3),
 			scale.x * (c2 * s3),
@@ -32,16 +32,16 @@ glm::mat4	TransformComponent::mat4(void){
 	});
 }
 
-glm::mat3	TransformComponent::normalMatrix(void){
+vem::mat3	TransformComponent::normalMatrix(void){
 	const float	c3 = cos(rotation.z);
 	const float	s3 = sin(rotation.z);
 	const float	c2 = cos(rotation.x);
 	const float	s2 = sin(rotation.x);
 	const float	c1 = cos(rotation.y);
 	const float	s1 = sin(rotation.y);
-	const glm::vec3	invScale = glm::vec3(1.f) / scale;
+	const vem::vec3	invScale = vem::vec3(1.f) / scale;
 
-	return (glm::mat3{
+	return (vem::mat3{
 		{
 			invScale.x * (c1 * c3 + s1 * s2 * s3),
 			invScale.x * (c2 * s3),
@@ -74,7 +74,7 @@ VeGameObject	VeGameObject::createGameObject(void){
 	return (VeGameObject(currentId++));
 }
 
-VeGameObject	VeGameObject::makePointLight(float intensity, float radius, glm::vec3 color){
+VeGameObject	VeGameObject::makePointLight(float intensity, float radius, vem::vec3 color){
 	VeGameObject	obj = VeGameObject::createGameObject();
 	obj._color = color;
 	obj._transform.scale.x = radius;

@@ -2,7 +2,7 @@
 
 using namespace std;
 
-void	MainClass::loadGameObjects(const string &filepath, glm::vec3 translation, glm::vec3 scale){
+void	MainClass::loadGameObjects(const string &filepath, vem::vec3 translation, vem::vec3 scale){
 	shared_ptr<VeModel>	veModel = VeModel::createModelFromFile(_veDevice, filepath);
 	auto				gameObject = VeGameObject::createGameObject();
 
@@ -33,7 +33,7 @@ MainClass::MainClass(int scene){
 	}
 
 	// Lights
-	/* vector<glm::vec3>	lightColors{
+	/* vector<vem::vec3>	lightColors{
 		{1.f, 0.f, 0.f},// Red
 		{0.f, 1.f, 0.f},// Green
 		{0.f, 0.f, 1.f},// Blue
@@ -42,15 +42,15 @@ MainClass::MainClass(int scene){
 		{1.f, 0.f, 1.f} // Purple
 	};
 	for (int i = 0; i < lightColors.size(); i++){
-		auto	p = VeGameObject::makePointLight(8.f, .1f, glm::vec3(1.f));
-		auto	rotateLight = glm::rotate(
-			glm::mat4(2.2f),// Spreading
+		auto	p = VeGameObject::makePointLight(8.f, .1f, vem::vec3(1.f));
+		auto	rotateLight = vem::rotate(
+			vem::mat4(2.2f),// Spreading
 			(i * TWO_PI) / lightColors.size(),
 			{0.f, -1.f, 0.f}// Axis
 		);
 
 		p._color = lightColors[i];
-		p._transform.translation = glm::vec3(rotateLight * glm::vec4(-1.f, -1.f, -1.f, -1.f));
+		p._transform.translation = vem::vec3(rotateLight * vem::vec4(-1.f, -1.f, -1.f, -1.f));
 		_gameObjects.emplace(p.getId(), move(p));
 	}*/
 }
@@ -124,7 +124,7 @@ void	MainClass::run(void){
 		cameraController.moveInPlaneXZ(_veWindow.getGLFWwindow(), frameTime, viewerObject);
 		camera.setViewYXZ(viewerObject._transform.translation, viewerObject._transform.rotation);
 		aspect = _veRenderer.getAspectRatio();
-		camera.setPerspectiveProjection(glm::radians(50.), aspect, .1f, 64.f);
+		camera.setPerspectiveProjection(vem::radians(50.), aspect, .1f, 64.f);
 		if (auto commandBuffer = _veRenderer.beginFrame()){
 			frameIndex = _veRenderer.getCurrentFrameIndex();
 			FrameInfo	frameInfo{

@@ -8,8 +8,8 @@ using namespace std;
 class VeModel{
 	public:
 		struct Vertex{
-			glm::vec3	position, color, normal;
-			glm::vec2	uv;
+			vem::vec3	position, color, normal;
+			vem::vec2	uv;
 
 			static vector<VkVertexInputBindingDescription>		getBindingDescriptions(void);
 			static vector<VkVertexInputAttributeDescription>	getAttributeDescriptions(void);

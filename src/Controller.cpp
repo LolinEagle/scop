@@ -23,7 +23,7 @@ void	Controller::moveInPlaneXZ(GLFWwindow *window, float dt, VeGameObject &gameO
 	if (glfwGetKey(window, _keys.escape) == GLFW_PRESS) glfwSetWindowShouldClose(window, GLFW_TRUE);
 
 	double		newXpos, newYpos;	// New cursor position
-	glm::vec3	rotate{0};			// Rotate camera
+	vem::vec3	rotate{0};			// Rotate camera
 
 	// Mouse input
 	glfwGetCursorPos(window, &newXpos, &newYpos);
@@ -36,16 +36,16 @@ void	Controller::moveInPlaneXZ(GLFWwindow *window, float dt, VeGameObject &gameO
 	glfwSetCursorPos(window, WIDTH_HALF, HEIGHT_HALF);			// Lock cursor
 
 	// Rotation
-	if (glm::dot(rotate, rotate) > numeric_limits<float>::epsilon())
-		gameObject._transform.rotation += glm::vec3(_lookSpeed * dt) * glm::normalize(rotate);
-	gameObject._transform.rotation.x = glm::clamp(gameObject._transform.rotation.x, -1.5f, 1.5f);
-	gameObject._transform.rotation.y = glm::mod(gameObject._transform.rotation.y, TWO_PI);
+	if (vem::dot(rotate, rotate) > numeric_limits<float>::epsilon())
+		gameObject._transform.rotation += vem::vec3(_lookSpeed * dt) * vem::normalize(rotate);
+	gameObject._transform.rotation.x = vem::clamp(gameObject._transform.rotation.x, -1.5f, 1.5f);
+	gameObject._transform.rotation.y = vem::mod(gameObject._transform.rotation.y, TWO_PI);
 
 	float			yaw = gameObject._transform.rotation.y;
-	const glm::vec3	forwardDir{sin(yaw), 0.f, cos(yaw)};		// Forward direction
-	const glm::vec3	rightDir{forwardDir.z, 0.f, -forwardDir.x};	// Right direction
-	const glm::vec3	upDir{0.f, -1.f, 0.f};						// Up direction
-	glm::vec3		moveDir{0};									// Move direction
+	const vem::vec3	forwardDir{sin(yaw), 0.f, cos(yaw)};		// Forward direction
+	const vem::vec3	rightDir{forwardDir.z, 0.f, -forwardDir.x};	// Right direction
+	const vem::vec3	upDir{0.f, -1.f, 0.f};						// Up direction
+	vem::vec3		moveDir{0};									// Move direction
 
 	// Keyboard input
 	if (glfwGetKey(window, _keys.moveForward) == GLFW_PRESS) moveDir += forwardDir;	// Move forward
@@ -64,8 +64,8 @@ void	Controller::moveInPlaneXZ(GLFWwindow *window, float dt, VeGameObject &gameO
 	}
 
 	// Translation
-	if (glm::dot(moveDir, moveDir) > numeric_limits<float>::epsilon())
-		gameObject._transform.translation += glm::vec3(_moveSpeed * dt) * glm::normalize(moveDir);
+	if (vem::dot(moveDir, moveDir) > numeric_limits<float>::epsilon())
+		gameObject._transform.translation += vem::vec3(_moveSpeed * dt) * vem::normalize(moveDir);
 
 	// Texture on
 	if (glfwGetKey(window, _keys.texture) == GLFW_PRESS && _textureOnPress == false){

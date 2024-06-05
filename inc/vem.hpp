@@ -3,7 +3,7 @@
 #include <cmath>
 #include <algorithm>
 
-namespace glm{
+namespace vem{
 
 class vec2;
 class vec3;
