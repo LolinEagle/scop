@@ -2,21 +2,6 @@
 
 using namespace std;
 
-template <typename T, typename... Rest>
-void	hashCombine(size_t &seed, const T &v, const Rest&... rest){
-	seed ^= hash<T>{}(v) + 0x9e3779b9 + (seed << 6) + (seed >> 2);
-	(hashCombine(seed, rest), ...);
-};
-
-template <>
-struct hash<VeModel::Vertex>{
-	size_t	operator()(VeModel::Vertex const &vertex) const {
-		size_t	seed = 0;
-		hashCombine(seed, vertex.position, vertex.color, vertex.normal, vertex.uv);
-		return (seed);
-	}
-};
-
 vector<VkVertexInputBindingDescription>		VeModel::Vertex::getBindingDescriptions(void){
 	vector<VkVertexInputBindingDescription>		bindingDescription(1);
 	bindingDescription[0].binding = 0;
@@ -73,6 +58,7 @@ void	VeModel::Builder::loadModel(const string &filepath){
 			size_t		found;					// Found if face have uv and normal
 			uint32_t	x[4];					// Keep indices for square face
 			int			verticeAdded = 0;		// How many vertices have be added
+			static int	si = 0;
 
 			for (int i = 0; i < 4; i++){
 				vertexIndices.clear();	// Clear vertex indices string
@@ -116,7 +102,13 @@ void	VeModel::Builder::loadModel(const string &filepath){
 					if (i == 3) vertex.uv = glm::vec2(1.f, 1.f);
 				}
 				if (normal >= 0) vertex.normal = normals[normal];
-				vertex.color = glm::vec3(1.f, 1.f, 1.f);
+				if (si == 0) vertex.color = glm::vec3(1.f, 0.f, 0.f);
+				else if (si == 1) vertex.color = glm::vec3(0.f, 1.f, 0.f);
+				else if (si == 2) vertex.color = glm::vec3(0.f, 0.f, 1.f);
+				else if (si == 3) vertex.color = glm::vec3(0.f, 1.f, 1.f);
+				else if (si == 4) vertex.color = glm::vec3(1.f, 0.f, 1.f);
+				else if (si == 5) vertex.color = glm::vec3(1.f, 1.f, 0.f);
+				
 
 				// Add it
 				auto	it = find(vertices.begin(), vertices.end(), vertex);
@@ -130,6 +122,8 @@ void	VeModel::Builder::loadModel(const string &filepath){
 					indices.push_back(x[i]);
 				}
 			}
+			if (++si > 5)
+				si = 0;
 			// Build the vertex normal if not build already
 			if (normal < 0){
 				glm::vec3	tmp = glm::vec3(

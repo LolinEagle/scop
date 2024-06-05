@@ -37,7 +37,7 @@ void	Controller::moveInPlaneXZ(GLFWwindow *window, float dt, VeGameObject &gameO
 
 	// Rotation
 	if (glm::dot(rotate, rotate) > numeric_limits<float>::epsilon())
-		gameObject._transform.rotation += _lookSpeed * dt * glm::normalize(rotate);
+		gameObject._transform.rotation += glm::vec3(_lookSpeed * dt) * glm::normalize(rotate);
 	gameObject._transform.rotation.x = glm::clamp(gameObject._transform.rotation.x, -1.5f, 1.5f);
 	gameObject._transform.rotation.y = glm::mod(gameObject._transform.rotation.y, TWO_PI);
 
@@ -65,7 +65,7 @@ void	Controller::moveInPlaneXZ(GLFWwindow *window, float dt, VeGameObject &gameO
 
 	// Translation
 	if (glm::dot(moveDir, moveDir) > numeric_limits<float>::epsilon())
-		gameObject._transform.translation += _moveSpeed * dt * glm::normalize(moveDir);
+		gameObject._transform.translation += glm::vec3(_moveSpeed * dt) * glm::normalize(moveDir);
 
 	// Texture on
 	if (glfwGetKey(window, _keys.texture) == GLFW_PRESS && _textureOnPress == false){

@@ -3,12 +3,12 @@
 glm::mat4	TransformComponent::mat4(void){
 	// Matrix corrsponds to Translate * Ry * Rx * Rz * Scale
 	// Rotations correspond to Tait-bryan angles of Y(1), X(2), Z(3)
-	const float	c3 = glm::cos(rotation.z);
-	const float	s3 = glm::sin(rotation.z);
-	const float	c2 = glm::cos(rotation.x);
-	const float	s2 = glm::sin(rotation.x);
-	const float	c1 = glm::cos(rotation.y);
-	const float	s1 = glm::sin(rotation.y);
+	const float	c3 = cos(rotation.z);
+	const float	s3 = sin(rotation.z);
+	const float	c2 = cos(rotation.x);
+	const float	s2 = sin(rotation.x);
+	const float	c1 = cos(rotation.y);
+	const float	s1 = sin(rotation.y);
 
 	return (glm::mat4{
 		{
@@ -33,13 +33,13 @@ glm::mat4	TransformComponent::mat4(void){
 }
 
 glm::mat3	TransformComponent::normalMatrix(void){
-	const float	c3 = glm::cos(rotation.z);
-	const float	s3 = glm::sin(rotation.z);
-	const float	c2 = glm::cos(rotation.x);
-	const float	s2 = glm::sin(rotation.x);
-	const float	c1 = glm::cos(rotation.y);
-	const float	s1 = glm::sin(rotation.y);
-	const glm::vec3	invScale = 1.f / scale;
+	const float	c3 = cos(rotation.z);
+	const float	s3 = sin(rotation.z);
+	const float	c2 = cos(rotation.x);
+	const float	s2 = sin(rotation.x);
+	const float	c1 = cos(rotation.y);
+	const float	s1 = sin(rotation.y);
+	const glm::vec3	invScale = glm::vec3(1.f) / scale;
 
 	return (glm::mat3{
 		{

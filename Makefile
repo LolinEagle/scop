@@ -4,6 +4,7 @@ SRC			=	main.cpp\
 				MainClass.cpp\
 				PointLight.cpp\
 				SimpleRender.cpp\
+				vem.cpp\
 				VulkanEngine/VeBuffer.cpp\
 				VulkanEngine/VeCamera.cpp\
 				VulkanEngine/VeDescriptors.cpp\
@@ -25,7 +26,7 @@ CPPFLAGS	=	-std=c++17 -MMD
 LDFLAGS		=	-lglfw -lvulkan -ldl -lpthread -lX11 -lXxf86vm -lXrandr -lXi -lpng
 
 # Path
-INC			=	-Iglm -Iinc -Iinc/VulkanEngine
+INC			=	-Iinc -Iinc/VulkanEngine
 SRC_PATH	=	./src/
 OBJ_PATH	=	./obj/
 OBJ_PATH_VE	=	./obj/VulkanEngine/

@@ -33,7 +33,7 @@ MainClass::MainClass(int scene){
 	}
 
 	// Lights
-	vector<glm::vec3>	lightColors{
+	/* vector<glm::vec3>	lightColors{
 		{1.f, 0.f, 0.f},// Red
 		{0.f, 1.f, 0.f},// Green
 		{0.f, 0.f, 1.f},// Blue
@@ -52,7 +52,7 @@ MainClass::MainClass(int scene){
 		p._color = lightColors[i];
 		p._transform.translation = glm::vec3(rotateLight * glm::vec4(-1.f, -1.f, -1.f, -1.f));
 		_gameObjects.emplace(p.getId(), move(p));
-	}
+	}*/
 }
 
 MainClass::~MainClass(){

@@ -74,5 +74,5 @@ void	main(void){
 	if (ubo.textureOn > 0)// Is true
 		outColor = texture(texSampler, fragUv);
 	else
-		outColor = vec4((diffuseLight + specularLight + 0.2) * fragColor, 1.0);
+		outColor = vec4((diffuseLight + specularLight + 0.5) * fragColor, 1.0);
 }
