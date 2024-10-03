@@ -21,7 +21,7 @@ class VeModel{
 			vector<Vertex>		vertices{};
 			vector<uint32_t>	indices{};
 
-			void	loadModel(const string &filepath);
+			void	loadModel(const string &filepath, const int &color);
 		};
 	private:
 		VeDevice				&_veDevice;
@@ -49,15 +49,17 @@ class VeModel{
 			VkImage &image,
 			VkDeviceMemory &imageMemory
 		);
-		void	createTextureImages(void);
+		void	createTextureImages(const int &texture);
 		void	createTextureImageView(void);
 		void	createTextureSampler(void);
 		void	createVertexBuffers(const vector<Vertex> &vertices);
 		void	createIndexBuffers(const vector<uint32_t> &indices);
 	public:
-		static unique_ptr<VeModel>	createModelFromFile(VeDevice &device, const string &filepath);
+		static unique_ptr<VeModel>	createModelFromFile(
+			VeDevice &device, const string &filepath, const int &color, const int &texture
+		);
 
-		VeModel(VeDevice &device, const VeModel::Builder &builder);
+		VeModel(VeDevice &device, const VeModel::Builder &builder, const int &texture);
 		~VeModel();
 
 		void	bind(VkCommandBuffer commandBuffer);

@@ -30,7 +30,7 @@ bool	VeModel::Vertex::operator==(const Vertex &other) const {
 	);
 }
 
-void	VeModel::Builder::loadModel(const string &filepath){
+void	VeModel::Builder::loadModel(const string &filepath, const int &color){
 	ifstream			file(filepath);
 	vector<vem::vec3>	positions, colors, normals;
 	vector<vem::vec2>	uvs;
@@ -97,17 +97,30 @@ void	VeModel::Builder::loadModel(const string &filepath){
 					vertex.uv = uvs[uv];
 				} else {
 					if (i == 0) vertex.uv = vem::vec2(0.f, 1.f);
-					if (i == 1) vertex.uv = vem::vec2(0.f, 0.f);
-					if (i == 2) vertex.uv = vem::vec2(1.f, 0.f);
-					if (i == 3) vertex.uv = vem::vec2(1.f, 1.f);
+					else if (i == 1) vertex.uv = vem::vec2(0.f, 0.f);
+					else if (i == 2) vertex.uv = vem::vec2(1.f, 0.f);
+					else if (i == 3) vertex.uv = vem::vec2(1.f, 1.f);
 				}
 				if (normal >= 0) vertex.normal = normals[normal];
-				if (si == 0) vertex.color = vem::vec3(1.f, 0.f, 0.f);
-				else if (si == 1) vertex.color = vem::vec3(0.f, 1.f, 0.f);
-				else if (si == 2) vertex.color = vem::vec3(0.f, 0.f, 1.f);
-				else if (si == 3) vertex.color = vem::vec3(0.f, 1.f, 1.f);
-				else if (si == 4) vertex.color = vem::vec3(1.f, 0.f, 1.f);
-				else if (si == 5) vertex.color = vem::vec3(1.f, 1.f, 0.f);
+
+				// Vertex color
+				if (color == 0){
+					if (si == 0) vertex.color = vem::vec3(1.f, 0.f, 0.f);
+					else if (si == 1) vertex.color = vem::vec3(0.f, 1.f, 0.f);
+					else if (si == 2) vertex.color = vem::vec3(0.f, 0.f, 1.f);
+					else if (si == 3) vertex.color = vem::vec3(0.f, 1.f, 1.f);
+					else if (si == 4) vertex.color = vem::vec3(1.f, 0.f, 1.f);
+					else if (si == 5) vertex.color = vem::vec3(1.f, 1.f, 0.f);
+				} else if (color == 1){
+					if (si == 0) vertex.color = vem::vec3(.125f);
+					else if (si == 1) vertex.color = vem::vec3(.250f);
+					else if (si == 2) vertex.color = vem::vec3(.375f);
+					else if (si == 3) vertex.color = vem::vec3(.500f);
+					else if (si == 4) vertex.color = vem::vec3(.625f);
+					else if (si == 5) vertex.color = vem::vec3(.875f);
+				} else {
+					vertex.color = vem::vec3(1.f);
+				}
 				
 
 				// Add it
@@ -327,10 +340,14 @@ unsigned char	*loadImage(const char *filename, int *x, int *y, int *comp, int re
 	return (image_data);
 }
 
-void	VeModel::createTextureImages(void){
+void	VeModel::createTextureImages(const int &texture){
 	int				texWidth, texHeight, texChannels;
+	string			filename;
+	if (texture == 0) filename = "model/texture/LolinEagle.png";
+	else if (texture == 1) filename = "model/texture/Stone.png";
+	else  filename = "model/texture/Wood.png" ;
 	unsigned char	*pixels = loadImage(
-		"model/texture/LolinEagle.png",
+		filename.c_str(),
 		&texWidth,
 		&texHeight,
 		&texChannels,
@@ -482,14 +499,16 @@ void	VeModel::createIndexBuffers(const vector<uint32_t> &indices){
 	_veDevice.copyBuffer(stagingBuffer.getBuffer(), _indexBuffer->getBuffer(), bufferSize);
 }
 
-unique_ptr<VeModel>	VeModel::createModelFromFile(VeDevice &device, const string &filepath){
+unique_ptr<VeModel>	VeModel::createModelFromFile(
+	VeDevice &device, const string &filepath, const int &color, const int &texture
+){
 	Builder	builder{};
-	builder.loadModel(filepath);
-	return (make_unique<VeModel>(device, builder));
+	builder.loadModel(filepath, color);
+	return (make_unique<VeModel>(device, builder, texture));
 }
 
-VeModel::VeModel(VeDevice &device, const VeModel::Builder &builder) : _veDevice(device){
-	createTextureImages();
+VeModel::VeModel(VeDevice &device, const VeModel::Builder &builder, const int &texture) : _veDevice(device){
+	createTextureImages(texture);
 	createTextureImageView();
 	createTextureSampler();
 	createVertexBuffers(builder.vertices);

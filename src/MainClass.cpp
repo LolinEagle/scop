@@ -2,8 +2,13 @@
 
 using namespace std;
 
-void	MainClass::loadGameObjects(const string &filepath, vem::vec3 translation, vem::vec3 scale){
-	shared_ptr<VeModel>	veModel = VeModel::createModelFromFile(_veDevice, filepath);
+void	MainClass::loadGameObjects(
+	const string &filepath, vem::vec3 translation, vem::vec3 scale,
+	const int &color, const int &texture
+){
+	shared_ptr<VeModel>	veModel = VeModel::createModelFromFile(
+		_veDevice, "model/" + filepath + ".obj", color, texture
+	);
 	auto				gameObject = VeGameObject::createGameObject();
 
 	gameObject._model = veModel;
@@ -12,7 +17,7 @@ void	MainClass::loadGameObjects(const string &filepath, vem::vec3 translation, v
 	_gameObjects.emplace(gameObject.getId(), move(gameObject));
 }
 
-MainClass::MainClass(int scene){
+MainClass::MainClass(const int &scene, const int &color, const int &texture){
 	_globalPool = VeDescriptorPool::Builder(_veDevice)
 		.setMaxSets(MAX_FRAMES_IN_FLIGHT * 2)
 		.addPoolSize(VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER, MAX_FRAMES_IN_FLIGHT)
@@ -20,16 +25,20 @@ MainClass::MainClass(int scene){
 		.build();
 
 	// Objects (filepath, translation, scale)
-	if (scene == 0) loadGameObjects("model/42.obj",			{0.f, 0.f, -1.f}, {1.f, -1.f, 1.f});
-	if (scene == 1) loadGameObjects("model/cube.obj",		{0.f, 0.f,  0.f}, {1.f,  1.f, 1.f});
-	if (scene == 2) loadGameObjects("model/teapot.obj",		{0.f, 0.f,  0.f}, {1.f, -1.f, 1.f});
-	if (scene == 3) loadGameObjects("model/teapot2.obj",	{0.f, 0.f,  0.f}, {1.f, -1.f, 1.f});
-	if (scene == 4){
-		loadGameObjects("model/42.obj",			{-2.0f, -0.2f,  1.0f}, {1.0f, -1.0f, 1.0f});
-		loadGameObjects("model/cube.obj",		{-2.0f,  0.0f, -2.0f}, {1.0f,  1.0f, 1.0f});
-		loadGameObjects("model/teapot.obj",		{ 2.0f,  1.1f,  2.0f}, {1.0f, -1.0f, 1.0f});
-		loadGameObjects("model/teapot2.obj",	{ 2.0f, -0.3f, -2.0f}, {1.0f, -1.0f, 1.0f});
-		loadGameObjects("model/cube.obj",		{ 0.0f,  1.2f,  0.0f}, {8.0f,  0.1f, 8.0f});
+	if (scene == 0){
+		loadGameObjects("42",		{0.f, 0.f, -1.f}, {1.f, -1.f, 1.f}, color, texture);
+	} else if (scene == 1){
+		loadGameObjects("cube",		{0.f, 0.f,  0.f}, {1.f,  1.f, 1.f}, color, texture);
+	} else if (scene == 2){
+		loadGameObjects("teapot",	{0.f, 0.f,  0.f}, {1.f, -1.f, 1.f}, color, texture);
+	} else if (scene == 3){
+		loadGameObjects("teapot2",	{0.f, 0.f,  0.f}, {1.f, -1.f, 1.f}, color, texture);
+	} else if (scene == 4){
+		loadGameObjects("42",		{-2.0f, -0.2f,  1.0f}, {1.0f, -1.0f, 1.0f}, color, texture);
+		loadGameObjects("cube",		{-2.0f,  0.0f, -2.0f}, {1.0f,  1.0f, 1.0f}, color, texture);
+		loadGameObjects("teapot",	{ 2.0f,  1.1f,  2.0f}, {1.0f, -1.0f, 1.0f}, color, texture);
+		loadGameObjects("teapot2",	{ 2.0f, -0.3f, -2.0f}, {1.0f, -1.0f, 1.0f}, color, texture);
+		loadGameObjects("cube",		{ 0.0f,  1.2f,  0.0f}, {8.0f,  0.1f, 8.0f}, color, texture);
 	}
 
 	// Lights
